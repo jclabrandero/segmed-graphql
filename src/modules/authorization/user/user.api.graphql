@@ -9,9 +9,32 @@ type User {
 }
 
 
+input IUserCreateArgs {
+	userName:			String!
+	displayName:		String
+	email:				String
+
+	password:			String
+	confirmPassword:	String
+}
+
+input IUserUpdateArgs {
+	displayName:		String
+	email:				String
+
+	password:			String
+	confirmPassword:	String
+}
+
 type Query {
 	users: [User!]! @authorized
 	currentUser(sessionId: Int!): User! @authorized
+	user(id: Int!): User! @authorized
+}
+
+type Mutation {
+	createUser(data: IUserCreateArgs!): User! @authorized
+	updateUser(id: Int!, data: IUserUpdateArgs!): User! @authorized
 }
 
 type Subscription {

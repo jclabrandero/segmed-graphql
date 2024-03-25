@@ -63,6 +63,7 @@ export class GraphqlResolver {
 			Query: {
 				users: user.index,
 				currentUser: user.current,
+				user: user.findOne,
 
 				groups: group.index
 			},
@@ -71,6 +72,9 @@ export class GraphqlResolver {
 				signOut: session.signOut,
 
 				createGroup: group.create,
+
+				createUser: user.create,
+				updateUser: user.update
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
