@@ -65,7 +65,8 @@ export class GraphqlResolver {
 				currentUser: user.current,
 				user: user.findOne,
 
-				groups: group.index
+				groups: group.index,
+				activeGroups: group.active
 			},
 			Mutation: {
 				signIn: session.signIn,

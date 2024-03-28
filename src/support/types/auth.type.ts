@@ -9,6 +9,8 @@ export interface IUserCreateArgs {
 	displayName?:		string
 	email?:				string
 
+	groups?:			Array<number>
+
 	password?:			string
 	confirmPassword?:	string
 }
@@ -16,6 +18,8 @@ export interface IUserCreateArgs {
 export interface IUserUpdateArgs {
 	displayName?:		string
 	email?:				string
+
+	groups?:			Array<number>
 
 	password?:			string
 	confirmPassword?:	string

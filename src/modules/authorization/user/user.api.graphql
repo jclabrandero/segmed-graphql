@@ -4,6 +4,8 @@ type User {
 	userName:		String!
 	displayName:	String
 	email:			String
+
+	groups:			[Group!]!
 	
 	status:			Int!
 }
@@ -14,6 +16,8 @@ input IUserCreateArgs {
 	displayName:		String
 	email:				String
 
+	groups:				[Int!]!
+
 	password:			String
 	confirmPassword:	String
 }
@@ -21,6 +25,8 @@ input IUserCreateArgs {
 input IUserUpdateArgs {
 	displayName:		String
 	email:				String
+
+	groups:				[Int!]
 
 	password:			String
 	confirmPassword:	String

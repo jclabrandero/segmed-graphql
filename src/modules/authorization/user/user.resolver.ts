@@ -1,7 +1,7 @@
 
 import { User } from '@prisma/client'
 
-import { Resolver } from '../../../support/classes'
+import { Relation, Resolver } from '../../../support/classes'
 import { IContext, IUserCreateArgs, IUserUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 
@@ -14,14 +14,35 @@ export class UserResolver extends Resolver {
 		super(SubscriptionEvent.User)
 	}
 
+	static format(record) {
+		if (!record) return null
+		const { groups, ...user } = record
+		return {
+			...user,
+			groups: groups ? groups.map(relation => ({
+				...relation.group
+			})) : undefined
+		}
+	}
+
 	async index(_, args, { db }: IContext): Promise<User[]> {
 		const records = await db.user.findMany({
 			where: {
 				NOT: { status: Status.Removed }
+			},
+			include: {
+				groups: {
+					where: {
+						status: Status.Active
+					},
+					include: {
+						group: true
+					}
+				}
 			}
 		})
 
-		return records
+		return records.map(record => UserResolver.format(record))
 	}
 
 	async current(_, args: { sessionId: number }, context: IContext): Promise<User> {
@@ -34,14 +55,24 @@ export class UserResolver extends Resolver {
 			where: {
 				id,
 				NOT: { status: Status.Removed }
+			},
+			include: {
+				groups: {
+					where: {
+						status: Status.Active
+					},
+					include: {
+						group: true
+					}
+				}
 			}
 		})
 
-		return record
+		return UserResolver.format(record)
 	}
 
 	async create(_, args: { data: IUserCreateArgs }, { db, pubsub }: IContext): Promise<User> {
-		const { password, confirmPassword, ...payload } = args.data
+		const { groups, password, confirmPassword, ...payload } = args.data
 		const { CREATED, UPSERTED } = SubscriptionEvent.User
 		let encrypted: string
 
@@ -53,6 +84,9 @@ export class UserResolver extends Resolver {
 		const record = await db.user.create({
 			data: {
 				...payload,
+				groups: groups ? {
+					create: groups.map(groupId => ({ groupId }))
+				} : undefined,
 				passwords: encrypted ? {
 					create: [{ encrypted }]
 				} : undefined
@@ -69,7 +103,7 @@ export class UserResolver extends Resolver {
 	}
 
 	async update(_, { id, data }: { id: number, data: IUserUpdateArgs }, { db, pubsub }: IContext): Promise<User> {
-		const { password, confirmPassword, ...payload } = data
+		const { groups, password, confirmPassword, ...payload } = data
 		const { UPDATED, UPSERTED } = SubscriptionEvent.User
 
 		if (password) {
@@ -83,6 +117,9 @@ export class UserResolver extends Resolver {
 			},
 			data: {
 				...payload,
+				groups: groups ? await Relation.upsert({
+					model: db.userGroup, where: { userId: id }, dataset: groups, field: 'groupId'
+				}) : undefined
 			}
 		})
 
