@@ -1,0 +1,14 @@
+
+type Permission {
+	id:				Int!
+	code:			String!
+	description:	String
+	
+	status:			Int!
+}
+
+
+type Query {
+	permissions: [Permission!]! @authorized
+	activePermissions: [Permission!]! @authorized
+}
