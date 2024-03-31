@@ -4,7 +4,8 @@ type Group {
 	name:			String!
 	description:	String
 
-	permissions:			[Permission!]!
+	members:		[User!]!
+	permissions:	[Permission!]!
 	
 	status:			Int!
 }

@@ -14,12 +14,37 @@ export class GroupResolver extends Resolver {
 
 	static format(record) {
 		if (!record) return null
-		const { permissions, ...group } = record
+		const { members, permissions, ...group } = record
 		return {
 			...group,
+			members: members ? members.map(relation => ({
+				...relation.user
+			})) : undefined
+			,
 			permissions: permissions ? permissions.map(relation => ({
 				...relation.permission
 			})) : undefined
+		}
+	}
+
+	static includeAll() {
+		return {
+			members: {
+				where: {
+					status: Status.Active
+				},
+				include: {
+					user: true
+				}
+			},
+			permissions: {
+				where: {
+					status: Status.Active
+				},
+				include: {
+					permission: true
+				}
+			}
 		}
 	}
 
@@ -28,16 +53,7 @@ export class GroupResolver extends Resolver {
 			where: {
 				NOT: { status: Status.Removed }
 			},
-			include: {
-				permissions: {
-					where: {
-						status: Status.Active
-					},
-					include: {
-						permission: true
-					}
-				}
-			}
+			include: GroupResolver.includeAll()
 		})
 
 		return records.map(record => GroupResolver.format(record))
@@ -48,16 +64,7 @@ export class GroupResolver extends Resolver {
 			where: {
 				status: Status.Active
 			},
-			include: {
-				permissions: {
-					where: {
-						status: Status.Active
-					},
-					include: {
-						permission: true
-					}
-				}
-			}
+			include: GroupResolver.includeAll()
 		})
 
 		return records.map(record => GroupResolver.format(record))
@@ -69,16 +76,7 @@ export class GroupResolver extends Resolver {
 				id,
 				NOT: { status: Status.Removed }
 			},
-			include: {
-				permissions: {
-					where: {
-						status: Status.Active
-					},
-					include: {
-						permission: true
-					}
-				}
-			}
+			include: GroupResolver.includeAll()
 		})
 
 		return GroupResolver.format(record)
