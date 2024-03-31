@@ -23,22 +23,7 @@ model UserGroup {
 	user	User	@relation(fields: [userId], references: [id])
 	group	Group	@relation(fields: [groupId], references: [id])
 
-	roles	UserGroupRole[]
-
 	@@id([ userId, groupId ])
-}
-
-model UserGroupRole {
-	id			Int		@unique @default(autoincrement())
-	status		Int		@default(1)
-
-	userGroupId	Int
-	roleId		Int
-
-	userGroup	UserGroup	@relation(fields: [userGroupId], references: [id])
-	role		Role		@relation(fields: [roleId], references: [id])
-
-	@@id([ userGroupId, roleId ])
 }
 
 model UserPassword {

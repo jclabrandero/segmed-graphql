@@ -7,4 +7,19 @@ model Group {
 	status		Int		@default(1)
 
 	members		UserGroup[]
+	permissions	GroupPermission[]
+}
+
+
+model GroupPermission {
+	id			Int		@unique @default(autoincrement())
+	status		Int		@default(1)
+
+	groupId			Int
+	permissionId	Int
+
+	group		Group		@relation(fields: [groupId], references: [id])
+	permission	Permission	@relation(fields: [permissionId], references: [id])
+
+	@@id([ groupId, permissionId ])
 }

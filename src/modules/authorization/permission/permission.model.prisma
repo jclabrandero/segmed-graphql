@@ -4,7 +4,7 @@ model Permission {
 	code		String	@unique
 	description	String?
 
-	status	Int		@default(1)
+	status		Int		@default(1)
 
-	roles	RolePermission[]
+	groups		GroupPermission[]
 }

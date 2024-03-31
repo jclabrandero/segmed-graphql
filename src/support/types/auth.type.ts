@@ -28,4 +28,6 @@ export interface IUserUpdateArgs {
 export interface IGroupCreateArgs {
 	name:			string
 	description?:	string
+
+	permissions?:	Array<number>
 }
