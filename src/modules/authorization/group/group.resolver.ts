@@ -1,8 +1,8 @@
 
 import { Group } from '@prisma/client'
 
-import { Resolver } from '../../../support/classes'
-import { IContext, IGroupCreateArgs } from '../../../support/types'
+import { Relation, Resolver } from '../../../support/classes'
+import { IContext, IGroupCreateArgs, IGroupUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 
 
@@ -63,6 +63,27 @@ export class GroupResolver extends Resolver {
 		return records.map(record => GroupResolver.format(record))
 	}
 
+	async findOne(_, { id }: { id: number }, { db }: IContext): Promise<Group> {
+		const record = await db.group.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				permissions: {
+					where: {
+						status: Status.Active
+					},
+					include: {
+						permission: true
+					}
+				}
+			}
+		})
+
+		return GroupResolver.format(record)
+	}
+
 	async create(_, { data }: { data: IGroupCreateArgs }, { db, pubsub }: IContext ): Promise<Group> {
 		const { permissions, ...payload } = data
 		const { CREATED, UPSERTED } = SubscriptionEvent.Group
@@ -80,6 +101,30 @@ export class GroupResolver extends Resolver {
 			pubsub,
 			events: [CREATED, UPSERTED],
 			dataset: [{ groupCreated: record }, { groupUpserted: record }]
+		})
+		return record
+	}
+
+	async update(_, { id, data }: { id: number, data: IGroupUpdateArgs }, { db, pubsub }: IContext): Promise<Group> {
+		const { permissions, ...payload } = data
+		const { UPDATED, UPSERTED } = SubscriptionEvent.Group
+
+		const record = await db.group.update({
+			where: {
+				id
+			},
+			data: {
+				...payload,
+				permissions: permissions ? await Relation.upsert({
+					model: db.groupPermission, where: { groupId: id }, dataset: permissions, field: 'permissionId'
+				}) : undefined
+			}
+		})
+
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ groupUpdated: record }, { groupUpserted: record }]
 		})
 		return record
 	}

@@ -17,13 +17,22 @@ input IGroupCreateArgs {
 	permissions:	[Int!]!
 }
 
+input IGroupUpdateArgs {
+	name:			String
+	description:	String
+
+	permissions:	[Int!]
+}
+
 type Query {
 	groups: [Group!]! @authorized
 	activeGroups: [Group!]! @authorized
+	group(id: Int!): Group! @authorized
 }
 
 type Mutation {
 	createGroup(data: IGroupCreateArgs!): Group! @authorized
+	updateGroup(id: Int!, data: IGroupUpdateArgs!): Group! @authorized
 }
 
 type Subscription {

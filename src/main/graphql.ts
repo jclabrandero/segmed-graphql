@@ -68,6 +68,7 @@ export class GraphqlResolver {
 
 				groups: group.index,
 				activeGroups: group.active,
+				group: group.findOne,
 
 				permissions: permission.index,
 				activePermissions: permission.active
@@ -77,6 +78,7 @@ export class GraphqlResolver {
 				signOut: session.signOut,
 
 				createGroup: group.create,
+				updateGroup: group.update,
 
 				createUser: user.create,
 				updateUser: user.update

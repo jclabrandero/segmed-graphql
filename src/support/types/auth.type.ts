@@ -31,3 +31,10 @@ export interface IGroupCreateArgs {
 
 	permissions?:	Array<number>
 }
+
+export interface IGroupUpdateArgs {
+	name?:			string
+	description?:	string
+
+	permissions?:	Array<number>
+}

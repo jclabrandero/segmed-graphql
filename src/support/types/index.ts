@@ -1,5 +1,5 @@
 
-import { IAuthPayload, IUserCreateArgs, IUserUpdateArgs, IGroupCreateArgs } from './auth.type'
+import { IAuthPayload, IUserCreateArgs, IUserUpdateArgs, IGroupCreateArgs, IGroupUpdateArgs } from './auth.type'
 import { IContext } from './context.type'
 import { IEvent } from './event.type'
 
@@ -8,6 +8,6 @@ export {
 	IAuthPayload,
 	IContext,
 	IEvent,
-	IGroupCreateArgs,
+	IGroupCreateArgs, IGroupUpdateArgs,
 	IUserCreateArgs, IUserUpdateArgs
 }
