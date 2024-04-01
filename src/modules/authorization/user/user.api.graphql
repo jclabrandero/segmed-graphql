@@ -7,6 +7,9 @@ type User {
 
 	groups:			[Group!]!
 	
+	permissions:	[String!]!
+	isAuthorized:	Boolean!
+	
 	status:			Int!
 }
 

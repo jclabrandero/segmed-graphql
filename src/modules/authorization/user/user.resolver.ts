@@ -17,11 +17,47 @@ export class UserResolver extends Resolver {
 	static format(record) {
 		if (!record) return null
 		const { groups, ...user } = record
+		const extend = groups ? {
+			groups: groups.map(relation => ({
+				...relation.group
+			})),
+			permissions: groups.reduce(
+				(accumulator, { group }) => [ ...accumulator, ...group.permissions.map(({ permission }) => permission.code) ].filter((value, index, array) => array.indexOf(value) === index),
+				[]
+			)
+		} : {
+			groups: [],
+			permissions: []
+		}
+
 		return {
 			...user,
-			groups: groups ? groups.map(relation => ({
-				...relation.group
-			})) : undefined
+			...extend,
+			isAuthorized: !!extend.permissions.length
+		}
+	}
+
+	static includeAll() {
+		return {
+			groups: {
+				where: {
+					status: Status.Active
+				},
+				include: {
+					group: {
+						include: {
+							permissions: {
+								where: {
+									status: Status.Active
+								},
+								include: {
+									permission: true
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -30,16 +66,7 @@ export class UserResolver extends Resolver {
 			where: {
 				NOT: { status: Status.Removed }
 			},
-			include: {
-				groups: {
-					where: {
-						status: Status.Active
-					},
-					include: {
-						group: true
-					}
-				}
-			}
+			include: UserResolver.includeAll()
 		})
 
 		return records.map(record => UserResolver.format(record))
@@ -47,7 +74,15 @@ export class UserResolver extends Resolver {
 
 	async current(_, args: { sessionId: number }, context: IContext): Promise<User> {
 		if (context.session.id !== args.sessionId) throw 'El portador no es válido.'
-		return context.user
+
+		const record = await context.db.user.findUnique({
+			where: {
+				id: context.user.id
+			},
+			include: UserResolver.includeAll()
+		})
+
+		return UserResolver.format(record)
 	}
 
 	async findOne(_, { id }: { id: number }, { db }: IContext): Promise<User> {
@@ -56,16 +91,7 @@ export class UserResolver extends Resolver {
 				id,
 				NOT: { status: Status.Removed }
 			},
-			include: {
-				groups: {
-					where: {
-						status: Status.Active
-					},
-					include: {
-						group: true
-					}
-				}
-			}
+			include: UserResolver.includeAll()
 		})
 
 		return UserResolver.format(record)
