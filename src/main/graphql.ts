@@ -9,6 +9,7 @@ import { PubSub } from 'graphql-subscriptions'
 import { IContext } from '../support/types'
 
 import { SessionResolver, UserResolver, GroupResolver, PermissionResolver } from '../modules/authorization'
+import { PersonDocumentTypeResolver } from '../modules/catalog'
 
 
 export class GraphqlResolver {
@@ -53,6 +54,7 @@ export class GraphqlResolver {
 			, session = new SessionResolver()
 			, group = new GroupResolver()
 			, permission = new PermissionResolver()
+			, personDocumentType = new PersonDocumentTypeResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -71,7 +73,11 @@ export class GraphqlResolver {
 				group: group.findOne,
 
 				permissions: permission.index,
-				activePermissions: permission.active
+				activePermissions: permission.active,
+
+				personDocumentTypes: personDocumentType.index,
+				activePersonDocumentTypes: personDocumentType.active,
+				personDocumentType: personDocumentType.findOne
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -81,7 +87,11 @@ export class GraphqlResolver {
 				updateGroup: group.update,
 
 				createUser: user.create,
-				updateUser: user.update
+				updateUser: user.update,
+
+				createPersonDocumentType: personDocumentType.create,
+				updatePersonDocumentType: personDocumentType.update,
+				deletePersonDocumentType: personDocumentType.delete
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
@@ -91,7 +101,12 @@ export class GraphqlResolver {
 				groupCreated: group.created({ pubsub }),
 				groupUpdated: group.updated({ pubsub }),
 				groupDeleted: group.deleted({ pubsub }),
-				groupUpserted: group.upserted({ pubsub })
+				groupUpserted: group.upserted({ pubsub }),
+
+				personDocumentTypeCreated: personDocumentType.created({ pubsub }),
+				personDocumentTypeUpdated: personDocumentType.updated({ pubsub }),
+				personDocumentTypeDeleted: personDocumentType.deleted({ pubsub }),
+				personDocumentTypeUpserted: personDocumentType.upserted({ pubsub })
 			}
 		}])
 	}

@@ -1,0 +1,38 @@
+
+type PersonDocumentType {
+	id:				Int!
+	name:			String!
+	description:	String
+	
+	status:			Int!
+}
+
+
+input IPersonDocumentTypeCreateArgs {
+	name:			String!
+	description:	String
+}
+
+input IPersonDocumentTypeUpdateArgs {
+	name:			String
+	description:	String
+}
+
+type Query {
+	personDocumentTypes: [PersonDocumentType!]! @authorized
+	activePersonDocumentTypes: [PersonDocumentType!]! @authorized
+	personDocumentType(id: Int!): PersonDocumentType! @authorized
+}
+
+type Mutation {
+	createPersonDocumentType(data: IPersonDocumentTypeCreateArgs!): PersonDocumentType! @authorized
+	updatePersonDocumentType(id: Int!, data: IPersonDocumentTypeUpdateArgs!): PersonDocumentType! @authorized
+	deletePersonDocumentType(id: Int!): PersonDocumentType! @authorized
+}
+
+type Subscription {
+	personDocumentTypeCreated: PersonDocumentType!
+	personDocumentTypeUpdated: PersonDocumentType!
+	personDocumentTypeDeleted: PersonDocumentType!
+	personDocumentTypeUpserted: PersonDocumentType!
+}

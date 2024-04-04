@@ -1,0 +1,81 @@
+
+import { PersonDocumentType } from '@prisma/client'
+
+import { Resolver } from '../../../support/classes'
+import { IContext, IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs } from '../../../support/types'
+import { Status, SubscriptionEvent } from '../../../support/constants'
+
+
+export class PersonDocumentTypeResolver extends Resolver {
+
+	constructor() {
+		super(SubscriptionEvent.PersonDocumentType)
+	}
+
+	async index(_, args, { db }: IContext): Promise<Array<PersonDocumentType>> {
+		return await db.personDocumentType.findMany({
+			where: {
+				NOT: { status: Status.Removed }
+			}
+		})
+	}
+
+	async active(_, args, { db }: IContext): Promise<Array<PersonDocumentType>> {
+		return await db.personDocumentType.findMany({
+			where: {
+				status: Status.Active
+			}
+		})
+	}
+
+	async findOne(_, { id }: { id: number }, { db }: IContext): Promise<PersonDocumentType> {
+		return await db.personDocumentType.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			}
+		})
+	}
+
+	async create(_, { data }: { data: IPersonDocumentTypeCreateArgs }, { db, pubsub }: IContext): Promise<PersonDocumentType> {
+		const { CREATED, UPSERTED } = SubscriptionEvent.PersonDocumentType
+		const record = await db.personDocumentType.create({
+			data
+		})
+		super.publish({
+			pubsub,
+			events: [CREATED, UPSERTED],
+			dataset: [{ personDocumentTypeCreated: record }, { personDocumentTypeUpserted: record }]
+		})
+		return record
+	}
+
+	async update(_, { id, data }: { id: number, data: IPersonDocumentTypeUpdateArgs }, { db, pubsub }: IContext): Promise<PersonDocumentType> {
+		const { UPDATED, UPSERTED } = SubscriptionEvent.PersonDocumentType
+		const record = await db.personDocumentType.update({
+			where: { id },
+			data
+		})
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ personDocumentTypeUpdated: record }, { personDocumentTypeUpserted: record }]
+		})
+		return record
+	}
+
+	async delete(_, { id }: { id: number }, { db, pubsub }: IContext): Promise<PersonDocumentType> {
+		const { DELETED, UPSERTED } = SubscriptionEvent.PersonDocumentType
+		const record = await db.personDocumentType.update({
+			where: { id },
+			data: { status: Status.Removed }
+		})
+		super.publish({
+			pubsub,
+			events: [DELETED, UPSERTED],
+			dataset: [{ personDocumentTypeDeleted: record }, { personDocumentTypeUpserted: record }]
+		})
+		return record
+	}
+	
+}

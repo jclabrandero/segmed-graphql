@@ -1,0 +1,8 @@
+
+model PersonDocumentType {
+	id			Int		@id @default(autoincrement())
+	name		String	@unique
+	description	String?
+
+	status		Int		@default(1)
+}

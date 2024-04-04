@@ -13,7 +13,16 @@ enum Group {
 	UPSERTED = 'GRP-UPSERT'
 }
 
+
+enum PersonDocumentType {
+	CREATED = 'PDT-C',
+	UPDATED = 'PDT-U',
+	DELETED = 'PDT-D',
+	UPSERTED = 'PDT-UPSERT'
+}
+
 export const SubscriptionEvent = {
 	User,
-	Group
+	Group,
+	PersonDocumentType
 }
