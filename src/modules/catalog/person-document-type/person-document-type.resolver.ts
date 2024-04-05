@@ -4,6 +4,7 @@ import { PersonDocumentType } from '@prisma/client'
 import { Resolver } from '../../../support/classes'
 import { IContext, IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
+import { now } from '../../../support/utils'
 
 
 export class PersonDocumentTypeResolver extends Resolver {
@@ -66,9 +67,19 @@ export class PersonDocumentTypeResolver extends Resolver {
 
 	async delete(_, { id }: { id: number }, { db, pubsub }: IContext): Promise<PersonDocumentType> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.PersonDocumentType
+
+		const found = await db.personDocumentType.findUnique({
+			where: { id, NOT: { status: Status.Removed } }
+		})
+
+		if (!found) throw 'No se encontró el registro'
+
 		const record = await db.personDocumentType.update({
 			where: { id },
-			data: { status: Status.Removed }
+			data: {
+				name: `${found.name}-DELETED-${now().formated}`,
+				status: Status.Removed
+			}
 		})
 		super.publish({
 			pubsub,
