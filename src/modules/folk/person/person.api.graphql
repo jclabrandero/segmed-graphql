@@ -1,0 +1,53 @@
+
+type Person {
+	id:			Int!
+	firstName:	String!
+	lastName:	String!
+	sex:		String!
+	birthDate:	DateTime!
+
+	status:		Int!
+
+	documentNumber:		String
+	personDocumentType:	PersonDocumentType
+}
+
+
+input IPersonCreateArgs {
+	firstName:	String!
+	lastName:	String!
+	sex:		String!
+	birthDate:	DateTime!
+
+	documentNumber:			String
+	personDocumentTypeId:	Int
+}
+
+input IPersonUpdateArgs {
+	firstName:	String
+	lastName:	String
+	sexo:		String
+	birthDate:	DateTime
+
+	documentNumber:			String
+	personDocumentTypeId:	Int
+}
+
+type Query {
+	persons: [Person!]! @authorized
+	activePersons: [Person]! @authorized
+	person(id: Int!): Person! @authorized
+}
+
+type Mutation {
+	createPerson(data: IPersonCreateArgs!): Person! @authorized
+	updatePerson(id: Int!, data: IPersonUpdateArgs!): Person! @authorized
+	deletePerson(id: Int!): Person! @authorized
+}
+
+type Subscription {
+	personCreated: Person!
+	personUpdated: Person!
+	personDeleted: Person!
+	personUpserted: Person!
+}

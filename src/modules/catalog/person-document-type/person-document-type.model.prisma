@@ -5,4 +5,6 @@ model PersonDocumentType {
 	description	String?
 
 	status		Int		@default(1)
+
+	people	Person[]
 }

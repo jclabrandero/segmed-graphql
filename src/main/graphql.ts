@@ -10,6 +10,7 @@ import { IContext } from '../support/types'
 
 import { SessionResolver, UserResolver, GroupResolver, PermissionResolver } from '../modules/authorization'
 import { PersonDocumentTypeResolver } from '../modules/catalog'
+import { PersonResolver } from '../modules/folk'
 
 
 export class GraphqlResolver {
@@ -55,6 +56,7 @@ export class GraphqlResolver {
 			, group = new GroupResolver()
 			, permission = new PermissionResolver()
 			, personDocumentType = new PersonDocumentTypeResolver()
+			, person = new PersonResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -77,7 +79,11 @@ export class GraphqlResolver {
 
 				personDocumentTypes: personDocumentType.index,
 				activePersonDocumentTypes: personDocumentType.active,
-				personDocumentType: personDocumentType.findOne
+				personDocumentType: personDocumentType.findOne,
+
+				persons: person.index,
+				activePersons: person.active,
+				person: person.findOne
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -91,7 +97,11 @@ export class GraphqlResolver {
 
 				createPersonDocumentType: personDocumentType.create,
 				updatePersonDocumentType: personDocumentType.update,
-				deletePersonDocumentType: personDocumentType.delete
+				deletePersonDocumentType: personDocumentType.delete,
+
+				createPerson: person.create,
+				updatePerson: person.update,
+				deletePerson: person.delete
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
@@ -106,7 +116,12 @@ export class GraphqlResolver {
 				personDocumentTypeCreated: personDocumentType.created({ pubsub }),
 				personDocumentTypeUpdated: personDocumentType.updated({ pubsub }),
 				personDocumentTypeDeleted: personDocumentType.deleted({ pubsub }),
-				personDocumentTypeUpserted: personDocumentType.upserted({ pubsub })
+				personDocumentTypeUpserted: personDocumentType.upserted({ pubsub }),
+
+				personCreated: person.created({ pubsub }),
+				personUpdated: person.updated({ pubsub }),
+				personDeleted: person.deleted({ pubsub }),
+				personUpserted: person.upserted({ pubsub })
 			}
 		}])
 	}
