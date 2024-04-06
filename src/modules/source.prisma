@@ -7,3 +7,14 @@ datasource db {
 generator client {
 	provider = "prisma-client-js"
 }
+
+model Audit {
+	id			BigInt	@id @default(autoincrement())
+	tableName	String
+	fieldName	String
+	rowId		Int
+	oldValue	String?
+	newValue	String
+	userName	String
+	updateDate	DateTime
+}
