@@ -1,6 +1,7 @@
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, User } from '@prisma/client'
 import { Auth } from '../classes'
+import { withAuditForCreate } from '../functions'
 
 
 const data = {
@@ -8,10 +9,16 @@ const data = {
 		{ code: 'R_PRMSSN', description: 'Lectura de permisos' },
 
 		{ code: 'R_GRP', description: 'Lectura de grupos' },
-		{ code: 'W_GPR', description: 'Escritura de grupos' },
+		{ code: 'W_GRP', description: 'Escritura de grupos' },
 
 		{ code: 'R_USR', description: 'Lectura de usuarios' },
 		{ code: 'W_USR', description: 'Escritura de usuarios' },
+
+		{ code: 'R_PDT', description: 'Lectura de tipos de documento identidad' },
+		{ code: 'W_PDT', description: 'Escritura de tipos de documento identidad' },
+
+		{ code: 'R_PRSN', description: 'Lectura de personas' },
+		{ code: 'W_PRSN', description: 'Escritura de personas' }
 	],
 	grupos: [
 		{
@@ -20,7 +27,7 @@ const data = {
 				description: 'Administrador del sistema',
 			},
 			permissions: [
-				'R_PRMSSN', 'R_GRP', 'W_GPR', 'R_USR', 'W_USR'
+				'R_PRMSSN', 'R_GRP', 'W_GRP', 'R_USR', 'W_USR'
 			]
 		}
 	],
@@ -34,8 +41,26 @@ const data = {
 			password: 'company'
 		}
 	],
+
+	tiposDocumentoIdentidad: [
+		{ name: 'CI', description: 'Cédula de Identidad' }
+	],
 }
 
+async function create(iterable, model, title, user: User) {
+	console.log('...CREANDO', title)
+	try {
+		for (const seed of iterable) {
+			await model.create({
+				data: withAuditForCreate(user, seed)
+			})
+		}
+		console.log(title, 'CORRECTO!')
+	} catch (error) {
+		console.log(title, 'ERROR!')
+		console.log(error)
+	}
+}
 
 async function createAutorizacion(client: PrismaClient) {
 	console.log('...Creando autorizacion')
@@ -87,10 +112,17 @@ async function createAutorizacion(client: PrismaClient) {
 	}
 }
 
+async function createCatalogo(client: PrismaClient, user: User) {
+	console.log('...Creando catalogo')
+	await create(data.tiposDocumentoIdentidad, client.personDocumentType, 'tiposDocumentoIdentidad', user)
+}
+
 async function build() {
 	const client: PrismaClient = new PrismaClient()
 
 	await createAutorizacion(client)
+	const user = await client.user.findUnique({ where: { userName: 'admin' }})
+	await createCatalogo(client, user)
 }
 
 build()
