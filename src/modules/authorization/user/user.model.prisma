@@ -10,6 +10,14 @@ model User {
 
 	groups		UserGroup[]
 	passwords	UserPassword[]
+
+	createdPersonDocumentTypes	PersonDocumentType[]	@relation(name: "PersonDocumentTypeCreatorUser")
+	updatedPersonDocumentTypes	PersonDocumentType[]	@relation(name: "PersonDocumentTypeLastUpdateUser")
+	deletedPersonDocumentTypes	PersonDocumentType[]	@relation(name: "PersonDocumentTypeDeletionUser")
+
+	createdPersons	Person[]	@relation(name: "PersonCreatorUser")
+	updatedPersons	Person[]	@relation(name: "PersonLastUpdateUser")
+	deletedPersons	Person[]	@relation(name: "PersonDeletionUser")
 }
 
 

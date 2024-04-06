@@ -4,6 +4,7 @@ import { Person } from '@prisma/client'
 import { Resolver } from '../../../support/classes'
 import { IContext, IPersonCreateArgs, IPersonUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
+import { auditLog, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
 
 export class PersonResolver extends Resolver {
@@ -78,10 +79,10 @@ export class PersonResolver extends Resolver {
 		})
 	}
 
-	async create(_, { data }: { data: IPersonCreateArgs }, { db, pubsub }: IContext): Promise<Person> {
+	async create(_, { data }: { data: IPersonCreateArgs }, { db, pubsub, user }: IContext): Promise<Person> {
 		const { CREATED, UPSERTED } = SubscriptionEvent.Person
 		const record = await db.person.create({
-			data
+			data: withAuditForCreate(user, data)
 		})
 		super.publish({
 			pubsub,
@@ -91,12 +92,14 @@ export class PersonResolver extends Resolver {
 		return record
 	}
 
-	async update(_, { id, data }: { id: number, data: IPersonUpdateArgs }, { db, pubsub }: IContext): Promise<Person> {
+	async update(_, { id, data }: { id: number, data: IPersonUpdateArgs }, { db, pubsub, user }: IContext): Promise<Person> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.Person
+		const found = await super.findOneOrFail(db.person, id)
 		const record = await db.person.update({
 			where: { id },
-			data
+			data: withAuditForUpdate(user, data)
 		})
+		await auditLog(db, 'Person', found, record, data)
 		super.publish({
 			pubsub,
 			events: [UPDATED, UPSERTED],
@@ -105,12 +108,12 @@ export class PersonResolver extends Resolver {
 		return record
 	}
 
-	async delete(_, { id }: { id: number }, { db, pubsub }: IContext): Promise<Person> {
+	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Person> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.Person
-
+		await super.findOneOrFail(db.person, id)
 		const record = await db.person.update({
 			where: { id },
-			data: { status: Status.Removed }
+			data: withAuditForDelete(user)
 		})
 		super.publish({
 			pubsub,
