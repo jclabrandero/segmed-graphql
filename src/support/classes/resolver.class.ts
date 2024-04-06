@@ -1,6 +1,7 @@
 
 import { PubSub } from 'graphql-subscriptions'
 
+import { Status } from '../constants'
 import { IEvent } from '../types'
 
 
@@ -36,5 +37,15 @@ export class Resolver {
 		for (let index = 0; index < events.length; index++) {
 			pubsub.publish(events[index], dataset[index])
 		}
+	}
+
+	public async findOneOrFail(model, id: number) {
+		const found = await model.findUnique({
+			where: { id, NOT: { status: Status.Removed } }
+		})
+
+		if (!found) throw 'No se encontró el registro'
+
+		return found
 	}
 }
