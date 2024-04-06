@@ -4,7 +4,7 @@ import { PersonDocumentType } from '@prisma/client'
 import { Resolver } from '../../../support/classes'
 import { IContext, IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { now } from '../../../support/utils'
+import { auditLog, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
 
 export class PersonDocumentTypeResolver extends Resolver {
@@ -38,10 +38,10 @@ export class PersonDocumentTypeResolver extends Resolver {
 		})
 	}
 
-	async create(_, { data }: { data: IPersonDocumentTypeCreateArgs }, { db, pubsub }: IContext): Promise<PersonDocumentType> {
+	async create(_, { data }: { data: IPersonDocumentTypeCreateArgs }, { db, pubsub, user }: IContext): Promise<PersonDocumentType> {
 		const { CREATED, UPSERTED } = SubscriptionEvent.PersonDocumentType
 		const record = await db.personDocumentType.create({
-			data
+			data: withAuditForCreate(user, data)
 		})
 		super.publish({
 			pubsub,
@@ -51,12 +51,14 @@ export class PersonDocumentTypeResolver extends Resolver {
 		return record
 	}
 
-	async update(_, { id, data }: { id: number, data: IPersonDocumentTypeUpdateArgs }, { db, pubsub }: IContext): Promise<PersonDocumentType> {
+	async update(_, { id, data }: { id: number, data: IPersonDocumentTypeUpdateArgs }, { db, pubsub, user }: IContext): Promise<PersonDocumentType> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.PersonDocumentType
+		const found = await super.findOneOrFail(db.personDocumentType, id)
 		const record = await db.personDocumentType.update({
 			where: { id },
-			data
+			data: withAuditForUpdate(user, data)
 		})
+		await auditLog(db, 'PersonDocumentType', found, record, data)
 		super.publish({
 			pubsub,
 			events: [UPDATED, UPSERTED],
@@ -65,21 +67,12 @@ export class PersonDocumentTypeResolver extends Resolver {
 		return record
 	}
 
-	async delete(_, { id }: { id: number }, { db, pubsub }: IContext): Promise<PersonDocumentType> {
+	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<PersonDocumentType> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.PersonDocumentType
-
-		const found = await db.personDocumentType.findUnique({
-			where: { id, NOT: { status: Status.Removed } }
-		})
-
-		if (!found) throw 'No se encontró el registro'
-
+		const found = await super.findOneOrFail(db.personDocumentType, id)
 		const record = await db.personDocumentType.update({
 			where: { id },
-			data: {
-				name: `${found.name}-DELETED-${now().formated}`,
-				status: Status.Removed
-			}
+			data: withAuditForDelete(user, found, 'name')
 		})
 		super.publish({
 			pubsub,
