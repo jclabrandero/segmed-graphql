@@ -13,6 +13,16 @@ export class PersonResolver extends Resolver {
 		super(SubscriptionEvent.Person)
 	}
 
+	static include() {
+		return {
+			personDocumentType: {
+				where: {
+					status: Status.Active
+				}
+			}
+		}
+	}
+
 	async index(_, args, { db }: IContext): Promise<Array<Person>> {
 		const total = await db.person.count({
 			where: {
@@ -28,9 +38,7 @@ export class PersonResolver extends Resolver {
 					where: {
 						NOT: { status: Status.Removed }
 					},
-					include: {
-						personDocumentType: true
-					},
+					include: PersonResolver.include(),
 					skip: i,
 					take: 1000
 				})
@@ -55,9 +63,7 @@ export class PersonResolver extends Resolver {
 					where: {
 						status: Status.Active
 					},
-					include: {
-						personDocumentType: true
-					},
+					include: PersonResolver.include(),
 					skip: i,
 					take: 1000
 				})
@@ -73,9 +79,7 @@ export class PersonResolver extends Resolver {
 				id,
 				NOT: { status: Status.Removed }
 			},
-			include: {
-				personDocumentType: true
-			},
+			include: PersonResolver.include()
 		})
 	}
 
