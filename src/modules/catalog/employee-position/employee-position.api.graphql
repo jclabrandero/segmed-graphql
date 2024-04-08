@@ -1,0 +1,38 @@
+
+type EmployeePosition {
+	id:				Int!
+	name:			String!
+	description:	String
+	
+	status:			Int!
+}
+
+
+input IEmployeePositionCreateArgs {
+	name:			String!
+	description:	String
+}
+
+input IEmployeePositionUpdateArgs {
+	name:			String
+	description:	String
+}
+
+type Query {
+	employeePositions: [EmployeePosition!]! @authorized
+	activeEmployeePositions: [EmployeePosition!]! @authorized
+	employeePosition(id: Int!): EmployeePosition! @authorized
+}
+
+type Mutation {
+	createEmployeePosition(data: IEmployeePositionCreateArgs!): EmployeePosition! @authorized
+	updateEmployeePosition(id: Int!, data: IEmployeePositionUpdateArgs!): EmployeePosition! @authorized
+	deleteEmployeePosition(id: Int!): EmployeePosition! @authorized
+}
+
+type Subscription {
+	employeePositionCreated: EmployeePosition!
+	employeePositionUpdated: EmployeePosition!
+	employeePositionDeleted: EmployeePosition!
+	employeePositionUpserted: EmployeePosition!
+}
