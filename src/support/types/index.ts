@@ -2,7 +2,11 @@
 import { IContext } from './context.type'
 import { IEvent } from './event.type'
 import { IAuthPayload, IUserCreateArgs, IUserUpdateArgs, IGroupCreateArgs, IGroupUpdateArgs } from './auth.type'
-import { IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs } from './catalog.type'
+import {
+	IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs,
+	IEmployeeTypeCreateArgs, IEmployeeTypeUpdateArgs,
+	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs
+} from './catalog.type'
 import { IPersonCreateArgs, IPersonUpdateArgs } from './folk.type'
 
 export {
@@ -11,6 +15,10 @@ export {
 	IEvent,
 	IGroupCreateArgs, IGroupUpdateArgs,
 	IUserCreateArgs, IUserUpdateArgs,
+
 	IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs,
-	IPersonCreateArgs, IPersonUpdateArgs
+	IEmployeeTypeCreateArgs, IEmployeeTypeUpdateArgs,
+	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs,
+
+	IPersonCreateArgs, IPersonUpdateArgs,
 }

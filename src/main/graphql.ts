@@ -9,7 +9,7 @@ import { PubSub } from 'graphql-subscriptions'
 import { IContext } from '../support/types'
 
 import { SessionResolver, UserResolver, GroupResolver, PermissionResolver } from '../modules/authorization'
-import { PersonDocumentTypeResolver } from '../modules/catalog'
+import { PersonDocumentTypeResolver, EmployeeTypeResolver, EmployeePositionResolver } from '../modules/catalog'
 import { PersonResolver } from '../modules/folk'
 
 
@@ -56,6 +56,8 @@ export class GraphqlResolver {
 			, group = new GroupResolver()
 			, permission = new PermissionResolver()
 			, personDocumentType = new PersonDocumentTypeResolver()
+			, employeeType = new EmployeeTypeResolver()
+			, employeePosition = new EmployeePositionResolver()
 			, person = new PersonResolver()
 
 		return mergeResolvers([{
@@ -80,6 +82,12 @@ export class GraphqlResolver {
 				personDocumentTypes: personDocumentType.index,
 				activePersonDocumentTypes: personDocumentType.active,
 				personDocumentType: personDocumentType.findOne,
+				employeeTypes: employeeType.index,
+				activeEmployeeTypes: employeeType.active,
+				employeeType: employeeType.findOne,
+				employeePositions: employeePosition.index,
+				activeEmployeePositions: employeePosition.active,
+				employeePosition: employeePosition.findOne,
 
 				persons: person.index,
 				activePersons: person.active,
@@ -98,6 +106,12 @@ export class GraphqlResolver {
 				createPersonDocumentType: personDocumentType.create,
 				updatePersonDocumentType: personDocumentType.update,
 				deletePersonDocumentType: personDocumentType.delete,
+				createEmployeeType: employeeType.create,
+				updateEmployeeType: employeeType.update,
+				deleteEmployeeType: employeeType.delete,
+				createEmployeePosition: employeePosition.create,
+				updateEmployeePosition: employeePosition.update,
+				deleteEmployeePosition: employeePosition.delete,
 
 				createPerson: person.create,
 				updatePerson: person.update,
@@ -117,6 +131,14 @@ export class GraphqlResolver {
 				personDocumentTypeUpdated: personDocumentType.updated({ pubsub }),
 				personDocumentTypeDeleted: personDocumentType.deleted({ pubsub }),
 				personDocumentTypeUpserted: personDocumentType.upserted({ pubsub }),
+				employeeTypeCreated: employeeType.created({ pubsub }),
+				employeeTypeUpdated: employeeType.updated({ pubsub }),
+				employeeTypeDeleted: employeeType.deleted({ pubsub }),
+				employeeTypeUpserted: employeeType.upserted({ pubsub }),
+				employeePositionCreated: employeePosition.created({ pubsub }),
+				employeePositionUpdated: employeePosition.updated({ pubsub }),
+				employeePositionDeleted: employeePosition.deleted({ pubsub }),
+				employeePositionUpserted: employeePosition.upserted({ pubsub }),
 
 				personCreated: person.created({ pubsub }),
 				personUpdated: person.updated({ pubsub }),

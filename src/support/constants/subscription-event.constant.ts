@@ -21,6 +21,21 @@ enum PersonDocumentType {
 	UPSERTED = 'PDT-UPSERT'
 }
 
+enum EmployeeType {
+	CREATED = 'EMPLYT-C',
+	UPDATED = 'EMPLYT-U',
+	DELETED = 'EMPLYT-D',
+	UPSERTED = 'EMPLYT-UPSERT'
+}
+
+enum EmployeePosition {
+	CREATED = 'EMPLYP-C',
+	UPDATED = 'EMPLYP-U',
+	DELETED = 'EMPLYP-D',
+	UPSERTED = 'EMPLYP-UPSERT'
+}
+
+
 enum Person {
 	CREATED = 'PRSN-C',
 	UPDATED = 'PRSN-U',
@@ -31,6 +46,6 @@ enum Person {
 export const SubscriptionEvent = {
 	User,
 	Group,
-	PersonDocumentType,
+	PersonDocumentType, EmployeeType, EmployeePosition,
 	Person
 }
