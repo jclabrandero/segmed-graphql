@@ -1,0 +1,38 @@
+
+type EmployeeType {
+	id:				Int!
+	name:			String!
+	description:	String
+	
+	status:			Int!
+}
+
+
+input IEmployeeTypeCreateArgs {
+	name:			String!
+	description:	String
+}
+
+input IEmployeeTypeUpdateArgs {
+	name:			String
+	description:	String
+}
+
+type Query {
+	employeeTypes: [EmployeeType!]! @authorized
+	activeEmployeeTypes: [EmployeeType!]! @authorized
+	employeeType(id: Int!): EmployeeType! @authorized
+}
+
+type Mutation {
+	createEmployeeType(data: IEmployeeTypeCreateArgs!): EmployeeType! @authorized
+	updateEmployeeType(id: Int!, data: IEmployeeTypeUpdateArgs!): EmployeeType! @authorized
+	deleteEmployeeType(id: Int!): EmployeeType! @authorized
+}
+
+type Subscription {
+	employeeTypeCreated: EmployeeType!
+	employeeTypeUpdated: EmployeeType!
+	employeeTypeDeleted: EmployeeType!
+	employeeTypeUpserted: EmployeeType!
+}
