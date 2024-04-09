@@ -1,0 +1,35 @@
+
+type Belonging {
+	id:				Int!
+	name:			String!
+	
+	status:			Int!
+}
+
+
+input IBelongingCreateArgs {
+	name:			String!
+}
+
+input IBelongingUpdateArgs {
+	name:			String
+}
+
+type Query {
+	belongings: [Belonging!]! @authorized
+	activeBelongings: [Belonging!]! @authorized
+	belonging(id: Int!): Belonging! @authorized
+}
+
+type Mutation {
+	createBelonging(data: IBelongingCreateArgs!): Belonging! @authorized
+	updateBelonging(id: Int!, data: IBelongingUpdateArgs!): Belonging! @authorized
+	deleteBelonging(id: Int!): Belonging! @authorized
+}
+
+type Subscription {
+	belongingCreated: Belonging!
+	belongingUpdated: Belonging!
+	belongingDeleted: Belonging!
+	belongingUpserted: Belonging!
+}

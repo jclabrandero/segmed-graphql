@@ -1,0 +1,39 @@
+
+type MedicalOffice {
+	id:			Int!
+	name:		String!
+	
+	status:		Int!
+
+	belonging:	Belonging!
+}
+
+
+input IMedicalOfficeCreateArgs {
+	name:			String!
+	belongingId:	Int!
+}
+
+input IMedicalOfficeUpdateArgs {
+	name:			String
+	belongingId:	Int
+}
+
+type Query {
+	medicalOffices: [MedicalOffice!]! @authorized
+	activeMedicalOffices: [MedicalOffice!]! @authorized
+	medicalOffice(id: Int!): MedicalOffice! @authorized
+}
+
+type Mutation {
+	createMedicalOffice(data: IMedicalOfficeCreateArgs!): MedicalOffice! @authorized
+	updateMedicalOffice(id: Int!, data: IMedicalOfficeUpdateArgs!): MedicalOffice! @authorized
+	deleteMedicalOffice(id: Int!): MedicalOffice! @authorized
+}
+
+type Subscription {
+	medicalOfficeCreated: MedicalOffice!
+	medicalOfficeUpdated: MedicalOffice!
+	medicalOfficeDeleted: MedicalOffice!
+	medicalOfficeUpserted: MedicalOffice!
+}

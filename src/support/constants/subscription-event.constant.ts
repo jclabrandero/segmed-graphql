@@ -36,6 +36,21 @@ enum EmployeePosition {
 }
 
 
+enum Belonging {
+	CREATED = 'BLNGNG-C',
+	UPDATED = 'BLNGNG-U',
+	DELETED = 'BLNGNG-D',
+	UPSERTED = 'BLNGNG-UPSERT'
+}
+
+enum MedicalOffice {
+	CREATED = 'MDCLOFFC-C',
+	UPDATED = 'MDCLOFFC-U',
+	DELETED = 'MDCLOFFC-D',
+	UPSERTED = 'MDCLOFFC-UPSERT'
+}
+
+
 enum Person {
 	CREATED = 'PRSN-C',
 	UPDATED = 'PRSN-U',
@@ -47,5 +62,6 @@ export const SubscriptionEvent = {
 	User,
 	Group,
 	PersonDocumentType, EmployeeType, EmployeePosition,
+	Belonging, MedicalOffice,
 	Person
 }

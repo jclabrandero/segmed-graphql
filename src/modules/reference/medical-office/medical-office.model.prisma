@@ -1,0 +1,22 @@
+
+model MedicalOffice {
+	id			Int		@id @default(autoincrement())
+	name		String	@unique
+
+	belongingId	Int
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+	deletionUserName	String?
+	deletionDate		DateTime?
+
+	belonging		Belonging	@relation(fields: [belongingId], references: [id])
+
+	creatorUser		User	@relation(name: "MedicalOfficeCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "MedicalOfficeLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	deleterUser		User?	@relation(name: "MedicalOfficeDeletionUser", fields: [deletionUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}

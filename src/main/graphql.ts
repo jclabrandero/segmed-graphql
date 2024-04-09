@@ -10,6 +10,7 @@ import { IContext } from '../support/types'
 
 import { SessionResolver, UserResolver, GroupResolver, PermissionResolver } from '../modules/authorization'
 import { PersonDocumentTypeResolver, EmployeeTypeResolver, EmployeePositionResolver } from '../modules/catalog'
+import { BelongingResolver, MedicalOfficeResolver } from '../modules/reference'
 import { PersonResolver } from '../modules/folk'
 
 
@@ -58,6 +59,8 @@ export class GraphqlResolver {
 			, personDocumentType = new PersonDocumentTypeResolver()
 			, employeeType = new EmployeeTypeResolver()
 			, employeePosition = new EmployeePositionResolver()
+			, belonging = new BelongingResolver()
+			, medicalOffice = new MedicalOfficeResolver()
 			, person = new PersonResolver()
 
 		return mergeResolvers([{
@@ -89,6 +92,13 @@ export class GraphqlResolver {
 				activeEmployeePositions: employeePosition.active,
 				employeePosition: employeePosition.findOne,
 
+				belongings: belonging.index,
+				activeBelongings: belonging.active,
+				belonging: belonging.findOne,
+				medicalOffices: medicalOffice.index,
+				activeMedicalOffices: medicalOffice.active,
+				medicalOffice: medicalOffice.findOne,
+
 				persons: person.index,
 				activePersons: person.active,
 				person: person.findOne
@@ -112,6 +122,13 @@ export class GraphqlResolver {
 				createEmployeePosition: employeePosition.create,
 				updateEmployeePosition: employeePosition.update,
 				deleteEmployeePosition: employeePosition.delete,
+
+				createBelonging: belonging.create,
+				updateBelonging: belonging.update,
+				deleteBelonging: belonging.delete,
+				createMedicalOffice: medicalOffice.create,
+				updateMedicalOffice: medicalOffice.update,
+				deleteMedicalOffice: medicalOffice.delete,
 
 				createPerson: person.create,
 				updatePerson: person.update,
@@ -139,6 +156,15 @@ export class GraphqlResolver {
 				employeePositionUpdated: employeePosition.updated({ pubsub }),
 				employeePositionDeleted: employeePosition.deleted({ pubsub }),
 				employeePositionUpserted: employeePosition.upserted({ pubsub }),
+
+				belongingCreated: belonging.created({ pubsub }),
+				belongingUpdated: belonging.updated({ pubsub }),
+				belongingDeleted: belonging.deleted({ pubsub }),
+				belongingUpserted: belonging.upserted({ pubsub }),
+				medicalOfficeCreated: medicalOffice.created({ pubsub }),
+				medicalOfficeUpdated: medicalOffice.updated({ pubsub }),
+				medicalOfficeDeleted: medicalOffice.deleted({ pubsub }),
+				medicalOfficeUpserted: medicalOffice.upserted({ pubsub }),
 
 				personCreated: person.created({ pubsub }),
 				personUpdated: person.updated({ pubsub }),

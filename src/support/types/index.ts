@@ -7,6 +7,10 @@ import {
 	IEmployeeTypeCreateArgs, IEmployeeTypeUpdateArgs,
 	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs
 } from './catalog.type'
+import {
+	IBelongingCreateArgs, IBelongingUpdateArgs,
+	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs
+} from './reference.type'
 import { IPersonCreateArgs, IPersonUpdateArgs } from './folk.type'
 
 export {
@@ -19,6 +23,9 @@ export {
 	IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs,
 	IEmployeeTypeCreateArgs, IEmployeeTypeUpdateArgs,
 	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs,
+
+	IBelongingCreateArgs, IBelongingUpdateArgs,
+	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs,
 
 	IPersonCreateArgs, IPersonUpdateArgs,
 }

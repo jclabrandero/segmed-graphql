@@ -23,6 +23,16 @@ model User {
 	updatedEmployeePositions	EmployeePosition[]	@relation(name: "EmployeePositionLastUpdateUser")
 	deletedEmployeePositions	EmployeePosition[]	@relation(name: "EmployeePositionDeletionUser")
 
+
+	createdBelongings	Belonging[]	@relation(name: "BelongingCreatorUser")
+	updatedBelongings	Belonging[]	@relation(name: "BelongingLastUpdateUser")
+	deletedBelongings	Belonging[]	@relation(name: "BelongingDeletionUser")
+
+	createdMedicalOffices	MedicalOffice[]	@relation(name: "MedicalOfficeCreatorUser")
+	updatedMedicalOffices	MedicalOffice[]	@relation(name: "MedicalOfficeLastUpdateUser")
+	deletedMedicalOffices	MedicalOffice[]	@relation(name: "MedicalOfficeDeletionUser")
+
+
 	createdPersons	Person[]	@relation(name: "PersonCreatorUser")
 	updatedPersons	Person[]	@relation(name: "PersonLastUpdateUser")
 	deletedPersons	Person[]	@relation(name: "PersonDeletionUser")
