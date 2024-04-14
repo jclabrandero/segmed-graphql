@@ -4,7 +4,7 @@ import { MedicalOffice } from '@prisma/client'
 import { Resolver } from '../../../support/classes'
 import { IContext, IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { auditLog, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
 
 export class MedicalOfficeResolver extends Resolver {
@@ -62,12 +62,10 @@ export class MedicalOfficeResolver extends Resolver {
 
 	async update(_, { id, data }: { id: number, data: IMedicalOfficeUpdateArgs }, { db, pubsub, user }: IContext): Promise<MedicalOffice> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.MedicalOffice
-		const found = await super.findOneOrFail(db.medicalOffice, id)
 		const record = await db.medicalOffice.update({
 			where: { id },
 			data: withAuditForUpdate(user, data)
 		})
-		await auditLog(db, 'MedicalOffice', found, record, data)
 		super.publish({
 			pubsub,
 			events: [UPDATED, UPSERTED],

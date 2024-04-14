@@ -4,7 +4,7 @@ import { Belonging } from '@prisma/client'
 import { Resolver } from '../../../support/classes'
 import { IContext, IBelongingCreateArgs, IBelongingUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { auditLog, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
 
 export class BelongingResolver extends Resolver {
@@ -53,12 +53,10 @@ export class BelongingResolver extends Resolver {
 
 	async update(_, { id, data }: { id: number, data: IBelongingUpdateArgs }, { db, pubsub, user }: IContext): Promise<Belonging> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.Belonging
-		const found = await super.findOneOrFail(db.belonging, id)
 		const record = await db.belonging.update({
 			where: { id },
 			data: withAuditForUpdate(user, data)
 		})
-		await auditLog(db, 'Belonging', found, record, data)
 		super.publish({
 			pubsub,
 			events: [UPDATED, UPSERTED],
