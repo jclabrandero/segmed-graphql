@@ -4,7 +4,7 @@ import { Person } from '@prisma/client'
 import { Resolver } from '../../../support/classes'
 import { IContext, IPersonCreateArgs, IPersonUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { auditLog, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
 
 export class PersonResolver extends Resolver {
@@ -98,12 +98,10 @@ export class PersonResolver extends Resolver {
 
 	async update(_, { id, data }: { id: number, data: IPersonUpdateArgs }, { db, pubsub, user }: IContext): Promise<Person> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.Person
-		const found = await super.findOneOrFail(db.person, id)
 		const record = await db.person.update({
 			where: { id },
 			data: withAuditForUpdate(user, data)
 		})
-		await auditLog(db, 'Person', found, record, data)
 		super.publish({
 			pubsub,
 			events: [UPDATED, UPSERTED],
