@@ -10,12 +10,9 @@ model PersonDocumentType {
 	creationDate		DateTime
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
-	deletionUserName	String?
-	deletionDate		DateTime?
 
 	people	Person[]
 
 	creatorUser		User	@relation(name: "PersonDocumentTypeCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "PersonDocumentTypeLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-	deleterUser		User?	@relation(name: "PersonDocumentTypeDeletionUser", fields: [deletionUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }

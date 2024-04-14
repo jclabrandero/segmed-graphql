@@ -1,0 +1,13 @@
+
+CREATE OR ALTER TRIGGER TRPersonDocumentTypeUpdated ON PersonDocumentType AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'PersonDocumentType', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO

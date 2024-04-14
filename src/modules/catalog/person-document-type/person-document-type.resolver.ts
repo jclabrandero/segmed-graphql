@@ -4,7 +4,7 @@ import { PersonDocumentType } from '@prisma/client'
 import { Resolver } from '../../../support/classes'
 import { IContext, IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { auditLog, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
 
 export class PersonDocumentTypeResolver extends Resolver {
@@ -53,12 +53,10 @@ export class PersonDocumentTypeResolver extends Resolver {
 
 	async update(_, { id, data }: { id: number, data: IPersonDocumentTypeUpdateArgs }, { db, pubsub, user }: IContext): Promise<PersonDocumentType> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.PersonDocumentType
-		const found = await super.findOneOrFail(db.personDocumentType, id)
 		const record = await db.personDocumentType.update({
 			where: { id },
 			data: withAuditForUpdate(user, data)
 		})
-		await auditLog(db, 'PersonDocumentType', found, record, data)
 		super.publish({
 			pubsub,
 			events: [UPDATED, UPSERTED],
