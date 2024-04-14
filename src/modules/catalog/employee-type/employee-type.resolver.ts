@@ -4,7 +4,7 @@ import { EmployeeType } from '@prisma/client'
 import { Resolver } from '../../../support/classes'
 import { IContext, IEmployeeTypeCreateArgs, IEmployeeTypeUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { auditLog, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
 
 export class EmployeeTypeResolver extends Resolver {
@@ -53,12 +53,10 @@ export class EmployeeTypeResolver extends Resolver {
 
 	async update(_, { id, data }: { id: number, data: IEmployeeTypeUpdateArgs }, { db, pubsub, user }: IContext): Promise<EmployeeType> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.EmployeeType
-		const found = await super.findOneOrFail(db.employeeType, id)
 		const record = await db.employeeType.update({
 			where: { id },
 			data: withAuditForUpdate(user, data)
 		})
-		await auditLog(db, 'EmployeeType', found, record, data)
 		super.publish({
 			pubsub,
 			events: [UPDATED, UPSERTED],

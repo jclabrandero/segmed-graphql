@@ -10,10 +10,7 @@ model EmployeeType {
 	creationDate		DateTime
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
-	deletionUserName	String?
-	deletionDate		DateTime?
 
 	creatorUser		User	@relation(name: "EmployeeTypeCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "EmployeeTypeLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-	deleterUser		User?	@relation(name: "EmployeeTypeDeletionUser", fields: [deletionUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }
