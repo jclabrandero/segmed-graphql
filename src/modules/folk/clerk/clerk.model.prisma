@@ -1,0 +1,68 @@
+
+model Clerk {
+	id		Int		@id @default(autoincrement())
+	ein		Int		@unique			//Employer Identification Number
+
+	personId		Int		@unique
+	employeeTypeId	Int
+	positionId		Int
+
+	status			Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	person			Person				@relation(fields: [personId], references: [id])
+	employeeType	EmployeeType		@relation(fields: [employeeTypeId], references: [id])
+	position		EmployeePosition	@relation(fields: [positionId], references: [id])
+	clerkUser		ClerkUser?
+
+	medicalOffices	ClerkMedicalOffice[]
+
+	creatorUser		User	@relation(name: "ClerkCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ClerkLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ClerkUser {
+	id		Int	@id @default(autoincrement())
+	
+	userId	Int	@unique
+	clerkId	Int	@unique
+
+	status	Int	@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	user	User	@relation(fields: [userId], references: [id])
+	clerk	Clerk	@relation(fields: [clerkId], references: [id])
+
+	creatorUser		User	@relation(name: "ClerkUserCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ClerkUserLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ClerkMedicalOffice {
+	id				Int		@default(autoincrement()) @unique
+
+	medicalOfficeId	Int
+	clerkId			Int
+
+	status			Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medicalOffice	MedicalOffice	@relation(fields: [medicalOfficeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	clerk			Clerk			@relation(fields: [clerkId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	creatorUser		User	@relation(name: "ClerkMedicalOfficeCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ClerkMedicalOfficeLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ medicalOfficeId, clerkId ])
+}

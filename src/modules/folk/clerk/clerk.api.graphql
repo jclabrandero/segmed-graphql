@@ -1,0 +1,52 @@
+
+type Clerk {
+	id:		Int!
+	ein:	Int!
+
+	status:	Int!
+
+	person:			Person!
+	employeeType:	EmployeeType!
+	position:		EmployeePosition!
+	medicalOffices:	[MedicalOffice!]!
+}
+
+
+input IClerkCreateArgs {
+	ein:	Int!
+
+	personId:		Int!
+	employeeTypeId:	Int!
+	positionId:		Int!
+
+	offices:		[Int!]
+	medicalOffices:	[Int!]
+}
+
+input IClerkUpdateArgs {
+	personId:		Int
+	employeeTypeId:	Int
+	positionId:		Int
+
+	offices:		[Int!]
+	medicalOffices:	[Int!]
+}
+
+type Query {
+	clerks: [Clerk!]! @authorized
+	activeClerks: [Clerk!]! @authorized
+	clerk(id: Int!): Clerk! @authorized
+}
+
+type Mutation {
+	createClerk(data: IClerkCreateArgs!): Clerk! @authorized
+	updateClerk(id: Int!, data: IClerkUpdateArgs!): Clerk! @authorized
+	deleteClerk(id: Int!): Clerk! @authorized
+}
+
+type Subscription {
+	clerkCreated: Clerk!
+	clerkUpdated: Clerk!
+	clerkDeleted: Clerk!
+	clerkUpserted: Clerk!
+}

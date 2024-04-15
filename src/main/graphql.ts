@@ -11,7 +11,7 @@ import { IContext } from '../support/types'
 import { SessionResolver, UserResolver, GroupResolver, PermissionResolver } from '../modules/authorization'
 import { PersonDocumentTypeResolver, EmployeeTypeResolver, EmployeePositionResolver } from '../modules/catalog'
 import { BelongingResolver, MedicalOfficeResolver } from '../modules/reference'
-import { PersonResolver } from '../modules/folk'
+import { PersonResolver, ClerkResolver } from '../modules/folk'
 
 
 export class GraphqlResolver {
@@ -62,6 +62,7 @@ export class GraphqlResolver {
 			, belonging = new BelongingResolver()
 			, medicalOffice = new MedicalOfficeResolver()
 			, person = new PersonResolver()
+			, clerk = new ClerkResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -101,7 +102,11 @@ export class GraphqlResolver {
 
 				persons: person.index,
 				activePersons: person.active,
-				person: person.findOne
+				person: person.findOne,
+
+				clerks: clerk.index,
+				activeClerks: clerk.active,
+				clerk: clerk.findOne
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -132,7 +137,11 @@ export class GraphqlResolver {
 
 				createPerson: person.create,
 				updatePerson: person.update,
-				deletePerson: person.delete
+				deletePerson: person.delete,
+
+				createClerk: clerk.create,
+				updateClerk: clerk.update,
+				deleteClerk: clerk.delete
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
@@ -169,7 +178,12 @@ export class GraphqlResolver {
 				personCreated: person.created({ pubsub }),
 				personUpdated: person.updated({ pubsub }),
 				personDeleted: person.deleted({ pubsub }),
-				personUpserted: person.upserted({ pubsub })
+				personUpserted: person.upserted({ pubsub }),
+
+				clerkCreated: clerk.created({ pubsub }),
+				clerkUpdated: clerk.updated({ pubsub }),
+				clerkDeleted: clerk.deleted({ pubsub }),
+				clerkUpserted: clerk.upserted({ pubsub })
 			}
 		}])
 	}

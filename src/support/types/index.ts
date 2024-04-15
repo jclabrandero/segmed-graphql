@@ -11,7 +11,10 @@ import {
 	IBelongingCreateArgs, IBelongingUpdateArgs,
 	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs
 } from './reference.type'
-import { IPersonCreateArgs, IPersonUpdateArgs } from './folk.type'
+import {
+	IPersonCreateArgs, IPersonUpdateArgs,
+	IClerkCreateArgs, IClerkUpdateArgs
+} from './folk.type'
 
 export {
 	IAuthPayload,
@@ -28,4 +31,5 @@ export {
 	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs,
 
 	IPersonCreateArgs, IPersonUpdateArgs,
+	IClerkCreateArgs, IClerkUpdateArgs
 }
