@@ -30,3 +30,16 @@ export interface IEmployeePositionUpdateArgs {
 	name?:			string
 	description?:	string
 }
+
+
+export interface IInsuredTypeCreateArgs {
+	name:				string
+	description?:		string
+	withDependents:	boolean
+}
+
+export interface IInsuredTypeUpdateArgs {
+	name?:				string
+	description?:		string
+	withDependents?:	boolean
+}

@@ -35,6 +35,13 @@ enum EmployeePosition {
 	UPSERTED = 'EMPLYP-UPSERT'
 }
 
+enum InsuredType {
+	CREATED = 'INSRDT-C',
+	UPDATED = 'INSRDT-U',
+	DELETED = 'INSRDT-D',
+	UPSERTED = 'INSRDT-UPSERT'
+}
+
 
 enum Belonging {
 	CREATED = 'BLNGNG-C',
@@ -69,7 +76,7 @@ enum Clerk {
 export const SubscriptionEvent = {
 	User,
 	Group,
-	PersonDocumentType, EmployeeType, EmployeePosition,
+	PersonDocumentType, EmployeeType, EmployeePosition, InsuredType,
 	Belonging, MedicalOffice,
 	Person, Clerk
 }

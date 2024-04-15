@@ -5,7 +5,8 @@ import { IAuthPayload, IUserCreateArgs, IUserUpdateArgs, IGroupCreateArgs, IGrou
 import {
 	IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs,
 	IEmployeeTypeCreateArgs, IEmployeeTypeUpdateArgs,
-	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs
+	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs,
+	IInsuredTypeCreateArgs, IInsuredTypeUpdateArgs
 } from './catalog.type'
 import {
 	IBelongingCreateArgs, IBelongingUpdateArgs,
@@ -26,6 +27,7 @@ export {
 	IPersonDocumentTypeCreateArgs, IPersonDocumentTypeUpdateArgs,
 	IEmployeeTypeCreateArgs, IEmployeeTypeUpdateArgs,
 	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs,
+	IInsuredTypeCreateArgs, IInsuredTypeUpdateArgs,
 
 	IBelongingCreateArgs, IBelongingUpdateArgs,
 	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs,

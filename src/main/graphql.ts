@@ -9,7 +9,11 @@ import { PubSub } from 'graphql-subscriptions'
 import { IContext } from '../support/types'
 
 import { SessionResolver, UserResolver, GroupResolver, PermissionResolver } from '../modules/authorization'
-import { PersonDocumentTypeResolver, EmployeeTypeResolver, EmployeePositionResolver } from '../modules/catalog'
+import {
+	PersonDocumentTypeResolver,
+	EmployeeTypeResolver, EmployeePositionResolver,
+	InsuredTypeResolver
+} from '../modules/catalog'
 import { BelongingResolver, MedicalOfficeResolver } from '../modules/reference'
 import { PersonResolver, ClerkResolver } from '../modules/folk'
 
@@ -59,6 +63,7 @@ export class GraphqlResolver {
 			, personDocumentType = new PersonDocumentTypeResolver()
 			, employeeType = new EmployeeTypeResolver()
 			, employeePosition = new EmployeePositionResolver()
+			, insuredType = new InsuredTypeResolver()
 			, belonging = new BelongingResolver()
 			, medicalOffice = new MedicalOfficeResolver()
 			, person = new PersonResolver()
@@ -92,6 +97,9 @@ export class GraphqlResolver {
 				employeePositions: employeePosition.index,
 				activeEmployeePositions: employeePosition.active,
 				employeePosition: employeePosition.findOne,
+				insuredTypes: insuredType.index,
+				activeInsuredTypes: insuredType.active,
+				insuredType: insuredType.findOne,
 
 				belongings: belonging.index,
 				activeBelongings: belonging.active,
@@ -111,10 +119,8 @@ export class GraphqlResolver {
 			Mutation: {
 				signIn: session.signIn,
 				signOut: session.signOut,
-
 				createGroup: group.create,
 				updateGroup: group.update,
-
 				createUser: user.create,
 				updateUser: user.update,
 
@@ -127,6 +133,9 @@ export class GraphqlResolver {
 				createEmployeePosition: employeePosition.create,
 				updateEmployeePosition: employeePosition.update,
 				deleteEmployeePosition: employeePosition.delete,
+				createInsuredType: insuredType.create,
+				updateInsuredType: insuredType.update,
+				deleteInsuredType: insuredType.delete,
 
 				createBelonging: belonging.create,
 				updateBelonging: belonging.update,
@@ -138,7 +147,6 @@ export class GraphqlResolver {
 				createPerson: person.create,
 				updatePerson: person.update,
 				deletePerson: person.delete,
-
 				createClerk: clerk.create,
 				updateClerk: clerk.update,
 				deleteClerk: clerk.delete
@@ -147,7 +155,6 @@ export class GraphqlResolver {
 				userCreated: user.created({ pubsub }),
 				userUpdated: user.updated({ pubsub }),
 				userUpserted: user.upserted({ pubsub }),
-
 				groupCreated: group.created({ pubsub }),
 				groupUpdated: group.updated({ pubsub }),
 				groupDeleted: group.deleted({ pubsub }),
@@ -165,6 +172,10 @@ export class GraphqlResolver {
 				employeePositionUpdated: employeePosition.updated({ pubsub }),
 				employeePositionDeleted: employeePosition.deleted({ pubsub }),
 				employeePositionUpserted: employeePosition.upserted({ pubsub }),
+				insuredTypeCreated: insuredType.created({ pubsub }),
+				insuredTypeUpdated: insuredType.updated({ pubsub }),
+				insuredTypeDeleted: insuredType.deleted({ pubsub }),
+				insuredTypeUpserted: insuredType.upserted({ pubsub }),
 
 				belongingCreated: belonging.created({ pubsub }),
 				belongingUpdated: belonging.updated({ pubsub }),
@@ -179,7 +190,6 @@ export class GraphqlResolver {
 				personUpdated: person.updated({ pubsub }),
 				personDeleted: person.deleted({ pubsub }),
 				personUpserted: person.upserted({ pubsub }),
-
 				clerkCreated: clerk.created({ pubsub }),
 				clerkUpdated: clerk.updated({ pubsub }),
 				clerkDeleted: clerk.deleted({ pubsub }),

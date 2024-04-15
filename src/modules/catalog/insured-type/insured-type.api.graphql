@@ -1,0 +1,43 @@
+
+type InsuredType {
+	id:				Int!
+	name:			String!
+	description:	String
+	withDependents:	Boolean!
+
+	status:			Int!
+
+	# beneficiarios:		[Beneficiario!]!
+}
+
+
+input IInsuredTypeCreateArgs {
+	name:			String!
+	description:	String
+	withDependents:	Boolean!
+}
+
+input IInsuredTypeUpdateArgs {
+	name:			String
+	description:	String
+	withDependents:	Boolean
+}
+
+type Query {
+	insuredTypes: [InsuredType!]! @authorized
+	activeInsuredTypes: [InsuredType!]! @authorized
+	insuredType(id: Int!): InsuredType! @authorized
+}
+
+type Mutation {
+	createInsuredType(data: IInsuredTypeCreateArgs!): InsuredType! @authorized
+	updateInsuredType(id: Int!, data: IInsuredTypeUpdateArgs!): InsuredType! @authorized
+	deleteInsuredType(id: Int!): InsuredType! @authorized
+}
+
+type Subscription {
+	insuredTypeCreated: InsuredType!
+	insuredTypeUpdated: InsuredType!
+	insuredTypeDeleted: InsuredType!
+	insuredTypeUpserted: InsuredType!
+}

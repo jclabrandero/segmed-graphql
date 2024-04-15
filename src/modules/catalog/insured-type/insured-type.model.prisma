@@ -1,0 +1,19 @@
+
+model InsuredType {
+	id				Int		@id @default(autoincrement())
+	name			String	@unique
+	description		String?
+	withDependents	Boolean
+
+	status			Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	//beneficiarios	Beneficiario[]
+
+	creatorUser		User	@relation(name: "InsuredTypeCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "InsuredTypeLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
