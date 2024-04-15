@@ -1,10 +1,11 @@
 
 import { Status } from '../constants'
+import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../functions'
 
 
 export class Relation {
 
-	public static async upsert({ model, where, dataset, field }) {
+	public static async upsert({ model, where, dataset, field, user }) {
 		const records = await model.findMany({ where })
 		const list = dataset.map(id => JSON.parse(`{"${field}":${id}}`))
 		const useFind = e => r => e[field] == r[field]
@@ -18,16 +19,16 @@ export class Relation {
 			case Status.Active:
 			case Status.Idle:
 			case Status.Pending:
-				if (!found) update.push({ where: { id }, data: { status: Status.Removed } })
+				if (!found) update.push({ where: { id }, data: withAuditForDelete(user) })
 				break
 			case Status.Removed:
-				if (found) update.push({ where: { id }, data: { status: Status.Active } })
+				if (found) update.push({ where: { id }, data: withAuditForUpdate(user, { status: Status.Active }) })
 				break
 			}
 		})
 
 		const create = list.reduce(
-			(prev, item) =>	records.find(useFind(item)) ? prev : [ ...prev, ...[item] ],
+			(prev, item) =>	records.find(useFind(item)) ? prev : [ ...prev, ...[withAuditForCreate(user, item)] ],
 			[]
 		)
 
