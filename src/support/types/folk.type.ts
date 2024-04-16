@@ -38,3 +38,31 @@ export interface IClerkUpdateArgs {
 	offices?:			Array<number>
 	medicalOffices?:	Array<number>
 }
+
+export interface IInsuredCreateArgs {
+	code:			string
+	iin?:			number
+	inletDate:		Date
+	tradeUnion?:	boolean
+	address?:		string
+	phone?:			string
+
+	personId:			number
+	insuredTypeId: 		number
+	holderInsuredId?:	number
+	belongingId:		number
+}
+
+export interface IInsuredUpdateArgs {
+	iin?:			number
+	inletDate?:		Date
+	outletDate?:	Date
+	tradeUnion?:	boolean
+	address?:		string
+	phone?:			string
+
+	personId?:			number
+	insuredTypeId?: 	number
+	holderInsuredId?:	number
+	belongingId?:		number
+}

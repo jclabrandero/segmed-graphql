@@ -12,7 +12,7 @@ model InsuredType {
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
-	//beneficiarios	Beneficiario[]
+	insureds		Insured[]
 
 	creatorUser		User	@relation(name: "InsuredTypeCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "InsuredTypeLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

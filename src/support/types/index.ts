@@ -14,7 +14,8 @@ import {
 } from './reference.type'
 import {
 	IPersonCreateArgs, IPersonUpdateArgs,
-	IClerkCreateArgs, IClerkUpdateArgs
+	IClerkCreateArgs, IClerkUpdateArgs,
+	IInsuredCreateArgs, IInsuredUpdateArgs
 } from './folk.type'
 
 export {
@@ -33,5 +34,6 @@ export {
 	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs,
 
 	IPersonCreateArgs, IPersonUpdateArgs,
-	IClerkCreateArgs, IClerkUpdateArgs
+	IClerkCreateArgs, IClerkUpdateArgs,
+	IInsuredCreateArgs, IInsuredUpdateArgs
 }

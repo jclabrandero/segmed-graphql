@@ -72,11 +72,18 @@ enum Clerk {
 	UPSERTED = 'CLRK-UPSERT'
 }
 
+enum Insured {
+	CREATED = 'INSRD-C',
+	UPDATED = 'INSRD-U',
+	DELETED = 'INSRD-D',
+	UPSERTED = 'INSRD-UPSERT'
+}
+
 
 export const SubscriptionEvent = {
 	User,
 	Group,
 	PersonDocumentType, EmployeeType, EmployeePosition, InsuredType,
 	Belonging, MedicalOffice,
-	Person, Clerk
+	Person, Clerk, Insured
 }

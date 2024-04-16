@@ -15,7 +15,7 @@ import {
 	InsuredTypeResolver
 } from '../modules/catalog'
 import { BelongingResolver, MedicalOfficeResolver } from '../modules/reference'
-import { PersonResolver, ClerkResolver } from '../modules/folk'
+import { PersonResolver, ClerkResolver, InsuredResolver } from '../modules/folk'
 
 
 export class GraphqlResolver {
@@ -68,6 +68,7 @@ export class GraphqlResolver {
 			, medicalOffice = new MedicalOfficeResolver()
 			, person = new PersonResolver()
 			, clerk = new ClerkResolver()
+			, insured = new InsuredResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -80,11 +81,9 @@ export class GraphqlResolver {
 				users: user.index,
 				currentUser: user.current,
 				user: user.findOne,
-
 				groups: group.index,
 				activeGroups: group.active,
 				group: group.findOne,
-
 				permissions: permission.index,
 				activePermissions: permission.active,
 
@@ -111,10 +110,13 @@ export class GraphqlResolver {
 				persons: person.index,
 				activePersons: person.active,
 				person: person.findOne,
-
 				clerks: clerk.index,
 				activeClerks: clerk.active,
-				clerk: clerk.findOne
+				clerk: clerk.findOne,
+				insureds: insured.index,
+				activeInsureds: insured.active,
+				activeHolderInsureds: insured.activeHolders,
+				insured: insured.findOne
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -149,7 +151,10 @@ export class GraphqlResolver {
 				deletePerson: person.delete,
 				createClerk: clerk.create,
 				updateClerk: clerk.update,
-				deleteClerk: clerk.delete
+				deleteClerk: clerk.delete,
+				createInsured: insured.create,
+				updateInsured: insured.update,
+				deleteInsured: insured.delete
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
@@ -193,7 +198,11 @@ export class GraphqlResolver {
 				clerkCreated: clerk.created({ pubsub }),
 				clerkUpdated: clerk.updated({ pubsub }),
 				clerkDeleted: clerk.deleted({ pubsub }),
-				clerkUpserted: clerk.upserted({ pubsub })
+				clerkUpserted: clerk.upserted({ pubsub }),
+				insuredCreated: insured.created({ pubsub }),
+				insuredUpdated: insured.updated({ pubsub }),
+				insuredDeleted: insured.deleted({ pubsub }),
+				insuredUpserted: insured.upserted({ pubsub })
 			}
 		}])
 	}

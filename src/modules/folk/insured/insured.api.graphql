@@ -1,0 +1,69 @@
+
+type Insured {
+	id:			Int!
+	code:		String!
+	iin:		Int
+	inletDate:	DateTime!
+	outletDate:	DateTime
+	tradeUnion:	Boolean!
+	address:	String
+	phone:		String
+
+	status:			Int!
+
+	person:			Person!
+	insuredType:	InsuredType!
+
+	holderInsured:	Insured
+	dependents:		[Insured!]!
+	belonging:		Belonging!
+}
+
+
+input IInsuredCreateArgs {
+	code:		String!
+	iin:		Int
+	inletDate:	DateTime!
+	tradeUnion:	Boolean
+	address:	String
+	phone:		String
+
+	personId:			Int!
+	insuredTypeId: 		Int!
+	holderInsuredId:	Int
+	belongingId:		Int!
+}
+
+input IInsuredUpdateArgs {
+	iin:		Int
+	inletDate:	DateTime
+	outletDate:	DateTime
+	tradeUnion:	Boolean
+	address:	String
+	phone:		String
+
+	personId:			Int
+	insuredTypeId: 		Int
+	holderInsuredId:	Int
+	belongingId:		Int
+}
+
+type Query {
+	insureds: [Insured!]! @authorized
+	activeInsureds: [Insured!]! @authorized
+	activeHolderInsureds: [Insured!]! @authorized
+	insured(id: Int!): Insured! @authorized
+}
+
+type Mutation {
+	createInsured(data: IInsuredCreateArgs!): Insured! @authorized
+	updateInsured(id: Int!, data: IInsuredUpdateArgs!): Insured! @authorized
+	deleteInsured(id: Int!): Insured! @authorized
+}
+
+type Subscription {
+	insuredCreated: Insured!
+	insuredUpdated: Insured!
+	insuredDeleted: Insured!
+	insuredUpserted: Insured!
+}

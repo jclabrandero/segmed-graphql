@@ -17,6 +17,9 @@ model Person {
 	lastUpdateDate		DateTime?
 
 	personDocumentType		PersonDocumentType? @relation(fields: [personDocumentTypeId], references: [id])
+	
+	clerk	Clerk?
+	insured	Insured?
 
 	creatorUser		User	@relation(name: "PersonCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "PersonLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
