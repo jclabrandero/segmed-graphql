@@ -10,32 +10,39 @@ model User {
 
 	groups		UserGroup[]
 	passwords	UserPassword[]
+	clerkUser	ClerkUser?
+
+	createdGroups			Group[]				@relation(name: "GroupCreatorUser")
+	updatedGroups			Group[]				@relation(name: "GroupLastUpdateUser")
+	createdGroupPermissions	GroupPermission[]	@relation(name: "GroupPermissionCreatorUser")
+	updatedGroupPermissions	GroupPermission[]	@relation(name: "GroupPermissionLastUpdateUser")
 
 	createdPersonDocumentTypes	PersonDocumentType[]	@relation(name: "PersonDocumentTypeCreatorUser")
 	updatedPersonDocumentTypes	PersonDocumentType[]	@relation(name: "PersonDocumentTypeLastUpdateUser")
-	deletedPersonDocumentTypes	PersonDocumentType[]	@relation(name: "PersonDocumentTypeDeletionUser")
-
-	createdEmployeeTypes	EmployeeType[]	@relation(name: "EmployeeTypeCreatorUser")
-	updatedEmployeeTypes	EmployeeType[]	@relation(name: "EmployeeTypeLastUpdateUser")
-	deletedEmployeeTypes	EmployeeType[]	@relation(name: "EmployeeTypeDeletionUser")
-
-	createdEmployeePositions	EmployeePosition[]	@relation(name: "EmployeePositionCreatorUser")
-	updatedEmployeePositions	EmployeePosition[]	@relation(name: "EmployeePositionLastUpdateUser")
-	deletedEmployeePositions	EmployeePosition[]	@relation(name: "EmployeePositionDeletionUser")
-
+	createdEmployeeTypes		EmployeeType[]			@relation(name: "EmployeeTypeCreatorUser")
+	updatedEmployeeTypes		EmployeeType[]			@relation(name: "EmployeeTypeLastUpdateUser")
+	createdEmployeePositions	EmployeePosition[]		@relation(name: "EmployeePositionCreatorUser")
+	updatedEmployeePositions	EmployeePosition[]		@relation(name: "EmployeePositionLastUpdateUser")
+	createdInsuredTypes			InsuredType[]			@relation(name: "InsuredTypeCreatorUser")
+	updatedInsuredTypes			InsuredType[]			@relation(name: "InsuredTypeLastUpdateUser")
+	createdMedicalSubspecialtys	MedicalSubspecialty[]	@relation(name: "MedicalSubspecialtyCreatorUser")
+	updatedMedicalSubspecialtys	MedicalSubspecialty[]	@relation(name: "MedicalSubspecialtyLastUpdateUser")
 
 	createdBelongings	Belonging[]	@relation(name: "BelongingCreatorUser")
 	updatedBelongings	Belonging[]	@relation(name: "BelongingLastUpdateUser")
-	deletedBelongings	Belonging[]	@relation(name: "BelongingDeletionUser")
-
 	createdMedicalOffices	MedicalOffice[]	@relation(name: "MedicalOfficeCreatorUser")
 	updatedMedicalOffices	MedicalOffice[]	@relation(name: "MedicalOfficeLastUpdateUser")
-	deletedMedicalOffices	MedicalOffice[]	@relation(name: "MedicalOfficeDeletionUser")
-
 
 	createdPersons	Person[]	@relation(name: "PersonCreatorUser")
 	updatedPersons	Person[]	@relation(name: "PersonLastUpdateUser")
-	deletedPersons	Person[]	@relation(name: "PersonDeletionUser")
+	createdClerks				Clerk[]					@relation(name: "ClerkCreatorUser")
+	updatedClerks				Clerk[]					@relation(name: "ClerkLastUpdateUser")
+	createdClerkUsers			ClerkUser[]				@relation(name: "ClerkUserCreatorUser")
+	updatedClerkUsers			ClerkUser[]				@relation(name: "ClerkUserLastUpdateUser")
+	createdClerkMedicalOffices	ClerkMedicalOffice[]	@relation(name: "ClerkMedicalOfficeCreatorUser")
+	updatedClerkMedicalOffices	ClerkMedicalOffice[]	@relation(name: "ClerkMedicalOfficeLastUpdateUser")
+	createdInsureds				Insured[]				@relation(name: "InsuredCreatorUser")
+	updatedInsureds				Insured[]				@relation(name: "InsuredLastUpdateUser")
 }
 
 

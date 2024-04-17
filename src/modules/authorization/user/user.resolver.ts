@@ -128,7 +128,7 @@ export class UserResolver extends Resolver {
 		return record
 	}
 
-	async update(_, { id, data }: { id: number, data: IUserUpdateArgs }, { db, pubsub }: IContext): Promise<User> {
+	async update(_, { id, data }: { id: number, data: IUserUpdateArgs }, { db, pubsub, user }: IContext): Promise<User> {
 		const { groups, password, confirmPassword, ...payload } = data
 		const { UPDATED, UPSERTED } = SubscriptionEvent.User
 
@@ -138,13 +138,11 @@ export class UserResolver extends Resolver {
 		}
 
 		const record = await db.user.update({
-			where: {
-				id
-			},
+			where: { id },
 			data: {
 				...payload,
 				groups: groups ? await Relation.upsert({
-					model: db.userGroup, where: { userId: id }, dataset: groups, field: 'groupId'
+					model: db.userGroup, where: { userId: id }, dataset: groups, field: 'groupId', user
 				}) : undefined
 			}
 		})
