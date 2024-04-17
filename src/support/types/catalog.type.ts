@@ -33,8 +33,8 @@ export interface IEmployeePositionUpdateArgs {
 
 
 export interface IInsuredTypeCreateArgs {
-	name:				string
-	description?:		string
+	name:			string
+	description?:	string
 	withDependents:	boolean
 }
 
@@ -62,4 +62,16 @@ export interface IMedicalSubspecialtyUpdateArgs {
 	dt?:	string
 	si?:	string
 	ot?:	string
+}
+
+export interface IMedicalSpecialtyCreateArgs {
+	name:				string
+	description?:		string
+	subspecialties?:	Array<number>
+}
+
+export interface IMedicalSpecialtyUpdateArgs {
+	name?:				string
+	description?:		string
+	subspecialties?:	Array<number>
 }

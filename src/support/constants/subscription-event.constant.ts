@@ -43,10 +43,17 @@ enum InsuredType {
 }
 
 enum MedicalSubspecialty {
-	CREATED = 'MDCLSS-C',
-	UPDATED = 'MDCLSS-U',
-	DELETED = 'MDCLSS-D',
-	UPSERTED = 'MDCLSS-UPSERT'
+	CREATED = 'MDCLSBSP-C',
+	UPDATED = 'MDCLSBSP-U',
+	DELETED = 'MDCLSBSP-D',
+	UPSERTED = 'MDCLSBSP-UPSERT'
+}
+
+enum MedicalSpecialty {
+	CREATED = 'MDCLSP-C',
+	UPDATED = 'MDCLSP-U',
+	DELETED = 'MDCLSP-D',
+	UPSERTED = 'MDCLSP-UPSERT'
 }
 
 
@@ -91,7 +98,7 @@ export const SubscriptionEvent = {
 	User, Group,
 
 	PersonDocumentType, EmployeeType, EmployeePosition, InsuredType,
-	MedicalSubspecialty,
+	MedicalSubspecialty, MedicalSpecialty,
 
 	Belonging, MedicalOffice,
 	

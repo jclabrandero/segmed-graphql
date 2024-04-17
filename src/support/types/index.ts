@@ -7,7 +7,8 @@ import {
 	IEmployeeTypeCreateArgs, IEmployeeTypeUpdateArgs,
 	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs,
 	IInsuredTypeCreateArgs, IInsuredTypeUpdateArgs,
-	IMedicalSubspecialtyCreateArgs, IMedicalSubspecialtyUpdateArgs
+	IMedicalSubspecialtyCreateArgs, IMedicalSubspecialtyUpdateArgs,
+	IMedicalSpecialtyCreateArgs, IMedicalSpecialtyUpdateArgs
 } from './catalog.type'
 import {
 	IBelongingCreateArgs, IBelongingUpdateArgs,
@@ -31,6 +32,7 @@ export {
 	IEmployeePositionCreateArgs, IEmployeePositionUpdateArgs,
 	IInsuredTypeCreateArgs, IInsuredTypeUpdateArgs,
 	IMedicalSubspecialtyCreateArgs, IMedicalSubspecialtyUpdateArgs,
+	IMedicalSpecialtyCreateArgs, IMedicalSpecialtyUpdateArgs,
 
 	IBelongingCreateArgs, IBelongingUpdateArgs,
 	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs,

@@ -1,0 +1,40 @@
+
+model MedicalSpecialty {
+	id			Int		@id @default(autoincrement())
+	name		String	@unique
+	description	String?
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	subspecialties		MedicalSpecialtySubspecialty[]
+
+	creatorUser		User	@relation(name: "MedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "MedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model MedicalSpecialtySubspecialty {
+	id						Int		@default(autoincrement()) @unique
+
+	medicalSubspecialtyId	Int
+	medicalSpecialtyId		Int
+
+	status					Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medicalSubspecialty		MedicalSubspecialty	@relation(fields: [medicalSubspecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	medicalSpecialty		MedicalSpecialty	@relation(fields: [medicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	creatorUser		User	@relation(name: "MedicalSpecialtySubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "MedicalSpecialtySubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ medicalSubspecialtyId, medicalSpecialtyId ])
+}

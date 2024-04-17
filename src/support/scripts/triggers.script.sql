@@ -68,6 +68,31 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER TRIGGER TRMedicalSpecialtyUpdated ON MedicalSpecialty AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'MedicalSpecialty', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
+CREATE OR ALTER TRIGGER TRMedicalSpecialtySubspecialtyUpdated ON MedicalSpecialtySubspecialty AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'MedicalSpecialtySubspecialty', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
+
 ------------------------------------------------------------------------------------------
 -- REFERENCE
 ------------------------------------------------------------------------------------------

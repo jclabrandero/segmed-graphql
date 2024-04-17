@@ -17,6 +17,8 @@ model MedicalSubspecialty {
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
+	subspecialtyOf		MedicalSpecialtySubspecialty[]
+
 	creatorUser		User	@relation(name: "MedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "MedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }

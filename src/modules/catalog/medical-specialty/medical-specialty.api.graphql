@@ -1,0 +1,44 @@
+
+type MedicalSpecialty {
+	id:				Int!
+	name:			String!
+	description:	String
+
+	status:			Int!
+
+	subspecialties:		[MedicalSubspecialty!]!
+}
+
+
+input IMedicalSpecialtyCreateArgs {
+	name:			String!
+	description:	String
+
+	subspecialties:	[Int!]
+}
+
+input IMedicalSpecialtyUpdateArgs {
+	name:			String
+	description:	String
+
+	subspecialties:	[Int!]
+}
+
+type Query {
+	medicalSpecialties: [MedicalSpecialty!]! @authorized
+	activeMedicalSpecialties: [MedicalSpecialty!]! @authorized
+	medicalSpecialty(id: Int!): MedicalSpecialty! @authorized
+}
+
+type Mutation {
+	createMedicalSpecialty(data: IMedicalSpecialtyCreateArgs!): MedicalSpecialty! @authorized
+	updateMedicalSpecialty(id: Int!, data: IMedicalSpecialtyUpdateArgs!): MedicalSpecialty! @authorized
+	deleteMedicalSpecialty(id: Int!): MedicalSpecialty! @authorized
+}
+
+type Subscription {
+	medicalSpecialtyCreated: MedicalSpecialty!
+	medicalSpecialtyUpdated: MedicalSpecialty!
+	medicalSpecialtyDeleted: MedicalSpecialty!
+	medicalSpecialtyUpserted: MedicalSpecialty!
+}
