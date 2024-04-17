@@ -4,6 +4,7 @@ import { Group } from '@prisma/client'
 import { Relation, Resolver } from '../../../support/classes'
 import { IContext, IGroupCreateArgs, IGroupUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
+import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
 
 
 export class GroupResolver extends Resolver {
@@ -82,15 +83,15 @@ export class GroupResolver extends Resolver {
 		return GroupResolver.format(record)
 	}
 
-	async create(_, { data }: { data: IGroupCreateArgs }, { db, pubsub }: IContext ): Promise<Group> {
+	async create(_, { data }: { data: IGroupCreateArgs }, { db, pubsub, user }: IContext ): Promise<Group> {
 		const { permissions, ...payload } = data
 		const { CREATED, UPSERTED } = SubscriptionEvent.Group
 		
 		const record = await db.group.create({
 			data: {
-				...payload,
+				...withAuditForCreate(user, payload),
 				permissions: permissions ? {
-					create: permissions.map(permissionId => ({ permissionId }))
+					create: permissions.map(permissionId => withAuditForCreate(user, { permissionId }))
 				} : undefined,
 			}
 		})
@@ -103,18 +104,16 @@ export class GroupResolver extends Resolver {
 		return record
 	}
 
-	async update(_, { id, data }: { id: number, data: IGroupUpdateArgs }, { db, pubsub }: IContext): Promise<Group> {
+	async update(_, { id, data }: { id: number, data: IGroupUpdateArgs }, { db, pubsub, user }: IContext): Promise<Group> {
 		const { permissions, ...payload } = data
 		const { UPDATED, UPSERTED } = SubscriptionEvent.Group
 
 		const record = await db.group.update({
-			where: {
-				id
-			},
+			where: { id },
 			data: {
-				...payload,
+				...withAuditForUpdate(user, payload),
 				permissions: permissions ? await Relation.upsert({
-					model: db.groupPermission, where: { groupId: id }, dataset: permissions, field: 'permissionId'
+					model: db.groupPermission, where: { groupId: id }, dataset: permissions, field: 'permissionId', user
 				}) : undefined
 			}
 		})

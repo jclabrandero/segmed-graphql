@@ -6,20 +6,37 @@ model Group {
 
 	status		Int		@default(1)
 
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
 	members		UserGroup[]
 	permissions	GroupPermission[]
+
+	creatorUser		User	@relation(name: "GroupCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "GroupLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }
 
 
 model GroupPermission {
-	id			Int		@unique @default(autoincrement())
-	status		Int		@default(1)
-
+	id		Int		@unique @default(autoincrement())
+	
 	groupId			Int
 	permissionId	Int
 
+	status	Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
 	group		Group		@relation(fields: [groupId], references: [id])
 	permission	Permission	@relation(fields: [permissionId], references: [id])
+
+	creatorUser		User	@relation(name: "GroupPermissionCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "GroupPermissionLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 
 	@@id([ groupId, permissionId ])
 }

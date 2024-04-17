@@ -63,6 +63,8 @@ async function create(iterable, model, title, user: User) {
 }
 
 async function createAutorizacion(client: PrismaClient) {
+	const user = { userName: 'admin' } as User
+
 	console.log('...Creando autorizacion')
 
 	try {
@@ -81,9 +83,9 @@ async function createAutorizacion(client: PrismaClient) {
 		for (const seed of data.grupos) {
 			await client.group.create({
 				data: {
-					...seed.group,
+					...withAuditForCreate(user as User, seed.group),
 					permissions: {
-						create: seed.permissions.map(code => ({ permissionId: permissions.find(p => p.code === code).id }))
+						create: seed.permissions.map(code => withAuditForCreate(user, { permissionId: permissions.find(p => p.code === code).id }))
 					}
 				}
 			})
