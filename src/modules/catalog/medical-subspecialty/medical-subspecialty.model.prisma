@@ -1,0 +1,22 @@
+
+model MedicalSubspecialty {
+	id		Int		@id @default(autoincrement())
+	name	String	@unique
+
+	description			String?
+	ageRangePatients	String?
+
+	dt	String?
+	si	String?
+	ot	String?
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	creatorUser		User	@relation(name: "MedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "MedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}

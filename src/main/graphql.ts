@@ -12,7 +12,8 @@ import { SessionResolver, UserResolver, GroupResolver, PermissionResolver } from
 import {
 	PersonDocumentTypeResolver,
 	EmployeeTypeResolver, EmployeePositionResolver,
-	InsuredTypeResolver
+	InsuredTypeResolver,
+	MedicalSubspecialtyResolver
 } from '../modules/catalog'
 import { BelongingResolver, MedicalOfficeResolver } from '../modules/reference'
 import { PersonResolver, ClerkResolver, InsuredResolver } from '../modules/folk'
@@ -64,6 +65,7 @@ export class GraphqlResolver {
 			, employeeType = new EmployeeTypeResolver()
 			, employeePosition = new EmployeePositionResolver()
 			, insuredType = new InsuredTypeResolver()
+			, medicalSubspecialty = new MedicalSubspecialtyResolver()
 			, belonging = new BelongingResolver()
 			, medicalOffice = new MedicalOfficeResolver()
 			, person = new PersonResolver()
@@ -99,6 +101,9 @@ export class GraphqlResolver {
 				insuredTypes: insuredType.index,
 				activeInsuredTypes: insuredType.active,
 				insuredType: insuredType.findOne,
+				medicalSubspecialties: medicalSubspecialty.index,
+				activeMedicalSubspecialties: medicalSubspecialty.active,
+				medicalSubspecialty: medicalSubspecialty.findOne,
 
 				belongings: belonging.index,
 				activeBelongings: belonging.active,
@@ -138,6 +143,9 @@ export class GraphqlResolver {
 				createInsuredType: insuredType.create,
 				updateInsuredType: insuredType.update,
 				deleteInsuredType: insuredType.delete,
+				createMedicalSubspecialty: medicalSubspecialty.create,
+				updateMedicalSubspecialty: medicalSubspecialty.update,
+				deleteMedicalSubspecialty: medicalSubspecialty.delete,
 
 				createBelonging: belonging.create,
 				updateBelonging: belonging.update,
@@ -181,6 +189,10 @@ export class GraphqlResolver {
 				insuredTypeUpdated: insuredType.updated({ pubsub }),
 				insuredTypeDeleted: insuredType.deleted({ pubsub }),
 				insuredTypeUpserted: insuredType.upserted({ pubsub }),
+				medicalSubspecialtyCreated: medicalSubspecialty.created({ pubsub }),
+				medicalSubspecialtyUpdated: medicalSubspecialty.updated({ pubsub }),
+				medicalSubspecialtyDeleted: medicalSubspecialty.deleted({ pubsub }),
+				medicalSubspecialtyUpserted: medicalSubspecialty.upserted({ pubsub }),
 
 				belongingCreated: belonging.created({ pubsub }),
 				belongingUpdated: belonging.updated({ pubsub }),

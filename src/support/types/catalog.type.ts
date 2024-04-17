@@ -43,3 +43,23 @@ export interface IInsuredTypeUpdateArgs {
 	description?:		string
 	withDependents?:	boolean
 }
+
+export interface IMedicalSubspecialtyCreateArgs {
+	name:				string
+	description?:		string
+	ageRangePatients?:	string
+
+	dt?:	string
+	si?:	string
+	ot?:	string
+}
+
+export interface IMedicalSubspecialtyUpdateArgs {
+	name?:				string
+	description?:		string
+	ageRangePatients?:	string
+
+	dt?:	string
+	si?:	string
+	ot?:	string
+}

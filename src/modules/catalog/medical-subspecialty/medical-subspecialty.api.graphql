@@ -1,0 +1,54 @@
+
+type MedicalSubspecialty {
+	id:		Int!
+	name:	String!
+
+	description:		String
+	ageRangePatients:	String
+
+	dt:	String	#	Diagnostic (D) or Therapeutic (T)
+	si:	String	#	Surgical (S) or Internal Medicine (I)
+	ot:	String	#	Organ-based (O) or Technique-based (T)
+
+	status:			Int!
+}
+
+
+input IMedicalSubspecialtyCreateArgs {
+	name:				String!
+	description:		String
+	ageRangePatients:	String
+
+	dt:	String
+	si:	String
+	ot:	String
+}
+
+input IMedicalSubspecialtyUpdateArgs {
+	name:				String
+	description:		String
+	ageRangePatients:	String
+
+	dt:	String
+	si:	String
+	ot:	String
+}
+
+type Query {
+	medicalSubspecialties: [MedicalSubspecialty!]! @authorized
+	activeMedicalSubspecialties: [MedicalSubspecialty!]! @authorized
+	medicalSubspecialty(id: Int!): MedicalSubspecialty! @authorized
+}
+
+type Mutation {
+	createMedicalSubspecialty(data: IMedicalSubspecialtyCreateArgs!): MedicalSubspecialty! @authorized
+	updateMedicalSubspecialty(id: Int!, data: IMedicalSubspecialtyUpdateArgs!): MedicalSubspecialty! @authorized
+	deleteMedicalSubspecialty(id: Int!): MedicalSubspecialty! @authorized
+}
+
+type Subscription {
+	medicalSubspecialtyCreated: MedicalSubspecialty!
+	medicalSubspecialtyUpdated: MedicalSubspecialty!
+	medicalSubspecialtyDeleted: MedicalSubspecialty!
+	medicalSubspecialtyUpserted: MedicalSubspecialty!
+}
