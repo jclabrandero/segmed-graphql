@@ -5,6 +5,7 @@ import { EmployeePositionResolver } from './employee-position/employee-position.
 import { InsuredTypeResolver } from './insured-type/insured-type.resolver'
 import { MedicalSubspecialtyResolver } from './medical-subspecialty/medical-subspecialty.resolver'
 import { MedicalSpecialtyResolver } from './medical-specialty/medical-specialty.resolver'
+import { MedicalGroupResolver } from './medical-group/medical-group.resolver'
 
 export {
 	PersonDocumentTypeResolver,
@@ -12,5 +13,6 @@ export {
 	EmployeePositionResolver,
 	InsuredTypeResolver,
 	MedicalSubspecialtyResolver,
-	MedicalSpecialtyResolver
+	MedicalSpecialtyResolver,
+	MedicalGroupResolver
 }

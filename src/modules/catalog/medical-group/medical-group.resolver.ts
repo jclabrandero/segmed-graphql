@@ -1,0 +1,140 @@
+
+import { MedicalGroup } from '@prisma/client'
+
+import { Relation, Resolver } from '../../../support/classes'
+import { IContext, IMedicalGroupCreateArgs, IMedicalGroupUpdateArgs } from '../../../support/types'
+import { Status, SubscriptionEvent } from '../../../support/constants'
+import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+
+
+export class MedicalGroupResolver extends Resolver {
+
+	constructor() {
+		super(SubscriptionEvent.MedicalGroup)
+	}
+
+	static format(record) {
+		if (!record) return null
+		const { specialties, ...group } = record
+		return {
+			...group,
+			specialties: specialties ? specialties.map(({ medicalSpecialty }) => ({
+				...medicalSpecialty,
+				subspecialties: medicalSpecialty.subspecialties.map(({ medicalSubspecialty }) => medicalSubspecialty)
+			})) : undefined
+		}
+	}
+
+	private static include() {
+		return {
+			specialties: {
+				where: {
+					status: Status.Active
+				},
+				include: {
+					medicalSpecialty: {
+						include: {
+							subspecialties: {
+								where: {
+									status: Status.Active
+								},
+								include: {
+									medicalSubspecialty: true
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	async index(_, args, { db }: IContext): Promise<Array<MedicalGroup>> {
+		const records = await db.medicalGroup.findMany({
+			where: {
+				NOT: { status: Status.Removed }
+			},
+			include: MedicalGroupResolver.include()
+		})
+
+		return records.map(MedicalGroupResolver.format)
+	}
+
+	async active(_, args, { db }: IContext): Promise<Array<MedicalGroup>> {
+		const records = await db.medicalGroup.findMany({
+			where: {
+				status: Status.Active
+			},
+			include: MedicalGroupResolver.include()
+		})
+
+		return records.map(MedicalGroupResolver.format)
+	}
+
+	async findOne(_, { id }: { id: number }, { db }: IContext): Promise<MedicalGroup> {
+		const record = await db.medicalGroup.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: MedicalGroupResolver.include()
+		})
+
+		return MedicalGroupResolver.format(record)
+	}
+
+	async create(_, { data }: { data: IMedicalGroupCreateArgs }, { db, pubsub, user }: IContext): Promise<MedicalGroup> {
+		const { CREATED, UPSERTED } = SubscriptionEvent.MedicalGroup
+		const { specialties, ...payload } = data
+		const record = await db.medicalGroup.create({
+			data: {
+				...withAuditForCreate(user, payload),
+				specialties: specialties ? {
+					create: specialties.map(medicalSpecialtyId => withAuditForCreate(user, { medicalSpecialtyId }))
+				}: undefined
+			}
+		})
+		super.publish({
+			pubsub,
+			events: [CREATED, UPSERTED],
+			dataset: [{ medicalGroupCreated: record }, { medicalGroupUpserted: record }]
+		})
+		return record
+	}
+
+	async update(_, { id, data }: { id: number, data: IMedicalGroupUpdateArgs }, { db, pubsub, user }: IContext): Promise<MedicalGroup> {
+		const { UPDATED, UPSERTED } = SubscriptionEvent.MedicalGroup
+		const { specialties, ...payload } = data
+		const record = await db.medicalGroup.update({
+			where: { id },
+			data: {
+				...withAuditForUpdate(user, payload),
+				specialties: specialties ? await Relation.upsert({
+					model: db.medicalGroupSpecialty, where: { medicalGroupId: id }, dataset: specialties, field: 'medicalSpecialtyId', user
+				}) : undefined
+			}
+		})
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ medicalGroupUpdated: record }, { medicalGroupUpserted: record }]
+		})
+		return record
+	}
+
+	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<MedicalGroup> {
+		const { DELETED, UPSERTED } = SubscriptionEvent.MedicalGroup
+		const found = await super.findOneOrFail(db.medicalGroup, id)
+		const record = await db.medicalGroup.update({
+			where: { id },
+			data: withAuditForDelete(user, found, 'name')
+		})
+		super.publish({
+			pubsub,
+			events: [DELETED, UPSERTED],
+			dataset: [{ medicalGroupDeleted: record }, { medicalGroupUpserted: record }]
+		})
+		return record
+	}
+
+}

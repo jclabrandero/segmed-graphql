@@ -75,3 +75,15 @@ export interface IMedicalSpecialtyUpdateArgs {
 	description?:		string
 	subspecialties?:	Array<number>
 }
+
+export interface IMedicalGroupCreateArgs {
+	name:			string
+	description?:	string
+	specialties?:	Array<number>
+}
+
+export interface IMedicalGroupUpdateArgs {
+	name?:			string
+	description?:	string
+	specialties?:	Array<number>
+}

@@ -1,0 +1,40 @@
+
+model MedicalGroup {
+	id			Int		@id @default(autoincrement())
+	name		String	@unique
+	description	String?
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	specialties	MedicalGroupSpecialty[]
+
+	creatorUser		User	@relation(name: "MedicalGroupCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "MedicalGroupLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model MedicalGroupSpecialty {
+	id					Int		@default(autoincrement()) @unique
+
+	medicalSpecialtyId	Int
+	medicalGroupId		Int
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+	
+	medicalSpecialty	MedicalSpecialty	@relation(fields: [medicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	medicalGroup		MedicalGroup		@relation(fields: [medicalGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	creatorUser		User	@relation(name: "MedicalGroupSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "MedicalGroupSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ medicalSpecialtyId, medicalGroupId ])
+}

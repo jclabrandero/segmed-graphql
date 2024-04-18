@@ -56,6 +56,13 @@ enum MedicalSpecialty {
 	UPSERTED = 'MDCLSP-UPSERT'
 }
 
+enum MedicalGroup {
+	CREATED = 'MDCLGRP-C',
+	UPDATED = 'MDCLGRP-U',
+	DELETED = 'MDCLGRP-D',
+	UPSERTED = 'MDCLGRP-UPSERT'
+}
+
 
 enum Belonging {
 	CREATED = 'BLNGNG-C',
@@ -98,7 +105,7 @@ export const SubscriptionEvent = {
 	User, Group,
 
 	PersonDocumentType, EmployeeType, EmployeePosition, InsuredType,
-	MedicalSubspecialty, MedicalSpecialty,
+	MedicalSubspecialty, MedicalSpecialty, MedicalGroup,
 
 	Belonging, MedicalOffice,
 	
