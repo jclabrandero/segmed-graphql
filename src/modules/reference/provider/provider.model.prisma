@@ -1,0 +1,98 @@
+
+model Provider {
+	id				Int		@id @default(autoincrement())
+	vendorCode		String	@unique
+	businessName	String
+
+	nit		String?
+	address	String?
+	phone	String?
+
+	belongingId		Int
+
+	status			Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	belonging		Belonging	@relation(fields: [belongingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	medicalGroups	ProviderMedicalGroup[]
+
+	creatorUser		User		@relation(name: "ProviderCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?		@relation(name: "ProviderLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ProviderMedicalGroup {
+	id					Int		@default(autoincrement()) @unique
+	groupName			String
+
+	medicalGroupId		Int
+	providerId			Int
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medicalGroup	MedicalGroup	@relation(fields: [medicalGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	provider		Provider		@relation(fields: [providerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	specialties		ProviderMedicalSpecialty[]
+
+	creatorUser		User	@relation(name: "ProviderMedicalGroupCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ProviderMedicalGroupLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ medicalGroupId, providerId ])
+}
+
+model ProviderMedicalSpecialty {
+	id						Int		@default(autoincrement()) @unique
+	specialtyName			String
+
+	medicalSpecialtyId		Int
+	providerMedicalGroupId	Int
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medicalSpecialty		MedicalSpecialty		@relation(fields: [medicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	providerMedicalGroup	ProviderMedicalGroup	@relation(fields: [providerMedicalGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	subspecialties			ProviderMedicalSubspecialty[]
+
+	creatorUser		User	@relation(name: "ProviderMedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ProviderMedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ medicalSpecialtyId, providerMedicalGroupId ])
+}
+
+model ProviderMedicalSubspecialty {
+	id							Int		@default(autoincrement()) @unique
+	subspecialtyName			String
+
+	medicalSubspecialtyId		Int
+	providerMedicalSpecialtyId	Int
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+	
+	medicalSubspecialty			MedicalSubspecialty			@relation(fields: [medicalSubspecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	providerMedicalSpecialty	ProviderMedicalSpecialty	@relation(fields: [providerMedicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	creatorUser		User	@relation(name: "ProviderMedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ProviderMedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ medicalSubspecialtyId, providerMedicalSpecialtyId ])
+}

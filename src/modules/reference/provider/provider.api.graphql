@@ -1,0 +1,69 @@
+
+type Provider {
+	id:				Int!
+	vendorCode:		String!
+	businessName:	String!
+	nit:			String
+	address:		String
+	phone:			String
+
+	status:			Int!
+
+	belonging:		Belonging!
+	medicalGroups:	[MedicalGroup!]!
+}
+
+
+input IProviderMedicalSpecialty {
+	medicalSpecialtyId:	Int!
+	subspecialties:		[Int!]!
+}
+
+input IProviderMedicalGroup {
+	medicalGroupId:	Int!
+	specialties:	[IProviderMedicalSpecialty!]!
+}
+
+input IProviderCreateArgs {
+	vendorCode:		String!
+	businessName:	String!
+	nit:			String
+	address:		String
+	phone:			String
+
+	belongingId:	Int!
+	medicalGroups:	[IProviderMedicalGroup!]
+}
+
+input IProviderUpdateArgs {
+	businessName:	String
+	nit:			String
+	address:		String
+	phone:			String
+
+	belongingId:	Int
+}
+
+input IProviderFilterArgs {
+	belongingId:	Int
+	medicalGroupId:	Int
+}
+
+type Query {
+	providers: [Provider!]! @authorized
+	activeProviders(query: IProviderFilterArgs!): [Provider!]! @authorized
+	provider(id: Int!): Provider! @authorized
+}
+
+type Mutation {
+	createProvider(data: IProviderCreateArgs!): Provider! @authorized
+	updateProvider(id: Int!, data: IProviderUpdateArgs!): Provider! @authorized
+	deleteProvider(id: Int!): Provider! @authorized
+}
+
+type Subscription {
+	providerCreated: Provider!
+	providerUpdated: Provider!
+	providerDeleted: Provider!
+	providerUpserted: Provider!
+}

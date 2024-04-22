@@ -12,6 +12,7 @@ model Belonging {
 
 	medicalOffices	MedicalOffice[]
 	insureds		Insured[]
+	providers		Provider[]
 
 	creatorUser		User	@relation(name: "BelongingCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "BelongingLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
