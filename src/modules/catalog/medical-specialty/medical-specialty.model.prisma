@@ -13,6 +13,7 @@ model MedicalSpecialty {
 
 	subspecialties		MedicalSpecialtySubspecialty[]
 	groups				MedicalGroupSpecialty[]
+	providerSpecialties	ProviderMedicalSpecialty[]
 
 	creatorUser		User	@relation(name: "MedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "MedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

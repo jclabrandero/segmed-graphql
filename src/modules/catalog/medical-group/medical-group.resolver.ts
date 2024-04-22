@@ -49,6 +49,34 @@ export class MedicalGroupResolver extends Resolver {
 		}
 	}
 
+	public static async index({ db }: IContext) {
+		const records = await db.medicalGroup.findMany({
+			where: {
+				NOT: { status: Status.Removed }
+			},
+			include: MedicalGroupResolver.include()
+		})
+
+		return records.reduce((indexedGroups, { id: groupId, specialties, ...group }) => {
+			indexedGroups[groupId] = {
+				...group,
+				specialties: specialties.reduce((indexedSpecialties, { medicalSpecialty }) => {
+					const { id: specialtyId, subspecialties, ...specialty } = medicalSpecialty
+					indexedSpecialties[specialtyId] = {
+						...specialty,
+						subspecialties: subspecialties.reduce((indexedSubspecialties, { medicalSubspecialty }) => {
+							const { id: subspecialtyId, ...subspecialty } = medicalSubspecialty
+							indexedSubspecialties[subspecialtyId] = subspecialty
+							return indexedSubspecialties
+						}, {})
+					}
+					return indexedSpecialties
+				}, {})
+			}
+			return indexedGroups
+		}, {})
+	}
+
 	async index(_, args, { db }: IContext): Promise<Array<MedicalGroup>> {
 		const records = await db.medicalGroup.findMany({
 			where: {
