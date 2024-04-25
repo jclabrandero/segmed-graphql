@@ -87,3 +87,17 @@ export interface IMedicalGroupUpdateArgs {
 	description?:	string
 	specialties?:	Array<number>
 }
+
+export interface IClinicalCareStateCreateArgs {
+	name:			string
+	description?:	string
+	color:			string
+	lock?:			boolean
+}
+
+export interface IClinicalCareStateUpdateArgs {
+	name?:			string
+	description?:	string
+	color?:			string
+	lock?:			boolean
+}
