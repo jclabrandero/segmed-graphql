@@ -13,6 +13,8 @@ export interface IUserCreateArgs {
 
 	password?:			string
 	confirmPassword?:	string
+
+	clerkId?:			number
 }
 
 export interface IUserUpdateArgs {
@@ -23,6 +25,8 @@ export interface IUserUpdateArgs {
 
 	password?:			string
 	confirmPassword?:	string
+	
+	clerkId?:			number
 }
 
 export interface IGroupCreateArgs {

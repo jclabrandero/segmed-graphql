@@ -4,8 +4,10 @@ import { User } from '@prisma/client'
 import { Relation, Resolver } from '../../../support/classes'
 import { IContext, IUserCreateArgs, IUserUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
+import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
 
 import { Auth } from '../../../support/classes'
+import { ClerkResolver } from '../../folk'
 
 
 export class UserResolver extends Resolver {
@@ -16,7 +18,7 @@ export class UserResolver extends Resolver {
 
 	static format(record) {
 		if (!record) return null
-		const { groups, ...user } = record
+		const { groups, clerkUser, ...user } = record
 		const extend = groups ? {
 			groups: groups.map(relation => ({
 				...relation.group
@@ -24,7 +26,8 @@ export class UserResolver extends Resolver {
 			permissions: groups.reduce(
 				(accumulator, { group }) => [ ...accumulator, ...group.permissions.map(({ permission }) => permission.code) ].filter((value, index, array) => array.indexOf(value) === index),
 				[]
-			)
+			),
+			clerk: clerkUser ? ClerkResolver.format(clerkUser.clerk) : undefined
 		} : {
 			groups: [],
 			permissions: []
@@ -54,6 +57,26 @@ export class UserResolver extends Resolver {
 									permission: true
 								}
 							}
+						}
+					}
+				}
+			},
+			clerkUser: {
+				where: {
+					status: Status.Active
+				},
+				include: {
+					clerk: {
+						include: {
+							medicalOffices: {
+								where: {
+									status: Status.Active
+								},
+								include: {
+									medicalOffice: true
+								}
+							},
+							person: true
 						}
 					}
 				}
@@ -97,8 +120,20 @@ export class UserResolver extends Resolver {
 		return UserResolver.format(record)
 	}
 
-	async create(_, args: { data: IUserCreateArgs }, { db, pubsub }: IContext): Promise<User> {
-		const { groups, password, confirmPassword, ...payload } = args.data
+	async findOneByUserName(_, { userName }: { userName: string }, { db }: IContext): Promise<User> {
+		const record = await db.user.findUnique({
+			where: {
+				userName,
+				NOT: { status: Status.Removed }
+			},
+			include: UserResolver.includeAll()
+		})
+
+		return UserResolver.format(record)
+	}
+
+	async create(_, args: { data: IUserCreateArgs }, { db, pubsub, user }: IContext): Promise<User> {
+		const { groups, password, confirmPassword, clerkId, ...payload } = args.data
 		const { CREATED, UPSERTED } = SubscriptionEvent.User
 		let encrypted: string
 
@@ -111,10 +146,13 @@ export class UserResolver extends Resolver {
 			data: {
 				...payload,
 				groups: groups ? {
-					create: groups.map(groupId => ({ groupId }))
+					create: groups.map(groupId => withAuditForCreate(user, { groupId }))
 				} : undefined,
 				passwords: encrypted ? {
 					create: [{ encrypted }]
+				} : undefined,
+				clerkUser: clerkId ? {
+					create: withAuditForCreate(user, { clerkId })
 				} : undefined
 			}
 		})
@@ -129,12 +167,28 @@ export class UserResolver extends Resolver {
 	}
 
 	async update(_, { id, data }: { id: number, data: IUserUpdateArgs }, { db, pubsub, user }: IContext): Promise<User> {
-		const { groups, password, confirmPassword, ...payload } = data
+		const { groups, password, confirmPassword, clerkId, ...payload } = data
 		const { UPDATED, UPSERTED } = SubscriptionEvent.User
+		const found = await super.findOneOrFail(db.user, id)
+		let encrypted: string
+		let clerkUser = undefined
 
 		if (password) {
 			if (password !== confirmPassword) throw 'La contraseña de confirmación no coincide.'
-			await Auth.hash(password)
+			encrypted = await Auth.hash(password)
+		}
+		if (clerkId) {
+			const currentClerkUser = await db.clerkUser.findFirst({ where: { userId: found.id } })
+			clerkUser = currentClerkUser
+				? {
+					update: {
+						where: { userId: found.id },
+						data: withAuditForUpdate(user, { clerkId })
+					}
+				}
+				: {
+					create: withAuditForCreate(user, { clerkId })
+				}
 		}
 
 		const record = await db.user.update({
@@ -143,7 +197,15 @@ export class UserResolver extends Resolver {
 				...payload,
 				groups: groups ? await Relation.upsert({
 					model: db.userGroup, where: { userId: id }, dataset: groups, field: 'groupId', user
-				}) : undefined
+				}) : undefined,
+				passwords: encrypted ? {
+					updateMany: {
+						where: { userName: found.userName },
+						data: { status: Status.Idle }
+					},
+					create: [{ encrypted }]
+				} : undefined,
+				clerkUser
 			}
 		})
 

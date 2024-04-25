@@ -5,12 +5,13 @@ type User {
 	displayName:	String
 	email:			String
 
-	groups:			[Group!]!
-	
-	permissions:	[String!]!
 	isAuthorized:	Boolean!
 	
 	status:			Int!
+
+	groups:			[Group!]!
+	permissions:	[String!]!
+	clerk:			Clerk
 }
 
 
@@ -19,10 +20,12 @@ input IUserCreateArgs {
 	displayName:		String
 	email:				String
 
-	groups:				[Int!]!
+	groups:				[Int!]
 
 	password:			String
 	confirmPassword:	String
+
+	clerkId:			Int
 }
 
 input IUserUpdateArgs {
@@ -33,12 +36,15 @@ input IUserUpdateArgs {
 
 	password:			String
 	confirmPassword:	String
+
+	clerkId:			Int
 }
 
 type Query {
 	users: [User!]! @authorized
 	currentUser(sessionId: Int!): User! @authorized
 	user(id: Int!): User! @authorized
+	userByUserName(userName: String!): User! @authorized
 }
 
 type Mutation {
