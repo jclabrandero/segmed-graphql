@@ -1,0 +1,44 @@
+
+type ClinicalCareState {
+	id:				Int!
+	name:			String!
+	description:	String
+	color:			String!
+	lock:			Boolean!
+
+	status:			Int!
+}
+
+
+input IClinicalCareStateCreateArgs {
+	name:			String!
+	description:	String
+	color:			String!
+	lock:			Boolean
+}
+
+input IClinicalCareStateUpdateArgs {
+	name:			String
+	description:	String
+	color:			String
+	lock:			Boolean
+}
+
+type Query {
+	clinicalCareStates: [ClinicalCareState!]! @authorized
+	activeClinicalCareState: [ClinicalCareState!]! @authorized
+	clinicalCareState(id: Int!): ClinicalCareState! @authorized
+}
+
+type Mutation {
+	createClinicalCareState(data: IClinicalCareStateCreateArgs!): ClinicalCareState! @authorized
+	updateClinicalCareState(id: Int!, data: IClinicalCareStateUpdateArgs!): ClinicalCareState! @authorized
+	deleteClinicalCareState(id: Int!): ClinicalCareState! @authorized
+}
+
+type Subscription {
+	clinicalCareStateCreated: ClinicalCareState!
+	clinicalCareStateUpdated: ClinicalCareState!
+	clinicalCareStateDeleted: ClinicalCareState!
+	clinicalCareStateUpserted: ClinicalCareState!
+}

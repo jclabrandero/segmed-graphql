@@ -1,0 +1,20 @@
+
+model ClinicalCareState {
+	id			Int		@id @default(autoincrement())
+	name		String	@unique
+	description	String?
+	color		String
+	lock		Boolean
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	clinicCareRecords	ClinicCare[]
+
+	creatorUser		User	@relation(name: "ClinicalCareStateCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ClinicalCareStateLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
