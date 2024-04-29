@@ -1,0 +1,40 @@
+
+type DrugUnit {
+	id:				Int!
+	name:			String!
+	description:	String
+	
+	status:			Int!
+
+	medications:	[Medication!]!
+}
+
+
+input IDrugUnitCreateArgs {
+	name:			String!
+	description:	String
+}
+
+input IDrugUnitUpdateArgs {
+	name:			String
+	description:	String
+}
+
+type Query {
+	drugUnits: [DrugUnit!]! @authorized
+	activeDrugUnits: [DrugUnit!]! @authorized
+	drugUnit(id: Int!): DrugUnit! @authorized
+}
+
+type Mutation {
+	createDrugUnit(data: IDrugUnitCreateArgs!): DrugUnit! @authorized
+	updateDrugUnit(id: Int!, data: IDrugUnitUpdateArgs!): DrugUnit! @authorized
+	deleteDrugUnit(id: Int!): DrugUnit! @authorized
+}
+
+type Subscription {
+	drugUnitCreated: DrugUnit!
+	drugUnitUpdated: DrugUnit!
+	drugUnitDeleted: DrugUnit!
+	drugUnitUpserted: DrugUnit!
+}

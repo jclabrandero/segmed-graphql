@@ -1,0 +1,16 @@
+
+model DrugUnit {
+	id			Int		@id @default(autoincrement())
+	name		String	@unique
+	description	String?
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	creatorUser		User	@relation(name: "DrugUnitCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "DrugUnitLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
