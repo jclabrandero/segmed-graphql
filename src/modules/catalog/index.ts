@@ -6,6 +6,9 @@ import { InsuredTypeResolver } from './insured-type/insured-type.resolver'
 import { MedicalSubspecialtyResolver } from './medical-subspecialty/medical-subspecialty.resolver'
 import { MedicalSpecialtyResolver } from './medical-specialty/medical-specialty.resolver'
 import { MedicalGroupResolver } from './medical-group/medical-group.resolver'
+import { DrugClassResolver } from './drug-class/drug-class.resolver'
+import { DrugUnitResolver } from './drug-unit/drug-unit.resolver'
+import { ClinicalCareStateResolver } from './clinical-care-state/clinical-care-state.resolver'
 
 export {
 	PersonDocumentTypeResolver,
@@ -14,5 +17,8 @@ export {
 	InsuredTypeResolver,
 	MedicalSubspecialtyResolver,
 	MedicalSpecialtyResolver,
-	MedicalGroupResolver
+	MedicalGroupResolver,
+	DrugClassResolver,
+	DrugUnitResolver,
+	ClinicalCareStateResolver
 }
