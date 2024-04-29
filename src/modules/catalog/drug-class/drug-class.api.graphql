@@ -1,0 +1,40 @@
+
+type DrugClass {
+	id:				Int!
+	name:			String!
+	description:	String
+	
+	status:			Int!
+
+	medications:	[Medication!]!
+}
+
+
+input IDrugClassCreateArgs {
+	name:			String!
+	description:	String
+}
+
+input IDrugClassUpdateArgs {
+	name:			String
+	description:	String
+}
+
+type Query {
+	drugClasess: [DrugClass!]! @authorized
+	activeDrugClasess: [DrugClass!]! @authorized
+	drugClass(id: Int!): DrugClass! @authorized
+}
+
+type Mutation {
+	createDrugClass(data: IDrugClassCreateArgs!): DrugClass! @authorized
+	updateDrugClass(id: Int!, data: IDrugClassUpdateArgs!): DrugClass! @authorized
+	deleteDrugClass(id: Int!): DrugClass! @authorized
+}
+
+type Subscription {
+	drugClassCreated: DrugClass!
+	drugClassUpdated: DrugClass!
+	drugClassDeleted: DrugClass!
+	drugClassUpserted: DrugClass!
+}
