@@ -1,0 +1,58 @@
+
+type Inventory {
+	id:			Int!
+	lot:		String!
+	quantity:	Int!
+	expireAt:	DateTime!
+
+	status:	Int!
+
+	pharmacy:	Pharmacy!
+	medication:	Medication!
+}
+
+type Pharmacy {
+	id:		Int!
+	name:	String!
+
+	status:	Int!
+
+	belonging:	Belonging!
+	inventory:	[Inventory!]!
+}
+
+type MedicationStock {
+	total:		Int!
+	pharmacy:	Pharmacy!
+	medication:	Medication!
+}
+
+input IPharmacyCreateArgs {
+	name:			String!
+	belongingId:	Int!
+}
+
+input IPharmacyUpdateArgs {
+	name:			String
+	belongingId:	Int
+}
+
+type Query {
+	pharmacies: [Pharmacy!]! @authorized
+	activePharmacies: [Pharmacy!]! @authorized
+	pharmacy(id: Int!): Pharmacy! @authorized
+	pharmacyStock(pharmacyId: Int!): [MedicationStock!]! @authorized
+}
+
+type Mutation {
+	createPharmacy(data: IPharmacyCreateArgs!): Pharmacy! @authorized
+	updatePharmacy(id: Int!, data: IPharmacyUpdateArgs!): Pharmacy! @authorized
+	deletePharmacy(id: Int!): Pharmacy! @authorized
+}
+
+type Subscription {
+	pharmacyCreated: Pharmacy!
+	pharmacyUpdated: Pharmacy!
+	pharmacyDeleted: Pharmacy!
+	pharmacyUpserted: Pharmacy!
+}
