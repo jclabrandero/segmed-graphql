@@ -88,6 +88,26 @@ export interface IMedicalGroupUpdateArgs {
 	specialties?:	Array<number>
 }
 
+export interface IDrugClassCreateArgs {
+	name:			string
+	description?:	string
+}
+
+export interface IDrugClassUpdateArgs {
+	name?:			string
+	description?:	string
+}
+
+export interface IDrugUnitCreateArgs {
+	name:			string
+	description?:	string
+}
+
+export interface IDrugUnitUpdateArgs {
+	name?:			string
+	description?:	string
+}
+
 export interface IClinicalCareStateCreateArgs {
 	name:			string
 	description?:	string
