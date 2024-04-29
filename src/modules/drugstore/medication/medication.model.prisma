@@ -1,0 +1,26 @@
+
+model Medication {
+	id				Int		@id @default(autoincrement())
+	code			String	@unique
+	name			String
+	concentration	String
+	liname			Boolean
+
+	classId		Int
+	unitId		Int
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	class			DrugClass	@relation(fields: [classId], references: [id])
+	unit			DrugUnit	@relation(fields: [unitId], references: [id])
+
+	inventory		Inventory[]
+
+	creatorUser		User	@relation(name: "MedicationCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "MedicationLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
