@@ -16,6 +16,10 @@ model User {
 	updatedGroups			Group[]				@relation(name: "GroupLastUpdateUser")
 	createdGroupPermissions	GroupPermission[]	@relation(name: "GroupPermissionCreatorUser")
 	updatedGroupPermissions	GroupPermission[]	@relation(name: "GroupPermissionLastUpdateUser")
+	createdUserGroups		UserGroup[]	@relation(name: "UserGroupCreatorUser")
+	updatedUserGroups		UserGroup[]	@relation(name: "UserGroupLastUpdateUser")
+	createdFileUploads		FileUpload[]	@relation(name: "FileUploadCreatorUser")
+	updatedFileUploads		FileUpload[]	@relation(name: "FileUploadLastUpdateUser")
 
 	createdPersonDocumentTypes	PersonDocumentType[]	@relation(name: "PersonDocumentTypeCreatorUser")
 	updatedPersonDocumentTypes	PersonDocumentType[]	@relation(name: "PersonDocumentTypeLastUpdateUser")
@@ -35,11 +39,25 @@ model User {
 	updatedMedicalGroupes					MedicalGroup[]					@relation(name: "MedicalGroupLastUpdateUser")
 	createdMedicalGroupSpecialties			MedicalGroupSpecialty[]			@relation(name: "MedicalGroupSpecialtyCreatorUser")
 	updatedMedicalGroupSpecialties			MedicalGroupSpecialty[]			@relation(name: "MedicalGroupSpecialtyLastUpdateUser")
+	createdClinicalCareStates	ClinicalCareState[]	@relation(name: "ClinicalCareStateCreatorUser")
+	updatedClinicalCareStates	ClinicalCareState[]	@relation(name: "ClinicalCareStateLastUpdateUser")
+	createdDrugClasess			DrugClass[]			@relation(name: "DrugClassCreatorUser")
+	updatedDrugClasess			DrugClass[]			@relation(name: "DrugClassLastUpdateUser")
+	createdDrugUnits			DrugUnit[]			@relation(name: "DrugUnitCreatorUser")
+	updatedDrugUnits			DrugUnit[]			@relation(name: "DrugUnitLastUpdateUser")
 
-	createdBelongings	Belonging[]	@relation(name: "BelongingCreatorUser")
-	updatedBelongings	Belonging[]	@relation(name: "BelongingLastUpdateUser")
+	createdBelongings		Belonging[]		@relation(name: "BelongingCreatorUser")
+	updatedBelongings		Belonging[]		@relation(name: "BelongingLastUpdateUser")
 	createdMedicalOffices	MedicalOffice[]	@relation(name: "MedicalOfficeCreatorUser")
 	updatedMedicalOffices	MedicalOffice[]	@relation(name: "MedicalOfficeLastUpdateUser")
+	createdProviders		Provider[]		@relation(name: "ProviderCreatorUser")
+	updatedProviders		Provider[]		@relation(name: "ProviderLastUpdateUser")
+	createdProviderMedicalGroups			ProviderMedicalGroup[]			@relation(name: "ProviderMedicalGroupCreatorUser")
+	updatedProviderMedicalGroups			ProviderMedicalGroup[]			@relation(name: "ProviderMedicalGroupLastUpdateUser")
+	createdProviderMedicalSpecialties		ProviderMedicalSpecialty[]		@relation(name: "ProviderMedicalSpecialtyCreatorUser")
+	updatedProviderMedicalSpecialties		ProviderMedicalSpecialty[]		@relation(name: "ProviderMedicalSpecialtyLastUpdateUser")
+	createdProviderMedicalSubspecialties	ProviderMedicalSubspecialty[]	@relation(name: "ProviderMedicalSubspecialtyCreatorUser")
+	updatedProviderMedicalSubspecialties	ProviderMedicalSubspecialty[]	@relation(name: "ProviderMedicalSubspecialtyLastUpdateUser")
 
 	createdPersons	Person[]	@relation(name: "PersonCreatorUser")
 	updatedPersons	Person[]	@relation(name: "PersonLastUpdateUser")
@@ -51,18 +69,51 @@ model User {
 	updatedClerkMedicalOffices	ClerkMedicalOffice[]	@relation(name: "ClerkMedicalOfficeLastUpdateUser")
 	createdInsureds				Insured[]				@relation(name: "InsuredCreatorUser")
 	updatedInsureds				Insured[]				@relation(name: "InsuredLastUpdateUser")
+
+	createdMedications	Medication[]	@relation(name: "MedicationCreatorUser")
+	updatedMedications	Medication[]	@relation(name: "MedicationLastUpdateUser")
+	createdPharmacies	Pharmacy[]		@relation(name: "PharmacyCreatorUser")
+	updatedPharmacies	Pharmacy[]		@relation(name: "PharmacyLastUpdateUser")
+	createdInventories	Inventory[]		@relation(name: "InventoryCreatorUser")
+	updatedInventories	Inventory[]		@relation(name: "InventoryLastUpdateUser")
+
+	createdClinicCares			ClinicCare[]		@relation(name: "ClinicCareCreatorUser")
+	updatedClinicCares			ClinicCare[]		@relation(name: "ClinicCareLastUpdateUser")
+	createdClinicCarePrimaries	ClinicCarePrimary[]	@relation(name: "ClinicCarePrimaryCreatorUser")
+	updatedClinicCarePrimaries	ClinicCarePrimary[]	@relation(name: "ClinicCarePrimaryLastUpdateUser")
+	createdInterclinicals		Interclinical[]		@relation(name: "InterclinicalCreatorUser")
+	updatedInterclinicals		Interclinical[]		@relation(name: "InterclinicalLastUpdateUser")
+	createdInterclinicalMedicalSpecialties		InterclinicalMedicalSpecialty[]		@relation(name: "InterclinicalMedicalSpecialtyCreatorUser")
+	updatedInterclinicalMedicalSpecialties		InterclinicalMedicalSpecialty[]		@relation(name: "InterclinicalMedicalSpecialtyLastUpdateUser")
+	createdInterclinicalMedicalSubspecialties	InterclinicalMedicalSubspecialty[]	@relation(name: "InterclinicalMedicalSubspecialtyCreatorUser")
+	updatedInterclinicalMedicalSubspecialties	InterclinicalMedicalSubspecialty[]	@relation(name: "InterclinicalMedicalSubspecialtyLastUpdateUser")
+	createdInterclinicalFileUploads		InterclinicalFileUpload[]		@relation(name: "InterclinicalFileUploadCreatorUser")
+	updatedInterclinicalFileUploads		InterclinicalFileUpload[]		@relation(name: "InterclinicalFileUploadLastUpdateUser")
+	createdPrescriptions			Prescription[]			@relation(name: "PrescriptionCreatorUser")
+	updatedPrescriptions			Prescription[]			@relation(name: "PrescriptionLastUpdateUser")
+	createdPrescriptionExterns		PrescriptionExtern[]	@relation(name: "PrescriptionExternCreatorUser")
+	updatedPrescriptionExterns		PrescriptionExtern[]	@relation(name: "PrescriptionExternLastUpdateUser")
 }
 
 
 model UserGroup {
 	id		Int		@unique @default(autoincrement())
-	status	Int		@default(1)
-
+	
 	userId	Int
 	groupId	Int
 
+	status	Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
 	user	User	@relation(fields: [userId], references: [id])
 	group	Group	@relation(fields: [groupId], references: [id])
+
+	creatorUser		User	@relation(name: "UserGroupCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "UserGroupLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 
 	@@id([ userId, groupId ])
 }
