@@ -1,0 +1,18 @@
+
+type FileInfo {
+	id:			Int!
+	md5:		String!
+	name:		String!
+	type:		String!
+	extension:	String!
+}
+
+type FileBase64 {
+	info:	FileInfo!
+	data:	String!
+}
+
+
+type Query {
+	downloadFile(md5: String!): FileBase64! @authorized
+}
