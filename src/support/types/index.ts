@@ -9,17 +9,30 @@ import {
 	IInsuredTypeCreateArgs, IInsuredTypeUpdateArgs,
 	IMedicalSubspecialtyCreateArgs, IMedicalSubspecialtyUpdateArgs,
 	IMedicalSpecialtyCreateArgs, IMedicalSpecialtyUpdateArgs,
-	IMedicalGroupCreateArgs, IMedicalGroupUpdateArgs
+	IMedicalGroupCreateArgs, IMedicalGroupUpdateArgs,
+	IDrugClassCreateArgs, IDrugClassUpdateArgs,
+	IDrugUnitCreateArgs, IDrugUnitUpdateArgs,
+	IClinicalCareStateCreateArgs, IClinicalCareStateUpdateArgs
 } from './catalog.type'
 import {
 	IBelongingCreateArgs, IBelongingUpdateArgs,
-	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs
+	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs,
+	IProviderCreateArgs, IProviderUpdateArgs
 } from './reference.type'
 import {
 	IPersonCreateArgs, IPersonUpdateArgs,
 	IClerkCreateArgs, IClerkUpdateArgs,
 	IInsuredCreateArgs, IInsuredUpdateArgs
 } from './folk.type'
+import {
+	IMedicationCreateArgs, IMedicationUpdateArgs,
+	IPharmacyCreateArgs, IPharmacyUpdateArgs, MedicationStock
+} from './drugstore'
+import {
+	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
+	IInterclinicalCreateArgs, IInterclinicalUpdateArgs,
+	IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs
+} from './health.type'
 
 export {
 	IAuthPayload,
@@ -35,11 +48,22 @@ export {
 	IMedicalSubspecialtyCreateArgs, IMedicalSubspecialtyUpdateArgs,
 	IMedicalSpecialtyCreateArgs, IMedicalSpecialtyUpdateArgs,
 	IMedicalGroupCreateArgs, IMedicalGroupUpdateArgs,
+	IDrugClassCreateArgs, IDrugClassUpdateArgs,
+	IDrugUnitCreateArgs, IDrugUnitUpdateArgs,
+	IClinicalCareStateCreateArgs, IClinicalCareStateUpdateArgs,
 
 	IBelongingCreateArgs, IBelongingUpdateArgs,
 	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs,
+	IProviderCreateArgs, IProviderUpdateArgs,
 
 	IPersonCreateArgs, IPersonUpdateArgs,
 	IClerkCreateArgs, IClerkUpdateArgs,
-	IInsuredCreateArgs, IInsuredUpdateArgs
+	IInsuredCreateArgs, IInsuredUpdateArgs,
+
+	IMedicationCreateArgs, IMedicationUpdateArgs,
+	IPharmacyCreateArgs, IPharmacyUpdateArgs, MedicationStock,
+
+	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
+	IInterclinicalCreateArgs, IInterclinicalUpdateArgs,
+	IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs
 }
