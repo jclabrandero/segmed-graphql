@@ -1,0 +1,98 @@
+
+model Interclinical {
+	id				Int	@id @default(autoincrement())
+	remark			String
+	driftDate		DateTime
+	approvedState	Int	@default(0)
+
+	clinicCareId	Int
+	medicalGroupId	Int
+	providerId		Int
+
+	status			Int	@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	clinicCare		ClinicCare		@relation(fields: [clinicCareId], references: [id])
+	medicalGroup	MedicalGroup	@relation(fields: [medicalGroupId], references: [id])
+	provider		Provider		@relation(fields: [providerId], references: [id])
+
+	specialties		InterclinicalMedicalSpecialty[]
+	files			InterclinicalFileUpload[]
+
+	creatorUser		User	@relation(name: "InterclinicalCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "InterclinicalLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model InterclinicalMedicalSpecialty {
+	id				Int		@default(autoincrement()) @unique
+	specialtyName	String
+
+	medicalSpecialtyId	Int
+	interclinicalId		Int
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+	
+	medicalSpecialty	MedicalSpecialty	@relation(fields: [medicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	interclinical		Interclinical		@relation(fields: [interclinicalId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	subspecialties	InterclinicalMedicalSubspecialty[]
+
+	creatorUser		User	@relation(name: "InterclinicalMedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "InterclinicalMedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ medicalSpecialtyId, interclinicalId ])
+}
+
+model InterclinicalMedicalSubspecialty {
+	id					Int		@default(autoincrement()) @unique
+	subspecialtyName	String
+
+	medicalSubspecialtyId			Int
+	interclinicalMedicalSpecialtyId	Int
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medicalSubspecialty				MedicalSubspecialty				@relation(fields: [medicalSubspecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	interclinicalMedicalSpecialty	InterclinicalMedicalSpecialty	@relation(fields: [interclinicalMedicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	creatorUser		User	@relation(name: "InterclinicalMedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "InterclinicalMedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ medicalSubspecialtyId, interclinicalMedicalSpecialtyId ])
+}
+
+model InterclinicalFileUpload {
+	id					Int		@default(autoincrement()) @unique
+
+	fileUploadId		Int
+	interclinicalId		Int
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	file				FileUpload		@relation(fields: [fileUploadId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	interclinical		Interclinical	@relation(fields: [interclinicalId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+	creatorUser		User	@relation(name: "InterclinicalFileUploadCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "InterclinicalFileUploadLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@id([ interclinicalId, fileUploadId ])
+}

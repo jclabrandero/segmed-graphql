@@ -1,0 +1,46 @@
+
+type Interclinical {
+	id:				Int!
+	remark:			String!
+	driftDate:		DateTime!
+	approvedState:	Int!
+
+	clinicCare:		ClinicCare!
+	medicalGroup:	MedicalGroup!
+	provider:		Provider!
+
+	files:	[FileInfo!]!
+}
+
+
+input IInterclinicalMedicalSpecialty {
+	medicalSpecialtyId:	Int!
+	subspecialties:		[Int!]!
+}
+
+input IInterclinicalCreateArgs {
+	clinicCareId:	Int!
+	
+	medicalGroupId:	Int!
+	providerId:		Int!
+	specialties:	[IInterclinicalMedicalSpecialty!]!
+	remark:			String!
+}
+
+input IInterclinicalUpdateArgs {
+	clinicCareId:	Int!
+
+	remark:			String
+	approvedState:	Int
+	files:			[String!]
+}
+
+type Query {
+	interclinical(id: Int!): Interclinical! @authorized
+}
+
+type Mutation {
+	createInterclinical(data: IInterclinicalCreateArgs!): ClinicCare! @authorized
+	updateInterclinical(id: Int!, data: IInterclinicalUpdateArgs!): ClinicCare! @authorized
+	deleteInterclinical(id: Int!, data: IInterclinicalUpdateArgs!): ClinicCare! @authorized
+}
