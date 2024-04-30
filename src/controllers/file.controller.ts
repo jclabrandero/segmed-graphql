@@ -31,7 +31,6 @@ export class FileController {
 
 				res.send({ md5: file.info.md5, type: file.info.type })
 			} catch (error) {
-				console.log(error)
 				res.status(500).json({
 					message: typeof(error) === 'object' ? error.message : error
 				})
