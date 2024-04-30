@@ -1,0 +1,25 @@
+
+type ClinicCarePrimary {
+	id:				Int!
+
+	reason:			String
+	physicalExam:	String
+	diagnosis:		String
+}
+
+
+input IClinicCarePrimaryUpsertArgs {
+	clinicCareId:	Int!
+
+	reason:			String
+	physicalExam:	String
+	diagnosis:		String
+}
+
+type Query {
+	clinicCarePrimary(id: Int!): ClinicCarePrimary @authorized
+}
+
+type Mutation {
+	upsertClinicCarePrimary(data: IClinicCarePrimaryUpsertArgs!): ClinicCare! @authorized
+}

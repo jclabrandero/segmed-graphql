@@ -1,0 +1,21 @@
+
+model ClinicCarePrimary {
+	id				Int	@id @default(autoincrement())
+	reason			String?
+	physicalExam	String?
+	diagnosis		String?
+
+	clinicCareId	Int	@unique
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	clinicCare	ClinicCare	@relation(fields: [clinicCareId], references: [id])
+
+	creatorUser		User	@relation(name: "ClinicCarePrimaryCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ClinicCarePrimaryLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
