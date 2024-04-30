@@ -1,0 +1,46 @@
+
+type ClinicCare {
+	id:			Int!
+	startDate:	DateTime!
+	endDate:	DateTime
+
+	insured:		Insured!
+	state:			ClinicalCareState!
+	medicalOffice:	MedicalOffice!
+
+	primary:		ClinicCarePrimary
+	
+	interclinicals:			[Interclinical!]!
+	prescriptions:			[Prescription!]!
+	prescriptionExterns:	[PrescriptionExtern!]!
+}
+
+
+input IClinicCareCreateArgs {
+	startDate:			DateTime!
+	insuredId:			Int!
+	stateId:			Int!
+	medicalOfficeId:	Int!
+}
+
+input IClinicCareStateUpdateArgs {
+	stateId:	Int!
+}
+
+type Query {
+	clinicCares: [ClinicCare!]! @authorized
+	clinicCare(id: Int!): ClinicCare! @authorized
+	clinicCareState(id: Int!): ClinicalCareState! @authorized
+}
+
+type Mutation {
+	createClinicCare(data: IClinicCareCreateArgs!): ClinicCare! @authorized
+	updateClinicCareState(id: Int!, data: IClinicCareStateUpdateArgs!): ClinicCare! @authorized
+}
+
+type Subscription {
+	clinicCareCreated: ClinicCare!
+	clinicCareUpdated: ClinicCare!
+	clinicCareDeleted: ClinicCare!
+	clinicCareUpserted: ClinicCare!
+}

@@ -1,0 +1,30 @@
+
+model ClinicCare {
+	id			Int		@id @default(autoincrement())
+	startDate	DateTime
+	endDate		DateTime?
+	
+	insuredId		Int
+	stateId			Int
+	medicalOfficeId	Int
+
+	status			Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	primary			ClinicCarePrimary?
+
+	insured			Insured				@relation(fields: [insuredId], references: [id])
+	state			ClinicalCareState	@relation(fields: [stateId], references: [id])
+	medicalOffice	MedicalOffice		@relation(fields: [medicalOfficeId], references: [id])
+
+	interclinicals		Interclinical[]
+	prescriptions		Prescription[]
+	prescriptionExterns	PrescriptionExtern[]
+
+	creatorUser		User	@relation(name: "ClinicCareCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "ClinicCareLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
