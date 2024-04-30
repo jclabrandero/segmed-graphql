@@ -13,7 +13,7 @@
     "dev:start": "nodemon -w dist -e js,json,graphql dist/index.js",
     "dev": "run-p dev:graphql dev:prisma dev:js",
     "lint": "eslint \"src/**/*.ts\"",
-    "seed:all": "npx ts-node src/support/seeders/all.seeder.ts"
+    "seed:demo": "npx ts-node src/support/seeders/demo.seeder.ts"
   },
   "author": "Juan Carlos Labrandero",
   "license": "MIT",

@@ -1,0 +1,624 @@
+{
+	"personDocumentTypes": [
+		{ "name": "CI", "description": "Cédula de Identidad" }
+	],
+	"insuredTypes": [
+		{ "name": "Titular", "description": "Trabajador obrero o funcionario de la empresa", "withDependents": true },
+		{ "name": "Hij@", "description": "Dependiente", "withDependents": false },
+		{ "name": "Espos@", "description": "Dependiente", "withDependents": false }
+	],
+	"employeePositions": [
+		{ "name": "Jefe Médico" },
+		{ "name": "Médico General" },
+		{ "name": "Medico de Seguro Delegado" },
+		{ "name": "Enfermero Encargado de Farmacias" },
+		{ "name": "Contador General" },
+		{ "name": "Auxiliar Contable" },
+		{ "name": "Analista de Recursos Humanos" },
+		{ "name": "Jefe de Recursos Humanos" }
+	],
+	"employeeTypes": [
+		{ "name": "Contador" },
+		{ "name": "Enfermero" },
+		{ "name": "Farmacéutico" },
+		{ "name": "Médico" }
+	],
+
+	"medicalSubspecialties": [
+		{
+			"name": "Cirugía Colorectal"
+		},
+		{
+			"name": "Cirugía Geriátrica"
+		},
+		{
+			"name": "Cirugía Pediátrica"
+		},
+		{
+			"name": "Cirugía Torácica"
+		},
+		{
+			"name": "Cirugía Vascular"
+		},
+		{
+			"name": "Cardiología"
+		},
+		{
+			"name": "Endocrinología"
+		},
+		{
+			"name": "Gastroenterología"
+		},
+		{
+			"name": "Hematología"
+		},
+		{
+			"name": "Nefrología"
+		},
+		{
+			"name": "Neurología"
+		},
+		{
+			"name": "Oncología médica"
+		},
+		{
+			"name": "Reumatología"
+		},
+		{
+			"name": "Neoropatología"
+		},
+		{
+			"name": "Neonatología"
+		},
+		{
+			"name": "Alergia e Inmunología Pediátrica"
+		},
+		{
+			"name": "Cardiología Pediátrica"
+		}
+	],
+	"medicalSpecialties": [
+		{
+			"specialty": { "name": "Anestesiología" },
+			"subspecialties": []
+		},
+		{
+			"specialty": { "name": "Cirugía General" },
+			"subspecialties": [
+				"Cirugía Colorectal",
+				"Cirugía Geriátrica",
+				"Cirugía Pediátrica",
+				"Cirugía Torácica",
+				"Cirugía Vascular"
+			]
+		},
+		{
+			"specialty": { "name": "Dermatología" },
+			"subspecialties": []
+		},
+		{
+			"specialty": { "name": "Hematología" },
+			"subspecialties": []
+		},
+		{
+			"specialty": { "name": "Medicina Interna" },
+			"subspecialties": [
+				"Cardiología",
+				"Endocrinología",
+				"Gastroenterología",
+				"Hematología",
+				"Nefrología",
+				"Neurología",
+				"Oncología médica",
+				"Reumatología"
+			]
+		},
+		{
+			"specialty": { "name": "Patología" },
+			"subspecialties": [
+				"Neoropatología"
+			]
+		},
+		{
+			"specialty": { "name": "Pediatría" },
+			"subspecialties": [
+				"Neonatología",
+				"Alergia e Inmunología Pediátrica",
+				"Cardiología Pediátrica"
+			]
+		}
+	],
+	"medicalGroups": [
+		{
+			"group": { "name": "Clínica" },
+			"specialties": [
+				"Anestesiología",
+				"Cirugía General",
+				"Dermatología",
+				"Hematología",
+				"Medicina Interna",
+				"Patología",
+				"Pediatría"
+			]
+		},
+		{
+			"group": { "name": "Especialista" },
+			"specialties": [
+				"Anestesiología",
+				"Cirugía General",
+				"Dermatología",
+				"Hematología",
+				"Medicina Interna",
+				"Patología",
+				"Pediatría"
+			]
+		},
+		{
+			"group": { "name": "Farmacia" },
+			"specialties": []
+		},
+		{
+			"group": { "name": "Imagenología" },
+			"specialties": []
+		},
+		{
+			"group": { "name": "Laboratorio" },
+			"specialties": []
+		}
+	],
+	"drugClasess": [
+		{ "name": "Comprimido" },
+		{ "name": "Antivirales de uso Sistémico" },
+		{ "name": "Terapia Endócrina" },
+		{ "name": "Laxante" },
+		{ "name": "Vitamina" },
+		{ "name": "Diurético" },
+		{ "name": "Oftanmológico" },
+		{ "name": "Todo el resto de Productos Terapéuticos" },
+		{ "name": "Antibiótico Quimioterápico Dermatol" }
+	],
+	"drugUnits": [
+		{ "name": "Comprimido" },
+		{ "name": "Emulsión Oral" },
+		{ "name": "Inyectable" },
+		{ "name": "Crema o Pomada Oftálmica" },
+		{ "name": "Crema o Pomada" },
+		{ "name": "Suspensión o Jarabe" }
+	],
+	"clinicalCareStates": [
+		{ "name": "En progreso", "color": "#ED6428", "lock": false },
+		{ "name": "Pendiente", "color": "#C2C2C2", "lock": false },
+		{ "name": "Finalizado", "color": "#40ED28", "lock": true }
+	],
+
+	"belongings": [
+		{ "name": "Atocha" },
+		{ "name": "Cochabamba" },
+		{ "name": "La Paz" },
+		{ "name": "Oruro" },
+		{ "name": "Potosí" },
+		{ "name": "San Vicente" },
+		{ "name": "Santa Cruz" },
+		{ "name": "Sucre" },
+		{ "name": "Tarija" },
+		{ "name": "Tupiza" },
+		{ "name": "Uyuni" },
+		{ "name": "Villazón" }
+	],
+	"medicalOffices": [
+		{
+			"medicalOffice": { "name": "Consultorio La Paz" },
+			"belonging": "La Paz"
+		},
+		{
+			"medicalOffice": { "name": "Consultorio San Vicente" },
+			"belonging": "San Vicente"
+		}
+	],
+
+	"insureds": [
+		{
+			"insured": {
+			  "code": "60-0524-HMF",
+			  "iin": 2,
+			  "inletDate": "2005-01-01T04:00:00.000Z",
+			  "tradeUnion": true,
+			  "phone": "73724838"
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Francisco",
+				"lastName": "Huarachi Mamani",
+				"sex": "Masculino",
+				"birthDate": "2060-05-24T04:00:00.000Z"
+			  },
+			  "documentNumber": "1398605"
+			},
+			"insuredType": "Titular",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "58-5427-CNT",
+			  "inletDate": "2005-01-01T04:00:00.000Z",
+			  "tradeUnion": false
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Toribia ",
+				"lastName": "Casimiro Nina",
+				"sex": "Femenino",
+				"birthDate": "2058-04-27T04:00:00.000Z"
+			  },
+			  "documentNumber": "8567332"
+			},
+			"holderInsuredIIN": 2,
+			"insuredType": "Espos@",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "68-1026-QHL",
+			  "iin": 4,
+			  "inletDate": "2005-01-01T04:00:00.000Z",
+			  "tradeUnion": true,
+			  "phone": "72360267"
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Lucio",
+				"lastName": "Quispe Huayta",
+				"sex": "Masculino",
+				"birthDate": "2068-10-26T04:00:00.000Z"
+			  },
+			  "documentNumber": "8626483"
+			},
+			"insuredType": "Titular",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "69-5617-MMI",
+			  "inletDate": "2005-01-01T04:00:00.000Z",
+			  "tradeUnion": false
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Ismaela",
+				"lastName": "Mendoza Mendoza",
+				"sex": "Femenino",
+				"birthDate": "2069-06-17T04:00:00.000Z"
+			  },
+			  "documentNumber": "8551723"
+			},
+			"holderInsuredIIN": 4,
+			"insuredType": "Espos@",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "65-1113-BOE",
+			  "iin": 6,
+			  "inletDate": "2005-01-01T04:00:00.000Z",
+			  "tradeUnion": true,
+			  "phone": "73808230"
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Estanislao",
+				"lastName": "Bolivar Bolivar",
+				"sex": "Masculino",
+				"birthDate": "2065-11-13T04:00:00.000Z"
+			  },
+			  "documentNumber": "1410508"
+			},
+			"insuredType": "Titular",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "81-5823-FNC",
+			  "inletDate": "2005-01-01T04:00:00.000Z",
+			  "tradeUnion": false
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Cidonia",
+				"lastName": "Flores Nina",
+				"sex": "Femenino",
+				"birthDate": "1981-08-23T04:00:00.000Z"
+			  },
+			  "documentNumber": "5539522"
+			},
+			"holderInsuredIIN": 6,
+			"insuredType": "Espos@",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "21-0716-BFJ",
+			  "inletDate": "2021-07-19T04:00:00.000Z",
+			  "tradeUnion": false
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Jhoan Omar",
+				"lastName": "Bolivar Flores",
+				"sex": "Masculino",
+				"birthDate": "2021-07-16T04:00:00.000Z"
+			  },
+			  "documentNumber": "16868060"
+			},
+			"holderInsuredIIN": 6,
+			"insuredType": "Hij@",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "71-0403-YVM",
+			  "iin": 10,
+			  "inletDate": "2005-01-01T04:00:00.000Z",
+			  "tradeUnion": true,
+			  "phone": "74258590"
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Mario",
+				"lastName": "Yuca Villca",
+				"sex": "Masculino",
+				"birthDate": "2071-04-03T04:00:00.000Z"
+			  },
+			  "documentNumber": "6673650"
+			},
+			"insuredType": "Titular",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "70-5408-QFD",
+			  "inletDate": "2005-01-01T04:00:00.000Z",
+			  "tradeUnion": false
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Dionicia",
+				"lastName": "Quispe Farfan",
+				"sex": "Femenino",
+				"birthDate": "2070-04-08T04:00:00.000Z"
+			  },
+			  "documentNumber": "1398354"
+			},
+			"holderInsuredIIN": 10,
+			"insuredType": "Espos@",
+			"belonging": "San Vicente"
+		},
+		{
+			"insured": {
+			  "code": "10-1130-YQJ",
+			  "inletDate": "2010-11-30T04:00:00.000Z",
+			  "tradeUnion": false
+			},
+			"person": {
+			  "flat": {
+				"firstName": "Jhenry",
+				"lastName": "Yuca Quispe",
+				"sex": "Masculino",
+				"birthDate": "2010-11-30T04:00:00.000Z"
+			  },
+			  "documentNumber": "14377273"
+			},
+			"holderInsuredIIN": 10,
+			"insuredType": "Hij@",
+			"belonging": "San Vicente"
+		}
+	],
+	"clerks": [
+		{
+			"clerk": {
+				"ein": 1122
+			},
+			"person": {
+				"flat": {
+					"firstName": "Pedro",
+					"lastName": "Perez Pereira",
+					"sex": "Masculino",
+					"birthDate": "2010-11-30T04:00:00.000Z"
+				},
+				"documentNumber": "1112223"
+			},
+			"employeeType": "Médico",
+			"position": "Médico General",
+			"medicalOffices": ["Consultorio La Paz"]
+		},
+		{
+			"clerk": {
+				"ein": 1123
+			},
+			"person": {
+				"flat": {
+					"firstName": "Medardo",
+					"lastName": "Medina",
+					"sex": "Masculino",
+					"birthDate": "2010-11-30T04:00:00.000Z"
+				},
+				"documentNumber": "1112223"
+			},
+			"employeeType": "Médico",
+			"position": "Médico General",
+			"medicalOffices": ["Consultorio San Vicente"]
+		}
+	],
+	
+	"medications": [
+		{
+			"medication": {
+				"code": "J0501",
+				"name": "Abacavir",
+				"concentration": "300 MG",
+				"liname": true
+			},
+			"unit": "Comprimido",
+			"class": "Antivirales de uso Sistémico"
+		},
+		{
+			"medication": {
+				"code": "L0209",
+				"name": "Abiraterona Acetato",
+				"concentration": "250 MG",
+				"liname": true
+			},
+			"unit": "Comprimido",
+			"class": "Terapia Endócrina"
+		},
+		{
+			"medication": {
+				"code": "A0601",
+				"name": "Aceite Mineral",
+				"concentration": "40%",
+				"liname": true
+			},
+			"unit": "Emulsión Oral",
+			"class": "Laxante"
+		},
+		{
+			"medication": {
+				"code": "A1101",
+				"name": "Aceite Vitaminado (Alimento)",
+				"concentration": "SEGÚN DISPONIBILIDAD",
+				"liname": true
+			},
+			"unit": "Emulsión Oral",
+			"class": "Vitamina"
+		},
+		{
+			"medication": {
+				"code": "C0301",
+				"name": "Acetazolamida",
+				"concentration": "250 MG",
+				"liname": true
+			},
+			"unit": "Comprimido",
+			"class": "Diurético"
+		},
+		{
+			"medication": {
+				"code": "V0301",
+				"name": "Acetil Cisteina",
+				"concentration": "10%",
+				"liname": true
+			},
+			"unit": "Inyectable",
+			"class": "Todo el resto de Productos Terapéuticos"
+		},
+		{
+			"medication": {
+				"code": "S0101",
+				"name": "Aciclovir",
+				"concentration": "3%",
+				"liname": true
+			},
+			"unit": "Crema o Pomada Oftálmica",
+			"class": "Oftanmológico"
+		},
+		{
+			"medication": {
+				"code": "D0603",
+				"name": "Aciclovir",
+				"concentration": "5%",
+				"liname": true
+			},
+			"unit": "Crema o Pomada",
+			"class": "Antibiótico Quimioterápico Dermatol"
+		},
+		{
+			"medication": {
+				"code": "J0542",
+				"name": "Aciclovir",
+				"concentration": "200 MG",
+				"liname": true
+			},
+			"unit": "Comprimido",
+			"class": "Antivirales de uso Sistémico"
+		},
+		{
+			"medication": {
+				"code": "J0530",
+				"name": "Aciclovir",
+				"concentration": "200 MG/5 ML",
+				"liname": true
+			},
+			"unit": "Suspensión o Jarabe",
+			"class": "Antivirales de uso Sistémico"
+		},
+		{
+			"medication": {
+				"code": "J0544",
+				"name": "Aciclovir",
+				"concentration": "250 MG",
+				"liname": true
+			},
+			"unit": "Inyectable",
+			"class": "Antivirales de uso Sistémico"
+		},
+		{
+			"medication": {
+				"code": "J0545",
+				"name": "Aciclovir",
+				"concentration": "500 MG",
+				"liname": true
+			},
+			"unit": "Inyectable",
+			"class": "Antivirales de uso Sistémico"
+		},
+		{
+			"medication": {
+				"code": "J0543",
+				"name": "Aciclovir",
+				"concentration": "800 MG",
+				"liname": true
+			},
+			"unit": "Comprimido",
+			"class": "Antivirales de uso Sistémico"
+		}
+	],
+	"pharmacies": [
+		{
+			"parmacy": { "name": "Farmacia San Vicente" },
+			"belonging": "San Vicente",
+			"inventory": [
+				{
+					"item": {
+						"lot": "31714028",
+						"quantity": 0,
+						"expireAt": "2025-05-07T04:00:00.000Z"
+					},
+					"medication": "J0501"
+				},
+				{
+					"item": {
+						"lot": "BN3592",
+						"quantity": 1,
+						"expireAt": "2025-09-25T04:00:00.000Z"
+					},
+					"medication": "L0209"
+				},
+				{
+					"item": {
+						"lot": "IJS3H00",
+						"quantity": 553,
+						"expireAt": "2025-11-30T04:00:00.000Z"
+					},
+					"medication": "J0542"
+				},
+				{
+					"item": {
+						"lot": "IJS3H03",
+						"quantity": 50,
+						"expireAt": "2025-11-30T04:00:00.000Z"
+					},
+					"medication": "J0543"
+				}
+			]
+		}
+	]
+}
