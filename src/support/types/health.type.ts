@@ -1,0 +1,60 @@
+
+export interface IClinicCareCreateArgs {
+	startDate:			Date
+	insuredId:			number
+	stateId:			number
+	medicalOfficeId:	number
+}
+
+export interface IClinicCarePrimaryUpsertArgs {
+	clinicCareId:	number
+
+	reason?:		string
+	physicalExam?:	string
+	diagnosis?:		string
+}
+
+export interface IInterclinicalCreateArgs {
+	clinicCareId:	number
+
+	medicalGroupId:	number
+	providerId:		number
+	specialties:	Array<{
+		medicalSpecialtyId:	number
+		subspecialties:		Array<number>
+	}>
+	remark:			string
+}
+
+export interface IInterclinicalUpdateArgs {
+	clinicCareId:	number
+	
+	remark?:		string
+	approvedState?:	number
+	files?:			Array<string>
+}
+
+export interface IPrescriptionCreateArgs {
+	clinicCareId:	number
+
+	pharmacyId:		number
+	medicationId:	number
+	quantity:		number
+	indications:	string
+}
+
+export interface IPrescriptionUpdateArgs {
+	clinicCareId:	number
+
+	medicationId?:	number
+	quantity?:		number
+	indications?:	string
+}
+
+export interface IPrescriptionExternCreateArgs {
+	clinicCareId:	number
+
+	medicationId:	number
+	quantity:		number
+	indications:	string
+}
