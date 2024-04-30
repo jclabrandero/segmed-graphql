@@ -1,0 +1,59 @@
+
+type Prescription {
+	id:			Int!
+	quantity:	Int!
+	indications:	String!
+
+	medication:	Medication!
+	pharmacy:	Pharmacy!
+	clinicCare:	ClinicCare!
+}
+
+type PrescriptionExtern {
+	id:			Int!
+	quantity:	Int!
+	indications:	String!
+
+	medication:	Medication!
+	clinicCare:	ClinicCare!
+}
+
+
+input IPrescriptionCreateArgs {
+	clinicCareId:	Int!
+
+	pharmacyId:		Int!
+	medicationId:	Int!
+	quantity:		Int!
+	indications:	String!
+}
+
+input IPrescriptionUpdateArgs {
+	clinicCareId:	Int!
+
+	medicationId:	Int
+	quantity:		Int
+	indications:	String
+}
+
+input IPrescriptionExternCreateArgs {
+	clinicCareId:	Int!
+
+	medicationId:	Int!
+	quantity:		Int!
+	indications:	String!
+}
+
+type Query {
+	prescription(id: Int!): Prescription! @authorized
+	prescriptionExtern(id: Int!): PrescriptionExtern! @authorized
+}
+
+type Mutation {
+	createPrescription(data: IPrescriptionCreateArgs): ClinicCare! @authorized
+	updatePrescription(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
+	deletePrescription(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
+	createPrescriptionExtern(data: IPrescriptionExternCreateArgs): ClinicCare! @authorized
+	updatePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
+	deletePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
+}
