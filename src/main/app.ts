@@ -10,6 +10,7 @@ import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import { json } from 'body-parser'
 import cors from 'cors'
+import fileUpload from 'express-fileupload'
 
 import { Routes } from './routes'
 import { GraphqlResolver } from './graphql'
@@ -33,12 +34,12 @@ export class App {
 		this.api = new GraphqlResolver()
 		this.db = new Database()
 
+		this.express.use(this.onRequest.bind(this))
+
 		this.init()
 	}
 
 	async init() {
-		this.express.use('/', this.routes.router)
-
 		const httpServer = this.server
 			, schema = this.api.schema
 			, wsServer = new WebSocketServer({
@@ -74,9 +75,16 @@ export class App {
 				context: this.api.buildContext(this.db.client, this.api.pubsub)
 			})
 		)
+		this.express.use(fileUpload())
+		this.express.use('/', cors<cors.CorsRequest>(), this.routes.router)
 
 		this.server.listen(process.env.PORT, () => {
 			console.log('Server ready on port', process.env.PORT)
 		})
+	}
+
+	onRequest(req, res, next) {
+		req.db = this.db.client
+		next()
 	}
 }
