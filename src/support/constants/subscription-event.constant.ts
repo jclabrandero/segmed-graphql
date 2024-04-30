@@ -63,6 +63,27 @@ enum MedicalGroup {
 	UPSERTED = 'MDCLGRP-UPSERT'
 }
 
+enum DrugClass {
+	CREATED = 'DRGCLS-C',
+	UPDATED = 'DRGCLS-U',
+	DELETED = 'DRGCLS-D',
+	UPSERTED = 'DRGCLS-UPSERT'
+}
+
+enum DrugUnit {
+	CREATED = 'DRGUNT-C',
+	UPDATED = 'DRGUNT-U',
+	DELETED = 'DRGUNT-D',
+	UPSERTED = 'DRGUNT-UPSERT'
+}
+
+enum ClinicalCareState {
+	CREATED = 'MDCRS-C',
+	UPDATED = 'MDCRS-U',
+	DELETED = 'MDCRS-D',
+	UPSERTED = 'MDCRS-UPSERT'
+}
+
 
 enum Belonging {
 	CREATED = 'BLNGNG-C',
@@ -76,6 +97,13 @@ enum MedicalOffice {
 	UPDATED = 'MDCLOFFC-U',
 	DELETED = 'MDCLOFFC-D',
 	UPSERTED = 'MDCLOFFC-UPSERT'
+}
+
+enum Provider {
+	CREATED = 'PRVDR-C',
+	UPDATED = 'PRVDR-U',
+	DELETED = 'PRVDR-D',
+	UPSERTED = 'PRVDR-UPSERT'
 }
 
 
@@ -101,13 +129,42 @@ enum Insured {
 }
 
 
+enum Medication {
+	CREATED = 'MDCTN-C',
+	UPDATED = 'MDCTN-U',
+	DELETED = 'MDCTN-D',
+	UPSERTED = 'MDCTN-UPSERT'
+}
+
+enum Pharmacy {
+	CREATED = 'PHRM-C',
+	UPDATED = 'PHRM-U',
+	DELETED = 'PHRM-D',
+	UPSERTED = 'PHRM-UPSERT'
+}
+
+
+enum ClinicCare {
+	CREATED = 'CLNCCR-C',
+	UPDATED = 'CLNCCR-U',
+	DELETED = 'CLNCCR-D',
+	UPSERTED = 'CLNCCR-UPSERT'
+}
+
+
 export const SubscriptionEvent = {
 	User, Group,
 
 	PersonDocumentType, EmployeeType, EmployeePosition, InsuredType,
 	MedicalSubspecialty, MedicalSpecialty, MedicalGroup,
+	DrugClass, DrugUnit,
+	ClinicalCareState,
 
-	Belonging, MedicalOffice,
+	Belonging, MedicalOffice, Provider,
 	
-	Person, Clerk, Insured
+	Person, Clerk, Insured,
+
+	Medication, Pharmacy,
+
+	ClinicCare
 }
