@@ -9,14 +9,23 @@ import { PubSub } from 'graphql-subscriptions'
 import { IContext } from '../support/types'
 
 import { SessionResolver, UserResolver, GroupResolver, PermissionResolver } from '../modules/authorization'
+import { FileResolver } from '../modules/system'
 import {
 	PersonDocumentTypeResolver,
 	EmployeeTypeResolver, EmployeePositionResolver,
 	InsuredTypeResolver,
-	MedicalSubspecialtyResolver, MedicalSpecialtyResolver, MedicalGroupResolver
+	MedicalSubspecialtyResolver, MedicalSpecialtyResolver, MedicalGroupResolver,
+	DrugClassResolver, DrugUnitResolver,
+	ClinicalCareStateResolver
 } from '../modules/catalog'
-import { BelongingResolver, MedicalOfficeResolver } from '../modules/reference'
+import { BelongingResolver, MedicalOfficeResolver, ProviderResolver } from '../modules/reference'
 import { PersonResolver, ClerkResolver, InsuredResolver } from '../modules/folk'
+import { MedicationResolver, PharmacyResolver } from '../modules/drugstore'
+import {
+	ClinicCareResolver, ClinicCarePrimaryResolver,
+	InterclinicalResolver,
+	PrescriptionResolver
+} from '../modules/health'
 
 
 export class GraphqlResolver {
@@ -61,6 +70,7 @@ export class GraphqlResolver {
 			, session = new SessionResolver()
 			, group = new GroupResolver()
 			, permission = new PermissionResolver()
+			, file = new FileResolver()
 			, personDocumentType = new PersonDocumentTypeResolver()
 			, employeeType = new EmployeeTypeResolver()
 			, employeePosition = new EmployeePositionResolver()
@@ -68,11 +78,21 @@ export class GraphqlResolver {
 			, medicalSubspecialty = new MedicalSubspecialtyResolver()
 			, medicalSpecialty = new MedicalSpecialtyResolver()
 			, medicalGroup = new MedicalGroupResolver()
+			, drugClass = new DrugClassResolver()
+			, drugUnit = new DrugUnitResolver()
+			, clinicalCareState = new ClinicalCareStateResolver()
 			, belonging = new BelongingResolver()
 			, medicalOffice = new MedicalOfficeResolver()
+			, provider = new ProviderResolver()
 			, person = new PersonResolver()
 			, clerk = new ClerkResolver()
 			, insured = new InsuredResolver()
+			, medication = new MedicationResolver()
+			, pharmacy = new PharmacyResolver()
+			, clinicCare = new ClinicCareResolver()
+			, clinicCarePrimary = new ClinicCarePrimaryResolver()
+			, interclinical = new InterclinicalResolver()
+			, prescription = new PrescriptionResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -85,11 +105,14 @@ export class GraphqlResolver {
 				users: user.index,
 				currentUser: user.current,
 				user: user.findOne,
+				userByUserName: user.findOneByUserName,
 				groups: group.index,
 				activeGroups: group.active,
 				group: group.findOne,
 				permissions: permission.index,
 				activePermissions: permission.active,
+
+				downloadFile: file.download,
 
 				personDocumentTypes: personDocumentType.index,
 				activePersonDocumentTypes: personDocumentType.active,
@@ -112,6 +135,15 @@ export class GraphqlResolver {
 				medicalGroups: medicalGroup.index,
 				activeMedicalGroups: medicalGroup.active,
 				medicalGroup: medicalGroup.findOne,
+				drugClasess: drugClass.index,
+				activeDrugClasess: drugClass.active,
+				drugClass: drugClass.findOne,
+				drugUnits: drugUnit.index,
+				activeDrugUnits: drugUnit.active,
+				drugUnit: drugUnit.findOne,
+				clinicalCareStates: clinicalCareState.index,
+				activeClinicalCareState: clinicalCareState.active,
+				clinicalCareState: clinicalCareState.findOne,
 
 				belongings: belonging.index,
 				activeBelongings: belonging.active,
@@ -119,6 +151,9 @@ export class GraphqlResolver {
 				medicalOffices: medicalOffice.index,
 				activeMedicalOffices: medicalOffice.active,
 				medicalOffice: medicalOffice.findOne,
+				providers: provider.index,
+				activeProviders: provider.filter,
+				provider: provider.findOne,
 
 				persons: person.index,
 				activePersons: person.active,
@@ -129,7 +164,23 @@ export class GraphqlResolver {
 				insureds: insured.index,
 				activeInsureds: insured.active,
 				activeHolderInsureds: insured.activeHolders,
-				insured: insured.findOne
+				insured: insured.findOne,
+
+				medications: medication.index,
+				medicationsLiname: medication.liname,
+				medication: medication.findOne,
+				pharmacies: pharmacy.index,
+				activePharmacies: pharmacy.active,
+				pharmacy: pharmacy.findOne,
+				pharmacyStock: pharmacy.stock,
+
+				clinicCares: clinicCare.index,
+				clinicCare: clinicCare.findOne,
+				clinicCareState: clinicCare.findState,
+				clinicCarePrimary: clinicCarePrimary.findOne,
+				interclinical: interclinical.findOne,
+				prescription: prescription.findOne,
+				prescriptionExtern: prescription.findOneExtern
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -160,6 +211,15 @@ export class GraphqlResolver {
 				createMedicalGroup: medicalGroup.create,
 				updateMedicalGroup: medicalGroup.update,
 				deleteMedicalGroup:	medicalGroup.delete,
+				createDrugClass: drugClass.create,
+				updateDrugClass: drugClass.update,
+				deleteDrugClass: drugClass.delete,
+				createDrugUnit: drugUnit.create,
+				updateDrugUnit: drugUnit.update,
+				deleteDrugUnit: drugUnit.delete,
+				createClinicalCareState: clinicalCareState.create,
+				updateClinicalCareState: clinicalCareState.update,
+				deleteClinicalCareState: clinicalCareState.delete,
 
 				createBelonging: belonging.create,
 				updateBelonging: belonging.update,
@@ -167,6 +227,8 @@ export class GraphqlResolver {
 				createMedicalOffice: medicalOffice.create,
 				updateMedicalOffice: medicalOffice.update,
 				deleteMedicalOffice: medicalOffice.delete,
+				createProvider: provider.create,
+				updateProvider: provider.update,
 
 				createPerson: person.create,
 				updatePerson: person.update,
@@ -176,7 +238,27 @@ export class GraphqlResolver {
 				deleteClerk: clerk.delete,
 				createInsured: insured.create,
 				updateInsured: insured.update,
-				deleteInsured: insured.delete
+				deleteInsured: insured.delete,
+
+				createMedication: medication.create,
+				updateMedication: medication.update,
+				deleteMedicationo: medication.delete,
+				createPharmacy: pharmacy.create,
+				updatePharmacy: pharmacy.update,
+				deletePharmacy: pharmacy.delete,
+
+				createClinicCare: clinicCare.create,
+				updateClinicCareState: clinicCare.updateState,
+				upsertClinicCarePrimary: clinicCarePrimary.upsert,
+				createInterclinical: interclinical.create,
+				updateInterclinical: interclinical.update,
+				deleteInterclinical: interclinical.delete,
+				createPrescription: prescription.create,
+				updatePrescription: prescription.update,
+				deletePrescription: prescription.delete,
+				createPrescriptionExtern: prescription.createExtern,
+				updatePrescriptionExtern: prescription.updateExtern,
+				deletePrescriptionExtern: prescription.deleteExtern
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
@@ -215,6 +297,18 @@ export class GraphqlResolver {
 				medicalGroupUpdated: medicalGroup.updated({ pubsub }),
 				medicalGroupDeleted: medicalGroup.deleted({ pubsub }),
 				medicalGroupUpserted: medicalGroup.upserted({ pubsub }),
+				drugClassCreated: drugClass.created({ pubsub }),
+				drugClassUpdated: drugClass.updated({ pubsub }),
+				drugClassDeleted: drugClass.deleted({ pubsub }),
+				drugClassUpserted: drugClass.upserted({ pubsub }),
+				drugUnitCreated: drugUnit.created({ pubsub }),
+				drugUnitUpdated: drugUnit.updated({ pubsub }),
+				drugUnitDeleted: drugUnit.deleted({ pubsub }),
+				drugUnitUpserted: drugUnit.upserted({ pubsub }),
+				clinicalCareStateCreated: clinicalCareState.created({ pubsub }),
+				clinicalCareStateUpdated: clinicalCareState.updated({ pubsub }),
+				clinicalCareStateDeleted: clinicalCareState.deleted({ pubsub }),
+				clinicalCareStateUpserted: clinicalCareState.upserted({ pubsub }),
 
 				belongingCreated: belonging.created({ pubsub }),
 				belongingUpdated: belonging.updated({ pubsub }),
@@ -224,6 +318,10 @@ export class GraphqlResolver {
 				medicalOfficeUpdated: medicalOffice.updated({ pubsub }),
 				medicalOfficeDeleted: medicalOffice.deleted({ pubsub }),
 				medicalOfficeUpserted: medicalOffice.upserted({ pubsub }),
+				providerCreated: provider.created({ pubsub }),
+				providerUpdated: provider.updated({ pubsub }),
+				providerDeleted: provider.deleted({ pubsub }),
+				providerUpserted: provider.upserted({ pubsub }),
 
 				personCreated: person.created({ pubsub }),
 				personUpdated: person.updated({ pubsub }),
@@ -236,7 +334,21 @@ export class GraphqlResolver {
 				insuredCreated: insured.created({ pubsub }),
 				insuredUpdated: insured.updated({ pubsub }),
 				insuredDeleted: insured.deleted({ pubsub }),
-				insuredUpserted: insured.upserted({ pubsub })
+				insuredUpserted: insured.upserted({ pubsub }),
+
+				medicationCreated: medication.created({ pubsub }),
+				medicationUpdated: medication.updated({ pubsub }),
+				medicationDeleted: medication.deleted({ pubsub }),
+				medicationUpserted: medication.upserted({ pubsub }),
+				pharmacyCreated: pharmacy.created({ pubsub }),
+				pharmacyUpdated: pharmacy.updated({ pubsub }),
+				pharmacyDeleted: pharmacy.deleted({ pubsub }),
+				pharmacyUpserted: pharmacy.upserted({ pubsub }),
+
+				clinicCareCreated: clinicCare.created({ pubsub }),
+				clinicCareUpdated: clinicCare.updated({ pubsub }),
+				clinicCareDeleted: clinicCare.deleted({ pubsub }),
+				clinicCareUpserted: clinicCare.upserted({ pubsub })
 			}
 		}])
 	}
