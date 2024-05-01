@@ -5,6 +5,7 @@ import { Resolver } from '../../../support/classes'
 import { IContext, IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { PrescriptionTemplate } from '../../template/prescription.template'
 
 
 export class PrescriptionResolver extends Resolver {
@@ -206,6 +207,58 @@ export class PrescriptionResolver extends Resolver {
 			dataset: [{ clinicCareUpdated: record }, { clinicCareUpserted: record }]
 		})
 		return record
+	}
+
+	async print(_, args: { data: { clinicCareId: number } }, constext: IContext) {
+		const template = new PrescriptionTemplate()
+		const record = await constext.db.clinicCare.findUnique({
+			where: {
+				id: args.data.clinicCareId,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				insured: {
+					include: {
+						person: true,
+						belonging: true
+					}
+				},
+				medicalOffice: true,
+				prescriptions: {
+					where: {
+						status: Status.Active
+					},
+					include: {
+						pharmacy: true,
+						medication: {
+							include: {
+								unit: true
+							}
+						}
+					}
+				},
+				prescriptionExterns: {
+					where: {
+						status: Status.Active
+					},
+					include: {
+						medication: {
+							include: {
+								unit: true
+							}
+						}
+					}
+				}
+			}
+		})
+		const buffer = await template.make(record, constext.user)
+
+		return {
+			info: {
+				type: 'application/pdf'
+			},
+			data: buffer.toString('base64')
+		}
 	}
 
 }

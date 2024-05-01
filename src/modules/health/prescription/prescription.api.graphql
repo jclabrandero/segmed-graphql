@@ -44,6 +44,10 @@ input IPrescriptionExternCreateArgs {
 	indications:	String!
 }
 
+input IPrescriptionPrintArgs {
+	clinicCareId:	Int!
+}
+
 type Query {
 	prescription(id: Int!): Prescription! @authorized
 	prescriptionExtern(id: Int!): PrescriptionExtern! @authorized
@@ -56,4 +60,5 @@ type Mutation {
 	createPrescriptionExtern(data: IPrescriptionExternCreateArgs): ClinicCare! @authorized
 	updatePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
 	deletePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
+	printPrescription(data: IPrescriptionPrintArgs!): FileBase64! @authorized
 }
