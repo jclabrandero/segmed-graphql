@@ -8,13 +8,13 @@ import { withAuditForCreate } from '../support/functions'
 
 export class FileController {
 	async upload(req: Request & { user: User, db: PrismaClient }, res: Response) {
-		const { file: fileBuffer } = req['files']
+		const { file: buffer } = req['files']
 			, { user, db } = req
 
-		if (fileBuffer) {
+		if (buffer) {
 			try {
 				const directory = process.env.FILE_UPLOAD_DIR
-				const file = new File({ upload: fileBuffer })
+				const file = new File({ upload: buffer })
 
 				await file.write({ directory })
 
@@ -23,7 +23,7 @@ export class FileController {
 					await db.fileUpload.create({ data: withAuditForCreate(user, {
 						md5: file.info.md5,
 						name: file.info.name,
-						encoding: fileBuffer.encoding,
+						encoding: buffer.encoding,
 						type: file.info.type,
 						extension: file.info.extension
 					})})

@@ -1,5 +1,6 @@
 
 import { IContext } from './context.type'
+import { FileBuffer } from './system.type'
 import { IEvent } from './event.type'
 import { IAuthPayload, IUserCreateArgs, IUserUpdateArgs, IGroupCreateArgs, IGroupUpdateArgs } from './auth.type'
 import {
@@ -37,6 +38,7 @@ import {
 export {
 	IAuthPayload,
 	IContext,
+	FileBuffer,
 	IEvent,
 	IGroupCreateArgs, IGroupUpdateArgs,
 	IUserCreateArgs, IUserUpdateArgs,
