@@ -253,12 +253,14 @@ export class GraphqlResolver {
 				createInterclinical: interclinical.create,
 				updateInterclinical: interclinical.update,
 				deleteInterclinical: interclinical.delete,
+				printInterclinical: interclinical.print,
 				createPrescription: prescription.create,
 				updatePrescription: prescription.update,
 				deletePrescription: prescription.delete,
 				createPrescriptionExtern: prescription.createExtern,
 				updatePrescriptionExtern: prescription.updateExtern,
-				deletePrescriptionExtern: prescription.deleteExtern
+				deletePrescriptionExtern: prescription.deleteExtern,
+				printPrescription: prescription.print
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
