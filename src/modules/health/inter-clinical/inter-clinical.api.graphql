@@ -43,4 +43,5 @@ type Mutation {
 	createInterclinical(data: IInterclinicalCreateArgs!): ClinicCare! @authorized
 	updateInterclinical(id: Int!, data: IInterclinicalUpdateArgs!): ClinicCare! @authorized
 	deleteInterclinical(id: Int!, data: IInterclinicalUpdateArgs!): ClinicCare! @authorized
+	printInterclinical(id: Int!): FileBase64! @authorized
 }

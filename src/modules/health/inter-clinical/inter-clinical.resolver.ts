@@ -6,6 +6,7 @@ import { IContext, IInterclinicalCreateArgs, IInterclinicalUpdateArgs } from '..
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { now, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 import { MedicalGroupResolver } from '../../catalog'
+import { InterclinicalTemplate } from '../../template/inter-clinical.template'
 
 
 export class InterclinicalResolver extends Resolver {
@@ -14,36 +15,7 @@ export class InterclinicalResolver extends Resolver {
 		super(SubscriptionEvent.ClinicCare)
 	}
 
-	async findOne(_, { id }: { id: number }, { db }: IContext) {
-		const record = await db.interclinical.findUnique({
-			where: {
-				id,
-				NOT: { status: Status.Removed }
-			},
-			include: {
-				medicalGroup: true,
-				provider: true,
-				specialties: {
-					include: {
-						medicalSpecialty: true,
-						subspecialties: {
-							include: {
-								medicalSubspecialty: true
-							}
-						}
-					}
-				},
-				files: {
-					where: {
-						status: Status.Active
-					},
-					include: {
-						file: true
-					}
-				}
-			}
-		})
-
+	static format(record) {
 		return {
 			...record,
 			medicalGroup: {
@@ -55,6 +27,43 @@ export class InterclinicalResolver extends Resolver {
 			},
 			files: record.files.map(ref => ref.file)
 		}
+	}
+
+	static include() {
+		return {
+			medicalGroup: true,
+			provider: true,
+			specialties: {
+				include: {
+					medicalSpecialty: true,
+					subspecialties: {
+						include: {
+							medicalSubspecialty: true
+						}
+					}
+				}
+			},
+			files: {
+				where: {
+					status: Status.Active
+				},
+				include: {
+					file: true
+				}
+			}
+		}
+	}
+
+	async findOne(_, { id }: { id: number }, { db }: IContext) {
+		const record = await db.interclinical.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: InterclinicalResolver.include()
+		})
+
+		return InterclinicalResolver.format(record)
 	}
 
 	async create(_, { data }: { data: IInterclinicalCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
@@ -148,6 +157,39 @@ export class InterclinicalResolver extends Resolver {
 			dataset: [{ clinicCareUpdated: record }, { clinicCareUpserted: record }]
 		})
 		return record
+	}
+
+	async print(_, args: { id: number }, constext: IContext) {
+		const template = new InterclinicalTemplate()
+		const record = await constext.db.interclinical.findUnique({
+			where: {
+				id: args.id,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				clinicCare: {
+					include: {
+						medicalOffice: true,
+						insured: {
+							include: {
+								person: true,
+								belonging: true
+							}
+						}
+					}
+				},
+				...InterclinicalResolver.include()
+			}
+		})
+
+		const buffer = await template.make(InterclinicalResolver.format(record), constext.user)
+
+		return {
+			info: {
+				type: 'application/pdf'
+			},
+			data: buffer.toString('base64')
+		}
 	}
 
 }
