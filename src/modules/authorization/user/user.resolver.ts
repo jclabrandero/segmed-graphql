@@ -24,7 +24,7 @@ export class UserResolver extends Resolver {
 				...relation.group
 			})),
 			permissions: groups.reduce(
-				(accumulator, { group }) => [ ...accumulator, ...group.permissions.map(({ permission }) => permission.code) ].filter((value, index, array) => array.indexOf(value) === index),
+				(accumulator, { group }) => [ ...accumulator, ...group.permissions.map(({ permission }) => permission.name) ].filter((value, index, array) => array.indexOf(value) === index),
 				[]
 			),
 			clerk: clerkUser ? ClerkResolver.format(clerkUser.clerk) : undefined
