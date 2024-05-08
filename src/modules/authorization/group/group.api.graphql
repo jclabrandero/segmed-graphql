@@ -26,14 +26,14 @@ input IGroupUpdateArgs {
 }
 
 type Query {
-	groups: [Group!]! @authorized
-	activeGroups: [Group!]! @authorized
-	group(id: Int!): Group! @authorized
+	groups: [Group!]! @authorized @has(permissions: [ReadGroup])
+	activeGroups: [Group!]! @authorized @has(permissions: [ReadGroup])
+	group(id: Int!): Group! @authorized @has(permissions: [ReadGroup])
 }
 
 type Mutation {
-	createGroup(data: IGroupCreateArgs!): Group! @authorized
-	updateGroup(id: Int!, data: IGroupUpdateArgs!): Group! @authorized
+	createGroup(data: IGroupCreateArgs!): Group! @authorized @has(permissions: [WriteGroup])
+	updateGroup(id: Int!, data: IGroupUpdateArgs!): Group! @authorized @has(permissions: [WriteGroup])
 }
 
 type Subscription {

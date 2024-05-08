@@ -2,6 +2,7 @@
 type Permission {
 	id:				Int!
 	code:			String!
+	name:			String!
 	description:	String
 	
 	status:			Int!
@@ -9,6 +10,6 @@ type Permission {
 
 
 type Query {
-	permissions: [Permission!]! @authorized
-	activePermissions: [Permission!]! @authorized
+	permissions: [Permission!]! @authorized @has(permissions: [ReadPermission])
+	activePermissions: [Permission!]! @authorized @has(permissions: [ReadPermission])
 }
