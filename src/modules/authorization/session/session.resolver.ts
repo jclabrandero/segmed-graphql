@@ -2,9 +2,12 @@
 import { IContext, IAuthPayload } from '../../../support/types'
 import { Status } from '../../../support/constants/status.constant'
 import { Auth } from '../../../support/classes'
+import { User } from '@prisma/client'
+import { UserResolver } from '../user/user.resolver'
 
 
 export class SessionResolver {
+	private user: User & { permissions: Array<string> }
 
 	authorized(resolve) {
 		return async function(source, args, context: IContext, info) {
@@ -18,14 +21,33 @@ export class SessionResolver {
 				if (session.status !== Status.Active) throw 'Sesión de usuario no es válido.'
 
 				const payload = await Auth.verify<IAuthPayload>(authData[1], session.publicKey)
-					, user = await context.db.user.findUnique({ where: { userName: payload.userName } })
+					, user = await context.db.user.findUnique({
+						where: { userName: payload.userName },
+						include: UserResolver.includeAll()
+					})
 
-				context.user = user
+				context.user = UserResolver.format(user)
 				context.session = session
 
 				return resolve(source, args, context, info)
 			}
 			else throw 'El usuario no tiene credenciales.'
+		}
+	}
+
+	has(resolve, permissions: Array<string>) {
+		return async (source, args, context: IContext, info) => {
+			for (const permission of permissions) {
+				if (!context.user.permissions.includes(permission)) {
+					const ref = await context.db.permission.findUnique({
+						where: { name: permission }
+					})
+
+					throw `No tienes permisos de: ${ref.description}`
+				}
+			}
+
+			return resolve(source, args, context, info)
 		}
 	}
 

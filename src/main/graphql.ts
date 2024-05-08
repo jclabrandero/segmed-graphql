@@ -49,8 +49,11 @@ export class GraphqlResolver {
 		return mapSchema(schema, {
 			[MapperKind.OBJECT_FIELD]: fieldConfig => {
 				const authDirective = getDirective(schema, fieldConfig, 'authorized')
-
 				if (authDirective) {
+					const hasDirective = getDirective(schema, fieldConfig, 'has')
+					if (hasDirective) {
+						fieldConfig.resolve = session.authorized(session.has(fieldConfig.resolve, hasDirective[0].permissions))
+					}
 					fieldConfig.resolve = session.authorized(fieldConfig.resolve)
 				}
 

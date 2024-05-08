@@ -1,2 +1,56 @@
 
 directive @authorized on FIELD | FIELD_DEFINITION
+
+directive @has(permissions: [PermissionName!]!) on FIELD_DEFINITION
+
+
+enum PermissionName {
+	ReadPermission
+	ReadGroup
+	WriteGroup
+	ReadUser
+	WriteUser
+
+	ReadPersonDocumentType
+	WritePersonDocumentType
+	ReadEmployeeType
+	WriteEmployeeType
+	ReadEmployeePosition
+	WriteEmployeePosition
+	ReadInsuredType
+	WriteInsuredType
+	ReadMedicalGroup
+	WriteMedicalGroup
+	ReadMedicalSpecialty
+	WriteMedicalSpecialty
+	ReadMedicalSubspecialty
+	WriteMedicalSubspecialty
+	ReadDrugClass
+	WriteDrugClass
+	ReadDrugUnit
+	WriteDrugUnit
+	ReadClinicalCareState
+	WriteClinicalCareState
+
+	ReadPerson
+	WritePerson
+	ReadClerk
+	WriteClerk
+	ReadInsured
+	WriteInsured
+
+	ReadBelonging
+	WriteBelonging
+	ReadMedicalOffice
+	WriteMedicalOffice
+	ReadProvider
+	WriteProvider
+
+	ReadMedication
+	WriteMedication
+	ReadPharmacy
+	WritePharmacy
+
+	ReadClinicCare
+	WriteClinicCare
+}

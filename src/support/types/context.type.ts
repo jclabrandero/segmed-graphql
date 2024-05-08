@@ -8,6 +8,6 @@ export interface IContext {
 	req:		Request
 	db:			PrismaClient
 	pubsub:		PubSub
-	user?:		User
+	user?:		User & { permissions: Array<string> }
 	session?:	Session
 }
