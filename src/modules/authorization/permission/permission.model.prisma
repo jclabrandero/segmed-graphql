@@ -2,6 +2,7 @@
 model Permission {
 	id			Int		@id @default(autoincrement())
 	code		String	@unique
+	name		String	@unique
 	description	String?
 
 	status		Int		@default(1)

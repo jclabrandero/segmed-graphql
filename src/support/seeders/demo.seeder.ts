@@ -6,21 +6,56 @@ import { withAuditForCreate } from '../functions'
 
 const data = {
 	permisos: [
-		{ code: 'SEGMED', description: 'Acceso básico' },
+		{ code: 'SEGMED', name: 'BasicPermission', description: 'Acceso básico' },
 
-		{ code: 'R_PRMSSN', description: 'Lectura de permisos' },
+		{ code: 'R_PRMSSN', name: 'ReadPermission', description: 'Lectura de permisos' },
+		{ code: 'R_GRP', name: 'ReadGroup', description: 'Lectura de grupos' },
+		{ code: 'W_GRP', name: 'WriteGroup', description: 'Escritura de grupos' },
+		{ code: 'R_USR', name: 'ReadUser', description: 'Lectura de usuarios' },
+		{ code: 'W_USR', name: 'WriteUser', description: 'Escritura de usuarios' },
 
-		{ code: 'R_GRP', description: 'Lectura de grupos' },
-		{ code: 'W_GRP', description: 'Escritura de grupos' },
+		{ code: 'R_PDT', name: 'ReadPersonDocumentType', description: 'Lectura de tipos de documento identidad' },
+		{ code: 'W_PDT', name: 'WritePersonDocumentType', description: 'Escritura de tipos de documento identidad' },
+		{ code: 'R_EMP', name: 'ReadEmployeeType', description: 'Lectura de cargos de funcionarios' },
+		{ code: 'W_EMP', name: 'WriteEmployeeType', description: 'Escritura de cargos de funcionarios' },
+		{ code: 'R_EMT', name: 'ReadEmployeePosition', description: 'Lectura de tipos de funcionarios' },
+		{ code: 'W_EMT', name: 'WriteEmployeePosition', description: 'Escritura de tipos de funcionarios' },
+		{ code: 'R_INT', name: 'ReadInsuredType', description: 'Lectura de tipos de beneficiarios' },
+		{ code: 'W_INT', name: 'WriteInsuredType', description: 'Escritura de tipos de beneficiarios' },
+		{ code: 'R_MDGRP', name: 'ReadMedicalGroup', description: 'Lectura de unidades médicas' },
+		{ code: 'W_MDGRP', name: 'WriteMedicalGroup', description: 'Escritura de unidades médicas' },
+		{ code: 'R_MDSPC', name: 'ReadMedicalSpecialty', description: 'Lectura de especialidades médicas' },
+		{ code: 'W_MDSPC', name: 'WriteMedicalSpecialty', description: 'Escritura de especialidades médicas' },
+		{ code: 'R_MDSSP', name: 'ReadMedicalSubspecialty', description: 'Lectura de sub-especialidades médicas' },
+		{ code: 'W_MDSSP', name: 'WriteMedicalSubspecialty', description: 'Escritura de sub-especialidades médicas' },
+		{ code: 'R_DRGCLS', name: 'ReadDrugClass', description: 'Lectura de clases de medicamentos' },
+		{ code: 'W_DRGCLS', name: 'WriteDrugClass', description: 'Escritura de clases de medicamentos' },
+		{ code: 'R_DRGUNT', name: 'ReadDrugUnit', description: 'Lectura de unidades de medicamentos' },
+		{ code: 'W_DRGUNT', name: 'WriteDrugUnit', description: 'Escritura de unidades de medicamentos' },
+		{ code: 'R_CLNCRST', name: 'ReadClinicalCareState', description: 'Lectura de estados de consultas' },
+		{ code: 'W_CLNCRST', name: 'WriteClinicalCareState', description: 'Escritura de estados de consultas' },
 
-		{ code: 'R_USR', description: 'Lectura de usuarios' },
-		{ code: 'W_USR', description: 'Escritura de usuarios' },
+		{ code: 'R_PRSN', name: 'ReadPerson', description: 'Lectura de personas' },
+		{ code: 'W_PRSN', name: 'WritePerson', description: 'Escritura de personas' },
+		{ code: 'R_CLRK', name: 'ReadClerk', description: 'Lectura de funcionarios' },
+		{ code: 'W_CLRK', name: 'WriteClerk', description: 'Escritura de funcionarios' },
+		{ code: 'R_NSRD', name: 'ReadInsured', description: 'Lectura de beneficiarios' },
+		{ code: 'W_NSRD', name: 'WriteInsured', description: 'Escritura de beneficiarios' },
 
-		{ code: 'R_PDT', description: 'Lectura de tipos de documento identidad' },
-		{ code: 'W_PDT', description: 'Escritura de tipos de documento identidad' },
+		{ code: 'R_BLNG', name: 'ReadBelonging', description: 'Lectura de pertinencias' },
+		{ code: 'W_BLNG', name: 'WriteBelonging', description: 'Escritura de pertinencias' },
+		{ code: 'R_MDOF', name: 'ReadMedicalOffice', description: 'Lectura de consultorios' },
+		{ code: 'W_MDOF', name: 'WriteMedicalOffice', description: 'Escritura de consultorios' },
+		{ code: 'R_PRVD', name: 'ReadProvider', description: 'Lectura de proveedores' },
+		{ code: 'W_PRVD', name: 'WriteProvider', description: 'Escritura de proveedores' },
 
-		{ code: 'R_PRSN', description: 'Lectura de personas' },
-		{ code: 'W_PRSN', description: 'Escritura de personas' }
+		{ code: 'R_MDCTN', name: 'ReadMedication', description: 'Lectura de medicamentos' },
+		{ code: 'W_MDCTN', name: 'WriteMedication', description: 'Escritura de medicamentos' },
+		{ code: 'R_PHRMC', name: 'ReadPharmacy', description: 'Lectura de farmacias' },
+		{ code: 'W_PHRMC', name: 'WritePharmacy', description: 'Escritura de farmacias' },
+
+		{ code: 'R_CLNCR', name: 'ReadClinicCare', description: 'Lectura de consultas médicas' },
+		{ code: 'W_CLNCR', name: 'WriteClinicCare', description: 'Escritura de consultas médicas' }
 	],
 	grupos: [
 		{
