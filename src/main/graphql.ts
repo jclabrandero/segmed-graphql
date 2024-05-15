@@ -109,6 +109,7 @@ export class GraphqlResolver {
 				currentUser: user.current,
 				user: user.findOne,
 				userByUserName: user.findOneByUserName,
+				userByMyUserName: user.findOneSelf,
 				groups: group.index,
 				activeGroups: group.active,
 				group: group.findOne,

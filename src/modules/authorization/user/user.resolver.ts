@@ -132,6 +132,20 @@ export class UserResolver extends Resolver {
 		return UserResolver.format(record)
 	}
 
+	async findOneSelf(_, { userName }: { userName: string }, { db, user }: IContext): Promise<User> {
+		if (userName !== user.userName) throw 'Lectura incorrecta de datos de usuario.'
+
+		const record = await db.user.findUnique({
+			where: {
+				userName,
+				NOT: { status: Status.Removed }
+			},
+			include: UserResolver.includeAll()
+		})
+
+		return UserResolver.format(record)
+	}
+
 	async create(_, args: { data: IUserCreateArgs }, { db, pubsub, user }: IContext): Promise<User> {
 		const { groups, password, confirmPassword, clerkId, ...payload } = args.data
 		const { CREATED, UPSERTED } = SubscriptionEvent.User
