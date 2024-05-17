@@ -34,15 +34,15 @@ input IPersonUpdateArgs {
 }
 
 type Query {
-	persons: [Person!]! @authorized
-	activePersons: [Person]! @authorized
-	person(id: Int!): Person! @authorized
+	persons: [Person!]! @authorized @has(permissions: [ReadPerson])
+	activePersons: [Person]! @authorized @has(permissions: [ReadPerson])
+	person(id: Int!): Person! @authorized @has(permissions: [ReadPerson])
 }
 
 type Mutation {
-	createPerson(data: IPersonCreateArgs!): Person! @authorized
-	updatePerson(id: Int!, data: IPersonUpdateArgs!): Person! @authorized
-	deletePerson(id: Int!): Person! @authorized
+	createPerson(data: IPersonCreateArgs!): Person! @authorized @has(permissions: [WritePerson])
+	updatePerson(id: Int!, data: IPersonUpdateArgs!): Person! @authorized @has(permissions: [WritePerson])
+	deletePerson(id: Int!): Person! @authorized @has(permissions: [WritePerson])
 }
 
 type Subscription {

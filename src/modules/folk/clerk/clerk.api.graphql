@@ -33,15 +33,15 @@ input IClerkUpdateArgs {
 }
 
 type Query {
-	clerks: [Clerk!]! @authorized
-	activeClerks: [Clerk!]! @authorized
-	clerk(id: Int!): Clerk! @authorized
+	clerks: [Clerk!]! @authorized @has(permissions: [ReadClerk])
+	activeClerks: [Clerk!]! @authorized @has(permissions: [ReadClerk])
+	clerk(id: Int!): Clerk! @authorized @has(permissions: [ReadClerk])
 }
 
 type Mutation {
-	createClerk(data: IClerkCreateArgs!): Clerk! @authorized
-	updateClerk(id: Int!, data: IClerkUpdateArgs!): Clerk! @authorized
-	deleteClerk(id: Int!): Clerk! @authorized
+	createClerk(data: IClerkCreateArgs!): Clerk! @authorized @has(permissions: [WriteClerk])
+	updateClerk(id: Int!, data: IClerkUpdateArgs!): Clerk! @authorized @has(permissions: [WriteClerk])
+	deleteClerk(id: Int!): Clerk! @authorized @has(permissions: [WriteClerk])
 }
 
 type Subscription {

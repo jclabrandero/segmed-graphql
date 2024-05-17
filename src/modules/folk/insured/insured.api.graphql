@@ -49,16 +49,16 @@ input IInsuredUpdateArgs {
 }
 
 type Query {
-	insureds: [Insured!]! @authorized
-	activeInsureds: [Insured!]! @authorized
-	activeHolderInsureds: [Insured!]! @authorized
-	insured(id: Int!): Insured! @authorized
+	insureds: [Insured!]! @authorized @has(permissions: [ReadInsured])
+	activeInsureds: [Insured!]! @authorized @has(permissions: [ReadInsured])
+	activeHolderInsureds: [Insured!]! @authorized @has(permissions: [ReadInsured])
+	insured(id: Int!): Insured! @authorized @has(permissions: [ReadInsured])
 }
 
 type Mutation {
-	createInsured(data: IInsuredCreateArgs!): Insured! @authorized
-	updateInsured(id: Int!, data: IInsuredUpdateArgs!): Insured! @authorized
-	deleteInsured(id: Int!): Insured! @authorized
+	createInsured(data: IInsuredCreateArgs!): Insured! @authorized @has(permissions: [WriteInsured])
+	updateInsured(id: Int!, data: IInsuredUpdateArgs!): Insured! @authorized @has(permissions: [WriteInsured])
+	deleteInsured(id: Int!): Insured! @authorized @has(permissions: [WriteInsured])
 }
 
 type Subscription {

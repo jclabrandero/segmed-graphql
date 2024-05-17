@@ -113,6 +113,11 @@ export class PersonResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Person> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.Person
 		await super.findOneOrFail(db.person, id)
+		const clerks = await db.clerk.findMany({ where: { personId: id, NOT: { status: Status.Removed } } })
+		if (clerks.length) throw 'Existen funcionarios que dependen de este registro.'
+		const insureds = await db.insured.findMany({ where: { personId: id, NOT: { status: Status.Removed } } })
+		if (insureds.length) throw 'Existen beneficiarios que dependen de este registro.'
+
 		const record = await db.person.update({
 			where: { id },
 			data: withAuditForDelete(user)
