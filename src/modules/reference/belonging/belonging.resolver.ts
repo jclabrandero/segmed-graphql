@@ -70,13 +70,13 @@ export class BelongingResolver extends Resolver {
 		const found = await super.findOneOrFail(db.belonging, id)
 		const where = { belongingId: id, NOT: { status: Status.Removed } }
 		const medicalOffices = await db.medicalOffice.findMany({ where })
-		if (medicalOffices.length) throw 'Existen consultorios que dependen de este registro.'
+		if (medicalOffices.length) throw 'Existen consultorios que dependen de éste registro.'
 		const insureds = await db.insured.findMany({ where })
-		if (insureds.length) throw 'Existen beneficiarios que dependen de este registro.'
+		if (insureds.length) throw 'Existen beneficiarios que dependen de éste registro.'
 		const providers = await db.provider.findMany({ where })
-		if (providers.length) throw 'Existen proveedores que dependen de este registro.'
+		if (providers.length) throw 'Existen proveedores que dependen de éste registro.'
 		const pharmacies = await db.pharmacy.findMany({ where })
-		if (pharmacies.length) throw 'Existen farmacias que dependen de este registro.'
+		if (pharmacies.length) throw 'Existen farmacias que dependen de éste registro.'
 
 		const record = await db.belonging.update({
 			where: { id },

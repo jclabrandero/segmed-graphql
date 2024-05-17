@@ -114,9 +114,9 @@ export class PersonResolver extends Resolver {
 		const { DELETED, UPSERTED } = SubscriptionEvent.Person
 		await super.findOneOrFail(db.person, id)
 		const clerks = await db.clerk.findMany({ where: { personId: id, NOT: { status: Status.Removed } } })
-		if (clerks.length) throw 'Existen funcionarios que dependen de este registro.'
+		if (clerks.length) throw 'Existen funcionarios que dependen de éste registro.'
 		const insureds = await db.insured.findMany({ where: { personId: id, NOT: { status: Status.Removed } } })
-		if (insureds.length) throw 'Existen beneficiarios que dependen de este registro.'
+		if (insureds.length) throw 'Existen beneficiarios que dependen de éste registro.'
 
 		const record = await db.person.update({
 			where: { id },
