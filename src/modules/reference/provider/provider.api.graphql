@@ -50,15 +50,15 @@ input IProviderFilterArgs {
 }
 
 type Query {
-	providers: [Provider!]! @authorized
-	activeProviders(query: IProviderFilterArgs!): [Provider!]! @authorized
-	provider(id: Int!): Provider! @authorized
+	providers: [Provider!]! @authorized @has(permissions: [ReadProvider])
+	activeProviders(query: IProviderFilterArgs!): [Provider!]! @authorized @has(permissions: [ReadProvider])
+	provider(id: Int!): Provider! @authorized @has(permissions: [ReadProvider])
 }
 
 type Mutation {
-	createProvider(data: IProviderCreateArgs!): Provider! @authorized
-	updateProvider(id: Int!, data: IProviderUpdateArgs!): Provider! @authorized
-	deleteProvider(id: Int!): Provider! @authorized
+	createProvider(data: IProviderCreateArgs!): Provider! @authorized @has(permissions: [WriteProvider])
+	updateProvider(id: Int!, data: IProviderUpdateArgs!): Provider! @authorized @has(permissions: [WriteProvider])
+	deleteProvider(id: Int!): Provider! @authorized @has(permissions: [WriteProvider])
 }
 
 type Subscription {

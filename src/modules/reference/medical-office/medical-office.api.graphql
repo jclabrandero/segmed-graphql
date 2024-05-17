@@ -20,15 +20,15 @@ input IMedicalOfficeUpdateArgs {
 }
 
 type Query {
-	medicalOffices: [MedicalOffice!]! @authorized
-	activeMedicalOffices: [MedicalOffice!]! @authorized
-	medicalOffice(id: Int!): MedicalOffice! @authorized
+	medicalOffices: [MedicalOffice!]! @authorized @has(permissions: [ReadMedicalOffice])
+	activeMedicalOffices: [MedicalOffice!]! @authorized @has(permissions: [ReadMedicalOffice])
+	medicalOffice(id: Int!): MedicalOffice! @authorized @has(permissions: [ReadMedicalOffice])
 }
 
 type Mutation {
-	createMedicalOffice(data: IMedicalOfficeCreateArgs!): MedicalOffice! @authorized
-	updateMedicalOffice(id: Int!, data: IMedicalOfficeUpdateArgs!): MedicalOffice! @authorized
-	deleteMedicalOffice(id: Int!): MedicalOffice! @authorized
+	createMedicalOffice(data: IMedicalOfficeCreateArgs!): MedicalOffice! @authorized @has(permissions: [WriteMedicalOffice])
+	updateMedicalOffice(id: Int!, data: IMedicalOfficeUpdateArgs!): MedicalOffice! @authorized @has(permissions: [WriteMedicalOffice])
+	deleteMedicalOffice(id: Int!): MedicalOffice! @authorized @has(permissions: [WriteMedicalOffice])
 }
 
 type Subscription {

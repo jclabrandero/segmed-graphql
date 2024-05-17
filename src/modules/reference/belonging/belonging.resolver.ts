@@ -68,6 +68,16 @@ export class BelongingResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Belonging> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.Belonging
 		const found = await super.findOneOrFail(db.belonging, id)
+		const where = { belongingId: id, status: Status.Active }
+		const medicalOffices = await db.medicalOffice.findMany({ where })
+		if (medicalOffices.length) throw 'Existen consultorios que dependen de este registro.'
+		const insureds = await db.insured.findMany({ where })
+		if (insureds.length) throw 'Existen beneficiarios que dependen de este registro.'
+		const providers = await db.provider.findMany({ where })
+		if (providers.length) throw 'Existen proveedores que dependen de este registro.'
+		const pharmacies = await db.pharmacy.findMany({ where })
+		if (pharmacies.length) throw 'Existen farmacias que dependen de este registro.'
+
 		const record = await db.belonging.update({
 			where: { id },
 			data: withAuditForDelete(user, found, 'name')

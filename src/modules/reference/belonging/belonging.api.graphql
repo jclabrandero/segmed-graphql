@@ -16,15 +16,15 @@ input IBelongingUpdateArgs {
 }
 
 type Query {
-	belongings: [Belonging!]! @authorized
-	activeBelongings: [Belonging!]! @authorized
-	belonging(id: Int!): Belonging! @authorized
+	belongings: [Belonging!]! @authorized @has(permissions: [ReadBelonging])
+	activeBelongings: [Belonging!]! @authorized @has(permissions: [ReadBelonging])
+	belonging(id: Int!): Belonging! @authorized @has(permissions: [ReadBelonging])
 }
 
 type Mutation {
-	createBelonging(data: IBelongingCreateArgs!): Belonging! @authorized
-	updateBelonging(id: Int!, data: IBelongingUpdateArgs!): Belonging! @authorized
-	deleteBelonging(id: Int!): Belonging! @authorized
+	createBelonging(data: IBelongingCreateArgs!): Belonging! @authorized @has(permissions: [WriteBelonging])
+	updateBelonging(id: Int!, data: IBelongingUpdateArgs!): Belonging! @authorized @has(permissions: [WriteBelonging])
+	deleteBelonging(id: Int!): Belonging! @authorized @has(permissions: [WriteBelonging])
 }
 
 type Subscription {

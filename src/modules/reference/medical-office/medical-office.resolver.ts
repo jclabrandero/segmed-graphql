@@ -77,6 +77,9 @@ export class MedicalOfficeResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<MedicalOffice> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.MedicalOffice
 		const found = await super.findOneOrFail(db.medicalOffice, id)
+		const clerks = await db.clerkMedicalOffice.findMany({ where: { medicalOfficeId: id, status: Status.Active } })
+		if (clerks.length) throw 'Existen funcionarios que dependen de este registro.'
+
 		const record = await db.medicalOffice.update({
 			where: { id },
 			data: withAuditForDelete(user, found, 'name')
