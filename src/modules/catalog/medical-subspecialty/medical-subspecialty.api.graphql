@@ -35,15 +35,15 @@ input IMedicalSubspecialtyUpdateArgs {
 }
 
 type Query {
-	medicalSubspecialties: [MedicalSubspecialty!]! @authorized
-	activeMedicalSubspecialties: [MedicalSubspecialty!]! @authorized
-	medicalSubspecialty(id: Int!): MedicalSubspecialty! @authorized
+	medicalSubspecialties: [MedicalSubspecialty!]! @authorized @has(permissions: [ReadMedicalSubspecialty])
+	activeMedicalSubspecialties: [MedicalSubspecialty!]! @authorized @has(permissions: [ReadMedicalSubspecialty])
+	medicalSubspecialty(id: Int!): MedicalSubspecialty! @authorized @has(permissions: [ReadMedicalSubspecialty])
 }
 
 type Mutation {
-	createMedicalSubspecialty(data: IMedicalSubspecialtyCreateArgs!): MedicalSubspecialty! @authorized
-	updateMedicalSubspecialty(id: Int!, data: IMedicalSubspecialtyUpdateArgs!): MedicalSubspecialty! @authorized
-	deleteMedicalSubspecialty(id: Int!): MedicalSubspecialty! @authorized
+	createMedicalSubspecialty(data: IMedicalSubspecialtyCreateArgs!): MedicalSubspecialty! @authorized @has(permissions: [WriteMedicalSubspecialty])
+	updateMedicalSubspecialty(id: Int!, data: IMedicalSubspecialtyUpdateArgs!): MedicalSubspecialty! @authorized @has(permissions: [WriteMedicalSubspecialty])
+	deleteMedicalSubspecialty(id: Int!): MedicalSubspecialty! @authorized @has(permissions: [WriteMedicalSubspecialty])
 }
 
 type Subscription {

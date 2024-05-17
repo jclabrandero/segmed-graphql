@@ -25,15 +25,15 @@ input IMedicalGroupUpdateArgs {
 }
 
 type Query {
-	medicalGroups: [MedicalGroup!]! @authorized
-	activeMedicalGroups: [MedicalGroup!]! @authorized
-	medicalGroup(id: Int!): MedicalGroup! @authorized
+	medicalGroups: [MedicalGroup!]! @authorized @has(permissions: [ReadMedicalGroup])
+	activeMedicalGroups: [MedicalGroup!]! @authorized @has(permissions: [ReadMedicalGroup])
+	medicalGroup(id: Int!): MedicalGroup! @authorized @has(permissions: [ReadMedicalGroup])
 }
 
 type Mutation {
-	createMedicalGroup(data: IMedicalGroupCreateArgs!): MedicalGroup! @authorized
-	updateMedicalGroup(id: Int!, data: IMedicalGroupUpdateArgs!): MedicalGroup! @authorized
-	deleteMedicalGroup(id: Int!): MedicalGroup! @authorized
+	createMedicalGroup(data: IMedicalGroupCreateArgs!): MedicalGroup! @authorized @has(permissions: [WriteMedicalGroup])
+	updateMedicalGroup(id: Int!, data: IMedicalGroupUpdateArgs!): MedicalGroup! @authorized @has(permissions: [WriteMedicalGroup])
+	deleteMedicalGroup(id: Int!): MedicalGroup! @authorized @has(permissions: [WriteMedicalGroup])
 }
 
 type Subscription {

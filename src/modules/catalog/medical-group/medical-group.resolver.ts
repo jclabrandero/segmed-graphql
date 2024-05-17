@@ -5,6 +5,7 @@ import { Relation, Resolver } from '../../../support/classes'
 import { IContext, IMedicalGroupCreateArgs, IMedicalGroupUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { MedicalSpecialtyResolver } from '../medical-specialty/medical-specialty.resolver'
 
 
 export class MedicalGroupResolver extends Resolver {
@@ -13,15 +14,24 @@ export class MedicalGroupResolver extends Resolver {
 		super(SubscriptionEvent.MedicalGroup)
 	}
 
+	static reduce(specialties) {
+		return specialties ? specialties.reduce(
+			(result, { medicalSpecialty }) =>
+				medicalSpecialty.status == Status.Active
+					? [ ...result, {
+						...medicalSpecialty,
+						subspecialties: MedicalSpecialtyResolver.reduce(medicalSpecialty.subspecialties)
+					}]
+					: result,
+			[]) : undefined
+	}
+
 	static format(record) {
 		if (!record) return null
 		const { specialties, ...group } = record
 		return {
 			...group,
-			specialties: specialties ? specialties.map(({ medicalSpecialty }) => ({
-				...medicalSpecialty,
-				subspecialties: medicalSpecialty.subspecialties.map(({ medicalSubspecialty }) => medicalSubspecialty)
-			})) : undefined
+			specialties: MedicalGroupResolver.reduce(specialties)
 		}
 	}
 
@@ -153,6 +163,9 @@ export class MedicalGroupResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<MedicalGroup> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.MedicalGroup
 		const found = await super.findOneOrFail(db.medicalGroup, id)
+		const providers = await db.providerMedicalGroup.findMany({ where: { providerId: id, NOT: { status: Status.Removed } } })
+		if (providers.length) throw 'Existen proveedores que dependen de éste registro.'
+
 		const record = await db.medicalGroup.update({
 			where: { id },
 			data: withAuditForDelete(user, found, 'name')

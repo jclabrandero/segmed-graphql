@@ -68,6 +68,16 @@ export class MedicalSubspecialtyResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<MedicalSubspecialty> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.MedicalSubspecialty
 		const found = await super.findOneOrFail(db.medicalSubspecialty, id)
+		const providers = await db.providerMedicalSubspecialty.findMany({ where: {
+			providerMedicalSpecialty: {
+				providerMedicalGroup: {
+					providerId: id
+				}
+			},
+			NOT: { status: Status.Removed }
+		} })
+		if (providers.length) throw 'Existen proveedores que dependen de éste registro.'
+
 		const record = await db.medicalSubspecialty.update({
 			where: { id },
 			data: withAuditForDelete(user, found, 'name')

@@ -13,14 +13,21 @@ export class MedicalSpecialtyResolver extends Resolver {
 		super(SubscriptionEvent.MedicalSpecialty)
 	}
 
+	static reduce(subspecialties) {
+		return subspecialties ? subspecialties.reduce(
+			(result, { medicalSubspecialty }) =>
+				medicalSubspecialty.status == Status.Active
+					? [ ...result, { ...medicalSubspecialty }]
+					: result,
+			[]) : undefined
+	}
+
 	static format(record) {
 		if (!record) return null
 		const { subspecialties, ...medicalSpecialty } = record
 		return {
 			...medicalSpecialty,
-			subspecialties: subspecialties ? subspecialties.map(sm => ({
-				...sm.medicalSubspecialty
-			})) : undefined
+			subspecialties: MedicalSpecialtyResolver.reduce(subspecialties)
 		}
 	}
 
@@ -112,10 +119,18 @@ export class MedicalSpecialtyResolver extends Resolver {
 
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<MedicalSpecialty> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.MedicalSpecialty
-		await super.findOneOrFail(db.medicalSpecialty, id)
+		const found = await super.findOneOrFail(db.medicalSpecialty, id)
+		const providers = await db.providerMedicalSpecialty.findMany({ where: {
+			providerMedicalGroup: {
+				providerId: id
+			},
+			NOT: { status: Status.Removed }
+		} })
+		if (providers.length) throw 'Existen proveedores que dependen de éste registro.'
+
 		const record = await db.medicalSpecialty.update({
 			where: { id },
-			data: withAuditForDelete(user)
+			data: withAuditForDelete(user, found, 'name')
 		})
 		super.publish({
 			pubsub,
