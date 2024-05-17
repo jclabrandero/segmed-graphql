@@ -21,15 +21,15 @@ input IDrugClassUpdateArgs {
 }
 
 type Query {
-	drugClasess: [DrugClass!]! @authorized
-	activeDrugClasess: [DrugClass!]! @authorized
-	drugClass(id: Int!): DrugClass! @authorized
+	drugClasess: [DrugClass!]! @authorized @has(permissions: [ReadDrugClass])
+	activeDrugClasess: [DrugClass!]! @authorized @has(permissions: [ReadDrugClass])
+	drugClass(id: Int!): DrugClass! @authorized @has(permissions: [ReadDrugClass])
 }
 
 type Mutation {
-	createDrugClass(data: IDrugClassCreateArgs!): DrugClass! @authorized
-	updateDrugClass(id: Int!, data: IDrugClassUpdateArgs!): DrugClass! @authorized
-	deleteDrugClass(id: Int!): DrugClass! @authorized
+	createDrugClass(data: IDrugClassCreateArgs!): DrugClass! @authorized @has(permissions: [WriteDrugClass])
+	updateDrugClass(id: Int!, data: IDrugClassUpdateArgs!): DrugClass! @authorized @has(permissions: [WriteDrugClass])
+	deleteDrugClass(id: Int!): DrugClass! @authorized @has(permissions: [WriteDrugClass])
 }
 
 type Subscription {

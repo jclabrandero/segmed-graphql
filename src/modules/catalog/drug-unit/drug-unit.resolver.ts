@@ -68,6 +68,9 @@ export class DrugUnitResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<DrugUnit> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.DrugUnit
 		const found = await super.findOneOrFail(db.drugUnit, id)
+		const medications = await db.medication.findMany({ where: { unitId: id, NOT: { status: Status.Removed } } })
+		if (medications.length) throw 'Existen medicamentos que dependen de éste registro.'
+
 		const record = await db.drugUnit.update({
 			where: { id },
 			data: withAuditForDelete(user, found, 'name')

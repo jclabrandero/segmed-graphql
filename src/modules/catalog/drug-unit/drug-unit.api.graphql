@@ -21,15 +21,15 @@ input IDrugUnitUpdateArgs {
 }
 
 type Query {
-	drugUnits: [DrugUnit!]! @authorized
-	activeDrugUnits: [DrugUnit!]! @authorized
-	drugUnit(id: Int!): DrugUnit! @authorized
+	drugUnits: [DrugUnit!]! @authorized @has(permissions: [ReadDrugUnit])
+	activeDrugUnits: [DrugUnit!]! @authorized @has(permissions: [ReadDrugUnit])
+	drugUnit(id: Int!): DrugUnit! @authorized @has(permissions: [ReadDrugUnit])
 }
 
 type Mutation {
-	createDrugUnit(data: IDrugUnitCreateArgs!): DrugUnit! @authorized
-	updateDrugUnit(id: Int!, data: IDrugUnitUpdateArgs!): DrugUnit! @authorized
-	deleteDrugUnit(id: Int!): DrugUnit! @authorized
+	createDrugUnit(data: IDrugUnitCreateArgs!): DrugUnit! @authorized @has(permissions: [WriteDrugUnit])
+	updateDrugUnit(id: Int!, data: IDrugUnitUpdateArgs!): DrugUnit! @authorized @has(permissions: [WriteDrugUnit])
+	deleteDrugUnit(id: Int!): DrugUnit! @authorized @has(permissions: [WriteDrugUnit])
 }
 
 type Subscription {
