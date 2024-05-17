@@ -38,16 +38,16 @@ input IPharmacyUpdateArgs {
 }
 
 type Query {
-	pharmacies: [Pharmacy!]! @authorized
-	activePharmacies: [Pharmacy!]! @authorized
-	pharmacy(id: Int!): Pharmacy! @authorized
-	pharmacyStock(pharmacyId: Int!): [MedicationStock!]! @authorized
+	pharmacies: [Pharmacy!]! @authorized @has(permissions: [ReadPharmacy])
+	activePharmacies: [Pharmacy!]! @authorized @has(permissions: [ReadPharmacy])
+	pharmacy(id: Int!): Pharmacy! @authorized @has(permissions: [ReadPharmacy])
+	pharmacyStock(pharmacyId: Int!): [MedicationStock!]! @authorized @has(permissions: [ReadMedication, ReadPharmacy])
 }
 
 type Mutation {
-	createPharmacy(data: IPharmacyCreateArgs!): Pharmacy! @authorized
-	updatePharmacy(id: Int!, data: IPharmacyUpdateArgs!): Pharmacy! @authorized
-	deletePharmacy(id: Int!): Pharmacy! @authorized
+	createPharmacy(data: IPharmacyCreateArgs!): Pharmacy! @authorized @has(permissions: [WritePharmacy])
+	updatePharmacy(id: Int!, data: IPharmacyUpdateArgs!): Pharmacy! @authorized @has(permissions: [WritePharmacy])
+	deletePharmacy(id: Int!): Pharmacy! @authorized @has(permissions: [WritePharmacy])
 }
 
 type Subscription {

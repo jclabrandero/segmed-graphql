@@ -34,15 +34,15 @@ input IMedicationUpdateArgs {
 }
 
 type Query {
-	medications: [Medication!]! @authorized
-	medicationsLiname: [Medication!]! @authorized
-	medication(id: Int!): Medication! @authorized
+	medications: [Medication!]! @authorized @has(permissions: [ReadMedication])
+	medicationsLiname: [Medication!]! @authorized @has(permissions: [ReadMedication])
+	medication(id: Int!): Medication! @authorized @has(permissions: [ReadMedication])
 }
 
 type Mutation {
-	createMedication(data: IMedicationCreateArgs!): Medication! @authorized
-	updateMedication(id: Int!, data: IMedicationUpdateArgs!): Medication! @authorized
-	deleteMedicationo(id: Int!): Medication! @authorized
+	createMedication(data: IMedicationCreateArgs!): Medication! @authorized @has(permissions: [WriteMedication])
+	updateMedication(id: Int!, data: IMedicationUpdateArgs!): Medication! @authorized @has(permissions: [WriteMedication])
+	deleteMedication(id: Int!): Medication! @authorized @has(permissions: [WriteMedication])
 }
 
 type Subscription {
