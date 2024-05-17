@@ -6,8 +6,6 @@ type InsuredType {
 	withDependents:	Boolean!
 
 	status:			Int!
-
-	# beneficiarios:		[Beneficiario!]!
 }
 
 
@@ -24,15 +22,15 @@ input IInsuredTypeUpdateArgs {
 }
 
 type Query {
-	insuredTypes: [InsuredType!]! @authorized
-	activeInsuredTypes: [InsuredType!]! @authorized
-	insuredType(id: Int!): InsuredType! @authorized
+	insuredTypes: [InsuredType!]! @authorized @has(permissions: [ReadInsuredType])
+	activeInsuredTypes: [InsuredType!]! @authorized @has(permissions: [ReadInsuredType])
+	insuredType(id: Int!): InsuredType! @authorized @has(permissions: [ReadInsuredType])
 }
 
 type Mutation {
-	createInsuredType(data: IInsuredTypeCreateArgs!): InsuredType! @authorized
-	updateInsuredType(id: Int!, data: IInsuredTypeUpdateArgs!): InsuredType! @authorized
-	deleteInsuredType(id: Int!): InsuredType! @authorized
+	createInsuredType(data: IInsuredTypeCreateArgs!): InsuredType! @authorized @has(permissions: [WriteInsuredType])
+	updateInsuredType(id: Int!, data: IInsuredTypeUpdateArgs!): InsuredType! @authorized @has(permissions: [WriteInsuredType])
+	deleteInsuredType(id: Int!): InsuredType! @authorized @has(permissions: [WriteInsuredType])
 }
 
 type Subscription {

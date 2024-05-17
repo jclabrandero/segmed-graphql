@@ -19,15 +19,15 @@ input IPersonDocumentTypeUpdateArgs {
 }
 
 type Query {
-	personDocumentTypes: [PersonDocumentType!]! @authorized
-	activePersonDocumentTypes: [PersonDocumentType!]! @authorized
-	personDocumentType(id: Int!): PersonDocumentType! @authorized
+	personDocumentTypes: [PersonDocumentType!]! @authorized @has(permissions: [ReadPersonDocumentType])
+	activePersonDocumentTypes: [PersonDocumentType!]! @authorized @has(permissions: [ReadPersonDocumentType])
+	personDocumentType(id: Int!): PersonDocumentType! @authorized @has(permissions: [ReadPersonDocumentType])
 }
 
 type Mutation {
-	createPersonDocumentType(data: IPersonDocumentTypeCreateArgs!): PersonDocumentType! @authorized
-	updatePersonDocumentType(id: Int!, data: IPersonDocumentTypeUpdateArgs!): PersonDocumentType! @authorized
-	deletePersonDocumentType(id: Int!): PersonDocumentType! @authorized
+	createPersonDocumentType(data: IPersonDocumentTypeCreateArgs!): PersonDocumentType! @authorized @has(permissions: [WritePersonDocumentType])
+	updatePersonDocumentType(id: Int!, data: IPersonDocumentTypeUpdateArgs!): PersonDocumentType! @authorized @has(permissions: [WritePersonDocumentType])
+	deletePersonDocumentType(id: Int!): PersonDocumentType! @authorized @has(permissions: [WritePersonDocumentType])
 }
 
 type Subscription {

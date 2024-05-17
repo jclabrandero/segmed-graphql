@@ -19,15 +19,15 @@ input IEmployeeTypeUpdateArgs {
 }
 
 type Query {
-	employeeTypes: [EmployeeType!]! @authorized
-	activeEmployeeTypes: [EmployeeType!]! @authorized
-	employeeType(id: Int!): EmployeeType! @authorized
+	employeeTypes: [EmployeeType!]! @authorized @has(permissions: [ReadEmployeeType])
+	activeEmployeeTypes: [EmployeeType!]! @authorized @has(permissions: [ReadEmployeeType])
+	employeeType(id: Int!): EmployeeType! @authorized @has(permissions: [ReadEmployeeType])
 }
 
 type Mutation {
-	createEmployeeType(data: IEmployeeTypeCreateArgs!): EmployeeType! @authorized
-	updateEmployeeType(id: Int!, data: IEmployeeTypeUpdateArgs!): EmployeeType! @authorized
-	deleteEmployeeType(id: Int!): EmployeeType! @authorized
+	createEmployeeType(data: IEmployeeTypeCreateArgs!): EmployeeType! @authorized @has(permissions: [WriteEmployeeType])
+	updateEmployeeType(id: Int!, data: IEmployeeTypeUpdateArgs!): EmployeeType! @authorized @has(permissions: [WriteEmployeeType])
+	deleteEmployeeType(id: Int!): EmployeeType! @authorized @has(permissions: [WriteEmployeeType])
 }
 
 type Subscription {

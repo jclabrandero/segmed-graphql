@@ -19,15 +19,15 @@ input IEmployeePositionUpdateArgs {
 }
 
 type Query {
-	employeePositions: [EmployeePosition!]! @authorized
-	activeEmployeePositions: [EmployeePosition!]! @authorized
-	employeePosition(id: Int!): EmployeePosition! @authorized
+	employeePositions: [EmployeePosition!]! @authorized @has(permissions: [ReadEmployeePosition])
+	activeEmployeePositions: [EmployeePosition!]! @authorized @has(permissions: [ReadEmployeePosition])
+	employeePosition(id: Int!): EmployeePosition! @authorized @has(permissions: [ReadEmployeePosition])
 }
 
 type Mutation {
-	createEmployeePosition(data: IEmployeePositionCreateArgs!): EmployeePosition! @authorized
-	updateEmployeePosition(id: Int!, data: IEmployeePositionUpdateArgs!): EmployeePosition! @authorized
-	deleteEmployeePosition(id: Int!): EmployeePosition! @authorized
+	createEmployeePosition(data: IEmployeePositionCreateArgs!): EmployeePosition! @authorized @has(permissions: [WriteEmployeePosition])
+	updateEmployeePosition(id: Int!, data: IEmployeePositionUpdateArgs!): EmployeePosition! @authorized @has(permissions: [WriteEmployeePosition])
+	deleteEmployeePosition(id: Int!): EmployeePosition! @authorized @has(permissions: [WriteEmployeePosition])
 }
 
 type Subscription {
