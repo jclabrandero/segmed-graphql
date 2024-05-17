@@ -68,7 +68,7 @@ export class EmployeeTypeResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<EmployeeType> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.EmployeeType
 		const found = await super.findOneOrFail(db.employeeType, id)
-		const clerks = await db.clerk.findMany({ where: { employeeTypeId: id, status: Status.Active } })
+		const clerks = await db.clerk.findMany({ where: { employeeTypeId: id, NOT: { status: Status.Removed } } })
 		if (clerks.length) throw 'Existen funcionarios que dependen de éste registro.'
 
 		const record = await db.employeeType.update({

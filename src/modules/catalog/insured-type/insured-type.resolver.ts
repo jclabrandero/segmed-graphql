@@ -68,7 +68,7 @@ export class InsuredTypeResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<InsuredType> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.InsuredType
 		const found = await super.findOneOrFail(db.insuredType, id)
-		const insureds = await db.insured.findMany({ where: { insuredTypeId: id, status: Status.Active } })
+		const insureds = await db.insured.findMany({ where: { insuredTypeId: id, NOT: { status: Status.Removed } } })
 		if (insureds.length) throw 'Existen beneficiarios que dependen de éste registro.'
 
 		const record = await db.insuredType.update({

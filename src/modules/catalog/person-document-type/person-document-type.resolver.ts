@@ -68,7 +68,7 @@ export class PersonDocumentTypeResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<PersonDocumentType> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.PersonDocumentType
 		const found = await super.findOneOrFail(db.personDocumentType, id)
-		const people = await db.person.findMany({ where: { personDocumentTypeId: id, status: Status.Active } })
+		const people = await db.person.findMany({ where: { personDocumentTypeId: id, NOT: { status: Status.Removed } } })
 		if (people.length) throw 'Existen personas que dependen de éste registro.'
 
 		const record = await db.personDocumentType.update({
