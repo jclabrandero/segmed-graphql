@@ -85,7 +85,7 @@ export class MedicationResolver extends Resolver {
 	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Medication> {
 		const { DELETED, UPSERTED } = SubscriptionEvent.Medication
 		await super.findOneOrFail(db.medication, id)
-		const medications = await db.inventory.findMany({ where: { medicationId: id, status: Status.Active } })
+		const medications = await db.inventory.findMany({ where: { medicationId: id, NOT: { status: Status.Removed } } })
 		if (medications.length) throw 'Existen medicamentos en invetarios de farmacias que dependen de éste registro.'
 
 		const record = await db.medication.update({

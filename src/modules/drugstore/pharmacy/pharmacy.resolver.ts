@@ -133,7 +133,14 @@ export class PharmacyResolver extends Resolver {
 		await super.findOneOrFail(db.pharmacy, id)
 		const record = await db.pharmacy.update({
 			where: { id },
-			data: withAuditForDelete(user)
+			data: withAuditForDelete(user, {
+				inventory: {
+					updateMany: {
+						where: { pharmacyId: id },
+						data: withAuditForDelete(user)
+					}
+				}
+			})
 		})
 		super.publish({
 			pubsub,
