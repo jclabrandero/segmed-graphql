@@ -121,3 +121,13 @@ export interface IClinicalCareStateUpdateArgs {
 	color?:			string
 	lock?:			boolean
 }
+
+export interface IDisabilityTypeCreateArgs {
+	name:			string
+	description?:	string
+}
+
+export interface IDisabilityTypeUpdateArgs {
+	name?:			string
+	description?:	string
+}

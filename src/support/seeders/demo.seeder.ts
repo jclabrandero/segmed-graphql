@@ -34,6 +34,8 @@ const data = {
 		{ code: 'W_DRGUNT', name: 'WriteDrugUnit', description: 'Escritura de unidades de medicamentos' },
 		{ code: 'R_CLNCRST', name: 'ReadClinicalCareState', description: 'Lectura de estados de consultas' },
 		{ code: 'W_CLNCRST', name: 'WriteClinicalCareState', description: 'Escritura de estados de consultas' },
+		{ code: 'R_DSBLTT', name: 'ReadDisabilityType', description: 'Lectura de tipos de discapacidades' },
+		{ code: 'W_DSBLTT', name: 'WriteDisabilityType', description: 'Escritura de tipos de discapacidades' },
 
 		{ code: 'R_PRSN', name: 'ReadPerson', description: 'Lectura de personas' },
 		{ code: 'W_PRSN', name: 'WritePerson', description: 'Escritura de personas' },
@@ -55,7 +57,8 @@ const data = {
 		{ code: 'W_PHRMC', name: 'WritePharmacy', description: 'Escritura de farmacias' },
 
 		{ code: 'R_CLNCR', name: 'ReadClinicCare', description: 'Lectura de consultas médicas' },
-		{ code: 'W_CLNCR', name: 'WriteClinicCare', description: 'Escritura de consultas médicas' }
+		{ code: 'W_CLNCR', name: 'WriteClinicCare', description: 'Escritura de consultas médicas' },
+		{ code: 'AP_ML', name: 'ApprovalMedicalLeave', description: 'Aprobación de bajas médicas' }
 	],
 	grupos: [
 		{

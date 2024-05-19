@@ -1,0 +1,37 @@
+
+type DisabilityType {
+	id:				Int!
+	name:			String!
+	description:	String
+	
+	status:			Int!
+}
+
+input IDisabilityTypeCreateArgs {
+	name:			String!
+	description:	String
+}
+
+input IDisabilityTypeUpdateArgs {
+	name:			String
+	description:	String
+}
+
+type Query {
+	disabilityTypes: [DisabilityType!]! @authorized @has(permissions: [ReadDisabilityType])
+	activeDisabilityTypes: [DisabilityType!]! @authorized @has(permissions: [ReadDisabilityType])
+	disabilityType(id: Int!): DisabilityType! @authorized @has(permissions: [ReadDisabilityType])
+}
+
+type Mutation {
+	createDisabilityType(data: IDisabilityTypeCreateArgs!): DisabilityType! @authorized @has(permissions: [WriteDisabilityType])
+	updateDisabilityType(id: Int!, data: IDisabilityTypeUpdateArgs!): DisabilityType! @authorized @has(permissions: [WriteDisabilityType])
+	deleteDisabilityType(id: Int!): DisabilityType! @authorized @has(permissions: [WriteDisabilityType])
+}
+
+type Subscription {
+	disabilityTypeCreated: DisabilityType!
+	disabilityTypeUpdated: DisabilityType!
+	disabilityTypeDeleted: DisabilityType!
+	disabilityTypeUpserted: DisabilityType!
+}

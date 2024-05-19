@@ -9,6 +9,7 @@ import { MedicalGroupResolver } from './medical-group/medical-group.resolver'
 import { DrugClassResolver } from './drug-class/drug-class.resolver'
 import { DrugUnitResolver } from './drug-unit/drug-unit.resolver'
 import { ClinicalCareStateResolver } from './clinical-care-state/clinical-care-state.resolver'
+import { DisabilityTypeResolver } from './disability-type/disability-type'
 
 export {
 	PersonDocumentTypeResolver,
@@ -20,5 +21,6 @@ export {
 	MedicalGroupResolver,
 	DrugClassResolver,
 	DrugUnitResolver,
-	ClinicalCareStateResolver
+	ClinicalCareStateResolver,
+	DisabilityTypeResolver
 }

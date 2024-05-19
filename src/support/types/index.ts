@@ -13,7 +13,8 @@ import {
 	IMedicalGroupCreateArgs, IMedicalGroupUpdateArgs,
 	IDrugClassCreateArgs, IDrugClassUpdateArgs,
 	IDrugUnitCreateArgs, IDrugUnitUpdateArgs,
-	IClinicalCareStateCreateArgs, IClinicalCareStateUpdateArgs
+	IClinicalCareStateCreateArgs, IClinicalCareStateUpdateArgs,
+	IDisabilityTypeCreateArgs, IDisabilityTypeUpdateArgs
 } from './catalog.type'
 import {
 	IBelongingCreateArgs, IBelongingUpdateArgs,
@@ -53,6 +54,7 @@ export {
 	IDrugClassCreateArgs, IDrugClassUpdateArgs,
 	IDrugUnitCreateArgs, IDrugUnitUpdateArgs,
 	IClinicalCareStateCreateArgs, IClinicalCareStateUpdateArgs,
+	IDisabilityTypeCreateArgs, IDisabilityTypeUpdateArgs,
 
 	IBelongingCreateArgs, IBelongingUpdateArgs,
 	IMedicalOfficeCreateArgs, IMedicalOfficeUpdateArgs,

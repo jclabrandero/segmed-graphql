@@ -16,7 +16,7 @@ import {
 	InsuredTypeResolver,
 	MedicalSubspecialtyResolver, MedicalSpecialtyResolver, MedicalGroupResolver,
 	DrugClassResolver, DrugUnitResolver,
-	ClinicalCareStateResolver
+	ClinicalCareStateResolver, DisabilityTypeResolver
 } from '../modules/catalog'
 import { BelongingResolver, MedicalOfficeResolver, ProviderResolver } from '../modules/reference'
 import { PersonResolver, ClerkResolver, InsuredResolver } from '../modules/folk'
@@ -84,6 +84,7 @@ export class GraphqlResolver {
 			, drugClass = new DrugClassResolver()
 			, drugUnit = new DrugUnitResolver()
 			, clinicalCareState = new ClinicalCareStateResolver()
+			, disabilityType = new DisabilityTypeResolver()
 			, belonging = new BelongingResolver()
 			, medicalOffice = new MedicalOfficeResolver()
 			, provider = new ProviderResolver()
@@ -148,6 +149,9 @@ export class GraphqlResolver {
 				clinicalCareStates: clinicalCareState.index,
 				activeClinicalCareState: clinicalCareState.active,
 				clinicalCareState: clinicalCareState.findOne,
+				disabilityTypes: disabilityType.index,
+				activeDisabilityTypes: disabilityType.active,
+				disabilityType: disabilityType.findOne,
 
 				belongings: belonging.index,
 				activeBelongings: belonging.active,
@@ -224,6 +228,9 @@ export class GraphqlResolver {
 				createClinicalCareState: clinicalCareState.create,
 				updateClinicalCareState: clinicalCareState.update,
 				deleteClinicalCareState: clinicalCareState.delete,
+				createDisabilityType: disabilityType.create,
+				updateDisabilityType: disabilityType.update,
+				deleteDisabilityType: disabilityType.delete,
 
 				createBelonging: belonging.create,
 				updateBelonging: belonging.update,
@@ -246,7 +253,7 @@ export class GraphqlResolver {
 
 				createMedication: medication.create,
 				updateMedication: medication.update,
-				deleteMedicationo: medication.delete,
+				deleteMedication: medication.delete,
 				createPharmacy: pharmacy.create,
 				updatePharmacy: pharmacy.update,
 				deletePharmacy: pharmacy.delete,
@@ -315,6 +322,10 @@ export class GraphqlResolver {
 				clinicalCareStateUpdated: clinicalCareState.updated({ pubsub }),
 				clinicalCareStateDeleted: clinicalCareState.deleted({ pubsub }),
 				clinicalCareStateUpserted: clinicalCareState.upserted({ pubsub }),
+				disabilityTypeCreated: disabilityType.created({ pubsub }),
+				disabilityTypeUpdated: disabilityType.updated({ pubsub }),
+				disabilityTypeDeleted: disabilityType.deleted({ pubsub }),
+				disabilityTypeUpserted: disabilityType.upserted({ pubsub }),
 
 				belongingCreated: belonging.created({ pubsub }),
 				belongingUpdated: belonging.updated({ pubsub }),
