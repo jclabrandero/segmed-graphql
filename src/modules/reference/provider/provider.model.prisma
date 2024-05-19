@@ -26,7 +26,6 @@ model Provider {
 
 model ProviderMedicalGroup {
 	id					Int		@default(autoincrement()) @unique
-	groupName			String
 
 	medicalGroupId		Int
 	providerId			Int
@@ -51,7 +50,6 @@ model ProviderMedicalGroup {
 
 model ProviderMedicalSpecialty {
 	id						Int		@default(autoincrement()) @unique
-	specialtyName			String
 
 	medicalSpecialtyId		Int
 	providerMedicalGroupId	Int
@@ -76,7 +74,6 @@ model ProviderMedicalSpecialty {
 
 model ProviderMedicalSubspecialty {
 	id							Int		@default(autoincrement()) @unique
-	subspecialtyName			String
 
 	medicalSubspecialtyId		Int
 	providerMedicalSpecialtyId	Int
