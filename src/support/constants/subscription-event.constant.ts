@@ -84,6 +84,13 @@ enum ClinicalCareState {
 	UPSERTED = 'MDCRS-UPSERT'
 }
 
+enum DisabilityType {
+	CREATED = 'DSBLTT-C',
+	UPDATED = 'DSBLTT-U',
+	DELETED = 'DSBLTT-D',
+	UPSERTED = 'DSBLTT-UPSERT'
+}
+
 
 enum Belonging {
 	CREATED = 'BLNGNG-C',
@@ -158,7 +165,7 @@ export const SubscriptionEvent = {
 	PersonDocumentType, EmployeeType, EmployeePosition, InsuredType,
 	MedicalSubspecialty, MedicalSpecialty, MedicalGroup,
 	DrugClass, DrugUnit,
-	ClinicalCareState,
+	DisabilityType, ClinicalCareState,
 
 	Belonging, MedicalOffice, Provider,
 	
