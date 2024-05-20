@@ -95,6 +95,9 @@ model User {
 	updatedPrescriptions			Prescription[]			@relation(name: "PrescriptionLastUpdateUser")
 	createdPrescriptionExterns		PrescriptionExtern[]	@relation(name: "PrescriptionExternCreatorUser")
 	updatedPrescriptionExterns		PrescriptionExtern[]	@relation(name: "PrescriptionExternLastUpdateUser")
+	approvedMedicalLeaves	MedicalLeave[]	@relation(name: "MedicalLeaveApprovalUser")
+	createdMedicalLeaves	MedicalLeave[]	@relation(name: "MedicalLeaveCreatorUser")
+	updatedMedicalLeaves	MedicalLeave[]	@relation(name: "MedicalLeaveLastUpdateUser")
 }
 
 
