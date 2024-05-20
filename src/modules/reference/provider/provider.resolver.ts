@@ -6,8 +6,6 @@ import { IContext, IProviderCreateArgs, IProviderUpdateArgs } from '../../../sup
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
 
-import { MedicalGroupResolver } from '../../catalog'
-
 
 interface IProviderFilterArgs {
 	belongingId:	number
@@ -97,22 +95,19 @@ export class ProviderResolver extends Resolver {
 	async create(_, { data }: { data: IProviderCreateArgs }, { db, pubsub, user }: IContext): Promise<Provider> {
 		const { CREATED, UPSERTED } = SubscriptionEvent.Provider
 		const { medicalGroups, ...remaining } = data
-		const groups = await MedicalGroupResolver.index({ db } as IContext)
+
 		const record = await db.provider.create({
 			data: {
 				...withAuditForCreate(user, remaining),
 				medicalGroups: medicalGroups ? {
 					create: medicalGroups.map(({ medicalGroupId, specialties }) => ({
-						...withAuditForCreate(user, { medicalGroupId, groupName: groups[medicalGroupId].name }),
+						...withAuditForCreate(user, { medicalGroupId }),
 						specialties: {
 							create: specialties.map(({ medicalSpecialtyId, subspecialties }) => ({
-								...withAuditForCreate(user, { medicalSpecialtyId, specialtyName: groups[medicalGroupId].specialties[medicalSpecialtyId].name }),
+								...withAuditForCreate(user, { medicalSpecialtyId }),
 								subspecialties: {
 									create: subspecialties.map(medicalSubspecialtyId => 
-										withAuditForCreate(user, {
-											medicalSubspecialtyId,
-											subspecialtyName: groups[medicalGroupId].specialties[medicalSpecialtyId].subspecialties[medicalSubspecialtyId].name
-										})
+										withAuditForCreate(user, { medicalSubspecialtyId })
 									)
 								}
 							}))
