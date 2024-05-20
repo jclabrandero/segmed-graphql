@@ -49,16 +49,16 @@ input IPrescriptionPrintArgs {
 }
 
 type Query {
-	prescription(id: Int!): Prescription! @authorized
-	prescriptionExtern(id: Int!): PrescriptionExtern! @authorized
+	prescription(id: Int!): Prescription! @authorized @has(permissions: [ReadClinicCare])
+	prescriptionExtern(id: Int!): PrescriptionExtern! @authorized @has(permissions: [ReadClinicCare])
 }
 
 type Mutation {
-	createPrescription(data: IPrescriptionCreateArgs): ClinicCare! @authorized
-	updatePrescription(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
-	deletePrescription(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
-	createPrescriptionExtern(data: IPrescriptionExternCreateArgs): ClinicCare! @authorized
-	updatePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
-	deletePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized
-	printPrescription(data: IPrescriptionPrintArgs!): FileBase64! @authorized
+	createPrescription(data: IPrescriptionCreateArgs): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	updatePrescription(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	deletePrescription(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	createPrescriptionExtern(data: IPrescriptionExternCreateArgs): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	updatePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	deletePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	printPrescription(data: IPrescriptionPrintArgs!): FileBase64! @authorized @has(permissions: [ReadClinicCare])
 }

@@ -13,6 +13,9 @@ type ClinicCare {
 	interclinicals:			[Interclinical!]!
 	prescriptions:			[Prescription!]!
 	prescriptionExterns:	[PrescriptionExtern!]!
+	medicalLeaves:			[MedicalLeave!]!
+
+	creatorUser:	User!
 }
 
 
@@ -28,14 +31,14 @@ input IClinicCareStateUpdateArgs {
 }
 
 type Query {
-	clinicCares: [ClinicCare!]! @authorized
-	clinicCare(id: Int!): ClinicCare! @authorized
-	clinicCareState(id: Int!): ClinicalCareState! @authorized
+	clinicCares: [ClinicCare!]! @authorized @has(permissions: [ReadClinicCare])
+	clinicCare(id: Int!): ClinicCare! @authorized @has(permissions: [ReadClinicCare])
+	clinicCareState(id: Int!): ClinicalCareState! @authorized @has(permissions: [ReadClinicCare])
 }
 
 type Mutation {
-	createClinicCare(data: IClinicCareCreateArgs!): ClinicCare! @authorized
-	updateClinicCareState(id: Int!, data: IClinicCareStateUpdateArgs!): ClinicCare! @authorized
+	createClinicCare(data: IClinicCareCreateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	updateClinicCareState(id: Int!, data: IClinicCareStateUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
 }
 
 type Subscription {

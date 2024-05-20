@@ -25,15 +25,15 @@ input IClinicalCareStateUpdateArgs {
 }
 
 type Query {
-	clinicalCareStates: [ClinicalCareState!]! @authorized
-	activeClinicalCareState: [ClinicalCareState!]! @authorized
-	clinicalCareState(id: Int!): ClinicalCareState! @authorized
+	clinicalCareStates: [ClinicalCareState!]! @authorized @has(permissions: [ReadClinicalCareState])
+	activeClinicalCareState: [ClinicalCareState!]! @authorized @has(permissions: [ReadClinicalCareState])
+	clinicalCareState(id: Int!): ClinicalCareState! @authorized @has(permissions: [ReadClinicalCareState])
 }
 
 type Mutation {
-	createClinicalCareState(data: IClinicalCareStateCreateArgs!): ClinicalCareState! @authorized
-	updateClinicalCareState(id: Int!, data: IClinicalCareStateUpdateArgs!): ClinicalCareState! @authorized
-	deleteClinicalCareState(id: Int!): ClinicalCareState! @authorized
+	createClinicalCareState(data: IClinicalCareStateCreateArgs!): ClinicalCareState! @authorized @has(permissions: [WriteClinicalCareState])
+	updateClinicalCareState(id: Int!, data: IClinicalCareStateUpdateArgs!): ClinicalCareState! @authorized @has(permissions: [WriteClinicalCareState])
+	deleteClinicalCareState(id: Int!): ClinicalCareState! @authorized @has(permissions: [WriteClinicalCareState])
 }
 
 type Subscription {

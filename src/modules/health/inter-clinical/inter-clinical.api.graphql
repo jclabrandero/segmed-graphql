@@ -36,12 +36,12 @@ input IInterclinicalUpdateArgs {
 }
 
 type Query {
-	interclinical(id: Int!): Interclinical! @authorized
+	interclinical(id: Int!): Interclinical! @authorized @has(permissions: [ReadClinicCare])
 }
 
 type Mutation {
-	createInterclinical(data: IInterclinicalCreateArgs!): ClinicCare! @authorized
-	updateInterclinical(id: Int!, data: IInterclinicalUpdateArgs!): ClinicCare! @authorized
-	deleteInterclinical(id: Int!, data: IInterclinicalUpdateArgs!): ClinicCare! @authorized
-	printInterclinical(id: Int!): FileBase64! @authorized
+	createInterclinical(data: IInterclinicalCreateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	updateInterclinical(id: Int!, data: IInterclinicalUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	deleteInterclinical(id: Int!, data: IInterclinicalUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	printInterclinical(id: Int!): FileBase64! @authorized @has(permissions: [ReadClinicCare])
 }

@@ -17,9 +17,9 @@ input IClinicCarePrimaryUpsertArgs {
 }
 
 type Query {
-	clinicCarePrimary(id: Int!): ClinicCarePrimary @authorized
+	clinicCarePrimary(id: Int!): ClinicCarePrimary @authorized @has(permissions: [ReadClinicCare])
 }
 
 type Mutation {
-	upsertClinicCarePrimary(data: IClinicCarePrimaryUpsertArgs!): ClinicCare! @authorized
+	upsertClinicCarePrimary(data: IClinicCarePrimaryUpsertArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
 }
