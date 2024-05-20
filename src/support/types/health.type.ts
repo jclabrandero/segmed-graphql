@@ -58,3 +58,21 @@ export interface IPrescriptionExternCreateArgs {
 	quantity:		number
 	indications:	string
 }
+
+export interface IMedicalLeaveCreateArgs {
+	clinicCareId:		number
+	disabilityTypeId:	number
+
+	reason:		string
+	startDate:	Date
+	endDate:	Date
+}
+
+export interface IMedicalLeaveUpdateArgs {
+	clinicCareId:		number
+	disabilityTypeId?:	number
+
+	reason?:	string
+	startDate?:	Date
+	endDate?:	Date
+}

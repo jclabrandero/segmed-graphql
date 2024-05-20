@@ -33,7 +33,8 @@ import {
 import {
 	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
 	IInterclinicalCreateArgs, IInterclinicalUpdateArgs,
-	IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs
+	IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs,
+	IMedicalLeaveCreateArgs, IMedicalLeaveUpdateArgs
 } from './health.type'
 
 export {
@@ -69,5 +70,6 @@ export {
 
 	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
 	IInterclinicalCreateArgs, IInterclinicalUpdateArgs,
-	IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs
+	IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs,
+	IMedicalLeaveCreateArgs, IMedicalLeaveUpdateArgs
 }

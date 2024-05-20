@@ -24,7 +24,8 @@ import { MedicationResolver, PharmacyResolver } from '../modules/drugstore'
 import {
 	ClinicCareResolver, ClinicCarePrimaryResolver,
 	InterclinicalResolver,
-	PrescriptionResolver
+	PrescriptionResolver,
+	MedicalLeaveResolver
 } from '../modules/health'
 
 
@@ -97,6 +98,7 @@ export class GraphqlResolver {
 			, clinicCarePrimary = new ClinicCarePrimaryResolver()
 			, interclinical = new InterclinicalResolver()
 			, prescription = new PrescriptionResolver()
+			, medicalLeave = new MedicalLeaveResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -188,7 +190,8 @@ export class GraphqlResolver {
 				clinicCarePrimary: clinicCarePrimary.findOne,
 				interclinical: interclinical.findOne,
 				prescription: prescription.findOne,
-				prescriptionExtern: prescription.findOneExtern
+				prescriptionExtern: prescription.findOneExtern,
+				medicalLeave: medicalLeave.findOne
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -271,7 +274,11 @@ export class GraphqlResolver {
 				createPrescriptionExtern: prescription.createExtern,
 				updatePrescriptionExtern: prescription.updateExtern,
 				deletePrescriptionExtern: prescription.deleteExtern,
-				printPrescription: prescription.print
+				printPrescription: prescription.print,
+				createMedicalLeave: medicalLeave.create,
+				updateMedicalLeave: medicalLeave.update,
+				deleteMedicalLeave: medicalLeave.delete,
+				approveMedicalLeave: medicalLeave.approve
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),

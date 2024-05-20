@@ -1,0 +1,45 @@
+
+type MedicalLeave {
+	id:			Int!
+
+	reason:		String!
+	startDate:	DateTime!
+	endDate:	DateTime!
+
+	approvalState:	Int!
+	approvalDate:	DateTime
+
+	approvalUser:	User
+	disabilityType:	DisabilityType!
+	clinicCare:		ClinicCare!
+}
+
+
+input IMedicalLeaveCreateArgs {
+	clinicCareId:		Int!
+	disabilityTypeId:	Int!
+
+	reason:		String!
+	startDate:	DateTime!
+	endDate:	DateTime!
+}
+
+input IMedicalLeaveUpdateArgs {
+	clinicCareId:		Int!
+	disabilityTypeId:	Int
+
+	reason:		String
+	startDate:	DateTime
+	endDate:	DateTime
+}
+
+type Query {
+	medicalLeave(id: Int!): MedicalLeave! @authorized @has(permissions: [ReadClinicCare])
+}
+
+type Mutation {
+	createMedicalLeave(data: IMedicalLeaveCreateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	updateMedicalLeave(id: Int!, data: IMedicalLeaveUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	deleteMedicalLeave(id: Int!, data: IMedicalLeaveUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
+	approveMedicalLeave(id: Int!, data: IMedicalLeaveUpdateArgs!): ClinicCare! @authorized @has(permissions: [ApprovalMedicalLeave])
+}

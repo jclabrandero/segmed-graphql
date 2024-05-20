@@ -27,7 +27,8 @@ export class ClinicCareResolver extends Resolver {
 					}
 				},
 				state: true,
-				medicalOffice: true
+				medicalOffice: true,
+				creatorUser: true
 			}
 		})
 	}
@@ -98,8 +99,18 @@ export class ClinicCareResolver extends Resolver {
 						}
 					}
 				},
+				medicalLeaves: {
+					where: {
+						NOT: { status: Status.Removed }
+					},
+					include: {
+						disabilityType: true,
+						approvalUser: true
+					}
+				},
 				state: true,
-				medicalOffice: true
+				medicalOffice: true,
+				creatorUser: true
 			}
 		})
 
