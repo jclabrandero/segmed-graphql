@@ -18,6 +18,63 @@ export class ProviderResolver extends Resolver {
 		super(SubscriptionEvent.Provider)
 	}
 
+	private static include() {
+		return {
+			belonging: true,
+			medicalGroups: {
+				where: {
+					status: Status.Active
+				},
+				include: {
+					medicalGroup: true,
+					specialties: {
+						where: {
+							status: Status.Active
+						},
+						include: {
+							medicalSpecialty: true,
+							subspecialties: {
+								where: {
+									status: Status.Active
+								},
+								include: {
+									medicalSubspecialty: true
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public static format(record) {
+		if (!record) return null
+		const { medicalGroups, ...provider } = record
+		return {
+			...provider,
+			medicalGroups: medicalGroups.map(um => ({
+				...um.medicalGroup,
+				specialties: um.specialties.map(em => ({
+					...em.medicalSpecialty,
+					subspecialties: em.subspecialties.map(sm => sm.medicalSubspecialty)
+				}))
+			}))
+		}
+	}
+
+	public static async findOne({ id }: { id: number }, { db }: IContext) {
+		const record = await db.provider.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: ProviderResolver.include()
+		})
+
+		return ProviderResolver.format(record)
+	}
+
 	async index(_, args, { db }: IContext): Promise<Array<Provider>> {
 		return await db.provider.findMany({
 			where: {
@@ -46,50 +103,15 @@ export class ProviderResolver extends Resolver {
 	}
 
 	async findOne(_, { id }: { id: number }, { db }: IContext) {
-		const res = await db.provider.findUnique({
+		const record = await db.provider.findUnique({
 			where: {
 				id,
 				NOT: { status: Status.Removed }
 			},
-			include: {
-				belonging: true,
-				medicalGroups: {
-					where: {
-						status: Status.Active
-					},
-					include: {
-						medicalGroup: true,
-						specialties: {
-							where: {
-								status: Status.Active
-							},
-							include: {
-								medicalSpecialty: true,
-								subspecialties: {
-									where: {
-										status: Status.Active
-									},
-									include: {
-										medicalSubspecialty: true
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+			include: ProviderResolver.include()
 		})
 
-		return {
-			...res,
-			medicalGroups: res.medicalGroups.map(um => ({
-				...um.medicalGroup,
-				specialties: um.specialties.map(em => ({
-					...em.medicalSpecialty,
-					subspecialties: em.subspecialties.map(sm => sm.medicalSubspecialty)
-				}))
-			}))
-		}
+		return ProviderResolver.format(record)
 	}
 
 	async create(_, { data }: { data: IProviderCreateArgs }, { db, pubsub, user }: IContext): Promise<Provider> {

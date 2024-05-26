@@ -7,6 +7,7 @@ import { Status, SubscriptionEvent } from '../../../support/constants'
 import { now, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 import { MedicalGroupResolver } from '../../catalog'
 import { InterclinicalTemplate } from '../../template/inter-clinical.template'
+import { ProviderResolver } from '../../reference'
 
 
 export class InterclinicalResolver extends Resolver {
@@ -16,12 +17,18 @@ export class InterclinicalResolver extends Resolver {
 	}
 
 	static format(record) {
+		if (!record) return null
+		const { medicalGroup, provider, files, ...interclinical } = record
 		return {
-			...record,
+			...interclinical,
+			provider: {
+				...provider.provider,
+				businessName: provider.providerBusinessName
+			},
 			medicalGroup: {
-				...record.medicalGroup,
-				name: record.medicalGroup.medicalGroupName,
-				specialties: record.medicalGroup.specialties.map(specialty => ({
+				...medicalGroup.medicalGroup,
+				name: medicalGroup.medicalGroupName,
+				specialties: medicalGroup.specialties.map(specialty => ({
 					...specialty.medicalSpecialty,
 					name: specialty.specialtyName,
 					subspecialties: specialty.subspecialties.map(subspecialty => ({
@@ -30,15 +37,20 @@ export class InterclinicalResolver extends Resolver {
 					}))
 				}))
 			},
-			files: record.files.map(ref => ref.file)
+			files: files.map(ref => ref.file)
 		}
 	}
 
 	static include() {
 		return {
-			provider: true,
+			provider: {
+				include: {
+					provider: true
+				}
+			},
 			medicalGroup: {
 				include: {
+					medicalGroup: true,
 					specialties: {
 						include: {
 							medicalSpecialty: true,
@@ -76,8 +88,9 @@ export class InterclinicalResolver extends Resolver {
 
 	async create(_, { data }: { data: IInterclinicalCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.ClinicCare
-		const { clinicCareId, medicalGroupId, specialties, ...payload } = data
-		const group = await MedicalGroupResolver.findOneWithIndexedSpecialties({ id: medicalGroupId },{ db } as IContext)
+		const { clinicCareId, providerId, medicalGroupId, specialties, ...payload } = data
+		const provider = await ProviderResolver.findOne({ id: providerId}, { db } as IContext)
+		const group = await MedicalGroupResolver.findOneWithIndexedSpecialties({ id: medicalGroupId }, { db } as IContext)
 		const record = await db.clinicCare.update({
 			where: { id: clinicCareId },
 			data: {
@@ -85,6 +98,12 @@ export class InterclinicalResolver extends Resolver {
 					create: [{
 						...withAuditForCreate(user, payload),
 						driftDate: now().local,
+						provider: {
+							create: withAuditForCreate(user, {
+								providerId,
+								providerBusinessName: provider.businessName
+							}),
+						},
 						medicalGroup: {
 							create: withAuditForCreate(user, {
 								medicalGroupId,

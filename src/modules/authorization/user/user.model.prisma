@@ -85,6 +85,8 @@ model User {
 	updatedClinicCarePrimaries	ClinicCarePrimary[]	@relation(name: "ClinicCarePrimaryLastUpdateUser")
 	createdInterclinicals		Interclinical[]		@relation(name: "InterclinicalCreatorUser")
 	updatedInterclinicals		Interclinical[]		@relation(name: "InterclinicalLastUpdateUser")
+	createdInterclinicalProvider				InterclinicalProvider[]				@relation(name: "InterclinicalProviderCreatorUser")
+	updatedInterclinicalProvider				InterclinicalProvider[]				@relation(name: "InterclinicalProviderLastUpdateUser")
 	createdInterclinicalMedicalGroup			InterclinicalMedicalGroup[]			@relation(name: "InterclinicalMedicalGroupCreatorUser")
 	updatedInterclinicalMedicalGroup			InterclinicalMedicalGroup[]			@relation(name: "InterclinicalMedicalGroupLastUpdateUser")
 	createdInterclinicalMedicalSpecialties		InterclinicalMedicalSpecialty[]		@relation(name: "InterclinicalMedicalSpecialtyCreatorUser")

@@ -6,7 +6,6 @@ model Interclinical {
 	approvedState	Int	@default(0)
 
 	clinicCareId	Int
-	providerId		Int
 
 	status			Int	@default(1)
 
@@ -16,13 +15,34 @@ model Interclinical {
 	lastUpdateDate		DateTime?
 
 	clinicCare		ClinicCare	@relation(fields: [clinicCareId], references: [id])
-	provider		Provider	@relation(fields: [providerId], references: [id])
 
+	provider		InterclinicalProvider?
 	medicalGroup	InterclinicalMedicalGroup?
 	files			InterclinicalFileUpload[]
 
 	creatorUser		User	@relation(name: "InterclinicalCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "InterclinicalLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model InterclinicalProvider {
+	id						Int @id @default(autoincrement())
+	providerBusinessName	String
+
+	providerId		Int	@unique
+	interclinicalId	Int	@unique
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	provider		Provider		@relation(fields: [providerId], references: [id])
+	interclinical	Interclinical	@relation(fields: [interclinicalId], references: [id])
+
+	creatorUser		User	@relation(name: "InterclinicalProviderCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "InterclinicalProviderLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model InterclinicalMedicalGroup {

@@ -430,6 +430,18 @@ BEGIN
 	EXECUTE dbo.SPCreateAuditLog 'Interclinical', @trace, @inserted, @deleted, @columnsUpdated;
 END
 GO
+CREATE OR ALTER TRIGGER TRInterclinicalProviderUpdated ON InterclinicalProvider AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'InterclinicalProvider', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
 CREATE OR ALTER TRIGGER TRInterclinicalMedicalGroupUpdated ON InterclinicalMedicalGroup AFTER UPDATE AS
 BEGIN
 	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);

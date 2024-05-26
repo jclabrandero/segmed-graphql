@@ -78,9 +78,14 @@ export class ClinicCareResolver extends Resolver {
 						NOT: { status: Status.Removed }
 					},
 					include: {
-						provider: true,
+						provider: {
+							include: {
+								provider: true
+							}
+						},
 						medicalGroup: {
 							include: {
+								medicalGroup: true,
 								specialties: {
 									include: {
 										medicalSpecialty: true,
