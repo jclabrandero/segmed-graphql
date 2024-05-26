@@ -6,7 +6,6 @@ model Interclinical {
 	approvedState	Int	@default(0)
 
 	clinicCareId	Int
-	medicalGroupId	Int
 	providerId		Int
 
 	status			Int	@default(1)
@@ -16,23 +15,45 @@ model Interclinical {
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
-	clinicCare		ClinicCare		@relation(fields: [clinicCareId], references: [id])
-	medicalGroup	MedicalGroup	@relation(fields: [medicalGroupId], references: [id])
-	provider		Provider		@relation(fields: [providerId], references: [id])
+	clinicCare		ClinicCare	@relation(fields: [clinicCareId], references: [id])
+	provider		Provider	@relation(fields: [providerId], references: [id])
 
-	specialties		InterclinicalMedicalSpecialty[]
+	medicalGroup	InterclinicalMedicalGroup?
 	files			InterclinicalFileUpload[]
 
 	creatorUser		User	@relation(name: "InterclinicalCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "InterclinicalLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model InterclinicalMedicalGroup {
+	id					Int @id @default(autoincrement())
+	medicalGroupName	String
+
+	medicalGroupId		Int	@unique
+	interclinicalId		Int	@unique
+
+	status				Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medicalGroup	MedicalGroup	@relation(fields: [medicalGroupId], references: [id])
+	interclinical	Interclinical	@relation(fields: [interclinicalId], references: [id])
+
+	specialties		InterclinicalMedicalSpecialty[]
+
+	creatorUser		User	@relation(name: "InterclinicalMedicalGroupCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "InterclinicalMedicalGroupLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
 model InterclinicalMedicalSpecialty {
 	id				Int		@default(autoincrement()) @unique
 	specialtyName	String
 
-	medicalSpecialtyId	Int
-	interclinicalId		Int
+	medicalSpecialtyId			Int
+	interclinicalMedicalGroupId	Int
 
 	status				Int		@default(1)
 
@@ -41,15 +62,15 @@ model InterclinicalMedicalSpecialty {
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 	
-	medicalSpecialty	MedicalSpecialty	@relation(fields: [medicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-	interclinical		Interclinical		@relation(fields: [interclinicalId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	medicalSpecialty			MedicalSpecialty			@relation(fields: [medicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	interclinicalMedicalGroup	InterclinicalMedicalGroup	@relation(fields: [interclinicalMedicalGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
 	subspecialties	InterclinicalMedicalSubspecialty[]
 
 	creatorUser		User	@relation(name: "InterclinicalMedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "InterclinicalMedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 
-	@@id([ medicalSpecialtyId, interclinicalId ])
+	@@id([ medicalSpecialtyId, interclinicalMedicalGroupId ])
 }
 
 model InterclinicalMedicalSubspecialty {

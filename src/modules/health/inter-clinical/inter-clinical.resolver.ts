@@ -20,9 +20,14 @@ export class InterclinicalResolver extends Resolver {
 			...record,
 			medicalGroup: {
 				...record.medicalGroup,
-				specialties: record.specialties.map(specialty => ({
+				name: record.medicalGroup.medicalGroupName,
+				specialties: record.medicalGroup.specialties.map(specialty => ({
 					...specialty.medicalSpecialty,
-					subspecialties: specialty.subspecialties.map(subspecialty => subspecialty.medicalSubspecialty)
+					name: specialty.specialtyName,
+					subspecialties: specialty.subspecialties.map(subspecialty => ({
+						...subspecialty.medicalSubspecialty,
+						name: subspecialty.subspecialtyName
+					}))
 				}))
 			},
 			files: record.files.map(ref => ref.file)
@@ -31,14 +36,17 @@ export class InterclinicalResolver extends Resolver {
 
 	static include() {
 		return {
-			medicalGroup: true,
 			provider: true,
-			specialties: {
+			medicalGroup: {
 				include: {
-					medicalSpecialty: true,
-					subspecialties: {
+					specialties: {
 						include: {
-							medicalSubspecialty: true
+							medicalSpecialty: true,
+							subspecialties: {
+								include: {
+									medicalSubspecialty: true
+								}
+							}
 						}
 					}
 				}
@@ -69,27 +77,35 @@ export class InterclinicalResolver extends Resolver {
 	async create(_, { data }: { data: IInterclinicalCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.ClinicCare
 		const { clinicCareId, medicalGroupId, specialties, ...payload } = data
-		const groups = await MedicalGroupResolver.index({ db } as IContext)
+		const group = await MedicalGroupResolver.findOneWithIndexedSpecialties({ id: medicalGroupId },{ db } as IContext)
 		const record = await db.clinicCare.update({
 			where: { id: clinicCareId },
 			data: {
 				interclinicals: {
 					create: [{
 						...withAuditForCreate(user, payload),
-						medicalGroupId,
 						driftDate: now().local,
-						specialties: {
-							create: specialties.map(({ medicalSpecialtyId, subspecialties }) => ({
-								...withAuditForCreate(user, { medicalSpecialtyId, specialtyName: groups[medicalGroupId].specialties[medicalSpecialtyId].name }),
-								subspecialties: {
-									create: subspecialties.map(medicalSubspecialtyId => 
+						medicalGroup: {
+							create: withAuditForCreate(user, {
+								medicalGroupId,
+								medicalGroupName: group.name,
+								specialties: {
+									create: specialties.map(({ medicalSpecialtyId, subspecialties }) =>
 										withAuditForCreate(user, {
-											medicalSubspecialtyId,
-											subspecialtyName: groups[medicalGroupId].specialties[medicalSpecialtyId].subspecialties[medicalSubspecialtyId].name
+											medicalSpecialtyId,
+											specialtyName: group.specialties[medicalSpecialtyId].name,
+											subspecialties: {
+												create: subspecialties.map(medicalSubspecialtyId => 
+													withAuditForCreate(user, {
+														medicalSubspecialtyId,
+														subspecialtyName: group.specialties[medicalSpecialtyId].subspecialties[medicalSubspecialtyId].name
+													})
+												)
+											}
 										})
 									)
 								}
-							}))
+							})
 						}
 					}]
 				}

@@ -5,6 +5,7 @@ import { Resolver } from '../../../support/classes'
 import { IContext, IClinicCareCreateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
+import { InterclinicalResolver } from '../inter-clinical/inter-clinical.resolver'
 
 
 export class ClinicCareResolver extends Resolver {
@@ -77,14 +78,17 @@ export class ClinicCareResolver extends Resolver {
 						NOT: { status: Status.Removed }
 					},
 					include: {
-						medicalGroup: true,
 						provider: true,
-						specialties: {
+						medicalGroup: {
 							include: {
-								medicalSpecialty: true,
-								subspecialties: {
+								specialties: {
 									include: {
-										medicalSubspecialty: true
+										medicalSpecialty: true,
+										subspecialties: {
+											include: {
+												medicalSubspecialty: true
+											}
+										}
 									}
 								}
 							}
@@ -116,17 +120,7 @@ export class ClinicCareResolver extends Resolver {
 
 		return {
 			...record,
-			interclinicals: record.interclinicals.map(ic => ({
-				...ic,
-				medicalGroup: {
-					...ic.medicalGroup,
-					specialties: ic.specialties.map(specialty => ({
-						...specialty.medicalSpecialty,
-						subspecialties: specialty.subspecialties.map(subspecialty => subspecialty.medicalSubspecialty)
-					}))
-				},
-				files: ic.files.map(ref => ref.file)
-			}))
+			interclinicals: record.interclinicals.map(interclinical => InterclinicalResolver.format(interclinical))
 		}
 	}
 

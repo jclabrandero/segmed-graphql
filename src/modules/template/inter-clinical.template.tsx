@@ -141,15 +141,15 @@ function TemplateView({ data, user }: { data, user: User, logo?: FileBuffer }) {
 									<td style={{ border: 'none' }}>
 										<p>REALIZAR EL SIGUIENTE SERVICIO:</p>
 										{
-											data.specialties.map((em) => (
-												<div key={`${em.medicalSpecialty.id}`}>
-													<label>{ em.medicalSpecialty.name }</label>
+											data.medicalGroup.specialties.map((specialty) => (
+												<div key={`${specialty.id}`}>
+													<label>{ specialty.name }</label>
 													{
-														(em.subspecialties.length > 0) ?
+														(specialty.subspecialties.length > 0) ?
 															<ul>
 																{
-																	em.subspecialties.map(srv => (
-																		<li key={`${em.medicalSpecialty.id}-${srv.medicalSubspecialty.id}`}>{ srv.medicalSubspecialty.name }</li>
+																	specialty.subspecialties.map(sbsp => (
+																		<li key={`${specialty.id}-${sbsp.id}`}>{ sbsp.name }</li>
 																	))
 																}
 															</ul>
