@@ -13,6 +13,15 @@ export class DisabilityTypeResolver extends Resolver {
 		super(SubscriptionEvent.DisabilityType)
 	}
 
+	public static async findOne({ id }: { id: number }, { db }: IContext) {
+		return await db.disabilityType.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			}
+		})
+	}
+
 	async index(_, args, { db }: IContext): Promise<Array<DisabilityType>> {
 		return await db.disabilityType.findMany({
 			where: {

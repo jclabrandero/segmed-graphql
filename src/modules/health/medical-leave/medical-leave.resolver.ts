@@ -5,6 +5,7 @@ import { Resolver } from '../../../support/classes'
 import { IContext, IMedicalLeaveCreateArgs, IMedicalLeaveUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { now, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { DisabilityTypeResolver } from '../../catalog'
 
 
 export class MedicalLeaveResolver extends Resolver {
@@ -13,29 +14,52 @@ export class MedicalLeaveResolver extends Resolver {
 		super(SubscriptionEvent.ClinicCare)
 	}
 
+	static format(record) {
+		if (!record) return null
+		const { disabilityType, ...medicalLeave } = record
+		return {
+			...medicalLeave,
+			disabilityType: {
+				...disabilityType.disabilityType,
+				name: disabilityType.disabilityTypeName
+			},
+		}
+	}
+
 	async findOne(_, { id }: { id: number }, { db }: IContext) {
-		return await db.medicalLeave.findUnique({
+		const record = await db.medicalLeave.findUnique({
 			where: {
 				id,
 				NOT: { status: Status.Removed }
 			},
 			include: {
-				disabilityType: true
+				disabilityType: {
+					include: {
+						disabilityType: true
+					}
+				}
 			}
 		})
+		return MedicalLeaveResolver.format(record)
 	}
 
 	async create(_, { data }: { data: IMedicalLeaveCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.ClinicCare
-		const { clinicCareId, ...payload } = data
-
+		const { clinicCareId, disabilityTypeId, ...payload } = data
+		const disabilityType = await DisabilityTypeResolver.findOne({ id: disabilityTypeId }, { db } as IContext)
 		const record = await db.clinicCare.update({
 			where: { id: clinicCareId },
 			data: {
 				medicalLeaves: {
-					create: [{
-						...withAuditForCreate(user, payload)
-					}]
+					create: withAuditForCreate(user, {
+						...payload,
+						disabilityType: {
+							create: withAuditForCreate(user, {
+								disabilityTypeId,
+								disabilityTypeName: disabilityType.name
+							})
+						}
+					})
 				}
 			}
 		})

@@ -10,7 +10,6 @@ model MedicalLeave {
 	approvalUserName	String?
 
 	clinicCareId		Int
-	disabilityTypeId	Int
 
 	status		Int		@default(1)
 
@@ -19,10 +18,32 @@ model MedicalLeave {
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
-	approvalUser	User?			@relation(name: "MedicalLeaveApprovalUser", fields: [approvalUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-	clinicCare		ClinicCare		@relation(fields: [clinicCareId], references: [id])
-	disabilityType	DisabilityType	@relation(fields: [disabilityTypeId], references: [id])
+	approvalUser	User?		@relation(name: "MedicalLeaveApprovalUser", fields: [approvalUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	clinicCare		ClinicCare	@relation(fields: [clinicCareId], references: [id])
+
+	disabilityType	MedicalLeaveDisabilityType?
 
 	creatorUser		User	@relation(name: "MedicalLeaveCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "MedicalLeaveLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model MedicalLeaveDisabilityType {
+	id					Int	@id @default(autoincrement())
+	disabilityTypeName	String
+
+	disabilityTypeId	Int	@unique
+	medicalLeaveId		Int	@unique
+
+	status				Int	@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	disabilityType	DisabilityType	@relation(fields: [disabilityTypeId], references: [id])
+	medicalLeave	MedicalLeave	@relation(fields: [medicalLeaveId], references: [id])
+
+	creatorUser		User	@relation(name: "MedicalLeaveDisabilityTypeCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "MedicalLeaveDisabilityTypeLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }

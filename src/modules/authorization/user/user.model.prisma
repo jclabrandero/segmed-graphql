@@ -95,13 +95,15 @@ model User {
 	updatedInterclinicalMedicalSubspecialties	InterclinicalMedicalSubspecialty[]	@relation(name: "InterclinicalMedicalSubspecialtyLastUpdateUser")
 	createdInterclinicalFileUploads				InterclinicalFileUpload[]			@relation(name: "InterclinicalFileUploadCreatorUser")
 	updatedInterclinicalFileUploads				InterclinicalFileUpload[]			@relation(name: "InterclinicalFileUploadLastUpdateUser")
-	createdPrescriptions			Prescription[]			@relation(name: "PrescriptionCreatorUser")
-	updatedPrescriptions			Prescription[]			@relation(name: "PrescriptionLastUpdateUser")
-	createdPrescriptionExterns		PrescriptionExtern[]	@relation(name: "PrescriptionExternCreatorUser")
-	updatedPrescriptionExterns		PrescriptionExtern[]	@relation(name: "PrescriptionExternLastUpdateUser")
-	approvedMedicalLeaves	MedicalLeave[]	@relation(name: "MedicalLeaveApprovalUser")
-	createdMedicalLeaves	MedicalLeave[]	@relation(name: "MedicalLeaveCreatorUser")
-	updatedMedicalLeaves	MedicalLeave[]	@relation(name: "MedicalLeaveLastUpdateUser")
+	createdPrescriptions		Prescription[]			@relation(name: "PrescriptionCreatorUser")
+	updatedPrescriptions		Prescription[]			@relation(name: "PrescriptionLastUpdateUser")
+	createdPrescriptionExterns	PrescriptionExtern[]	@relation(name: "PrescriptionExternCreatorUser")
+	updatedPrescriptionExterns	PrescriptionExtern[]	@relation(name: "PrescriptionExternLastUpdateUser")
+	approvedMedicalLeaves				MedicalLeave[]					@relation(name: "MedicalLeaveApprovalUser")
+	createdMedicalLeaves				MedicalLeave[]					@relation(name: "MedicalLeaveCreatorUser")
+	updatedMedicalLeaves				MedicalLeave[]					@relation(name: "MedicalLeaveLastUpdateUser")
+	createdMedicalLeaveDisabilityTypes	MedicalLeaveDisabilityType[]	@relation(name: "MedicalLeaveDisabilityTypeCreatorUser")
+	updatedMedicalLeaveDisabilityTypes	MedicalLeaveDisabilityType[]	@relation(name: "MedicalLeaveDisabilityTypeLastUpdateUser")
 }
 
 

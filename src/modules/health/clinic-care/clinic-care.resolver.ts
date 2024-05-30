@@ -6,6 +6,7 @@ import { IContext, IClinicCareCreateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
 import { InterclinicalResolver } from '../inter-clinical/inter-clinical.resolver'
+import { MedicalLeaveResolver } from '../medical-leave/medical-leave.resolver'
 
 
 export class ClinicCareResolver extends Resolver {
@@ -113,7 +114,11 @@ export class ClinicCareResolver extends Resolver {
 						NOT: { status: Status.Removed }
 					},
 					include: {
-						disabilityType: true,
+						disabilityType: {
+							include: {
+								disabilityType: true
+							}
+						},
 						approvalUser: true
 					}
 				},
@@ -125,7 +130,8 @@ export class ClinicCareResolver extends Resolver {
 
 		return {
 			...record,
-			interclinicals: record.interclinicals.map(interclinical => InterclinicalResolver.format(interclinical))
+			interclinicals: record.interclinicals.map(interclinical => InterclinicalResolver.format(interclinical)),
+			medicalLeaves: record.medicalLeaves.map(medicalLeave => MedicalLeaveResolver.format(medicalLeave))
 		}
 	}
 
