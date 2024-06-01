@@ -31,7 +31,6 @@ input IPrescriptionCreateArgs {
 input IPrescriptionUpdateArgs {
 	clinicCareId:	Int!
 
-	medicationId:	Int
 	quantity:		Int
 	indications:	String
 }

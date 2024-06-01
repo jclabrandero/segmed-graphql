@@ -46,7 +46,6 @@ export interface IPrescriptionCreateArgs {
 export interface IPrescriptionUpdateArgs {
 	clinicCareId:	number
 
-	medicationId?:	number
 	quantity?:		number
 	indications?:	string
 }

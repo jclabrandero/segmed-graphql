@@ -1,50 +1,117 @@
 
 model Prescription {
-	id			Int		@unique @default(autoincrement())
+	id			Int		@id @default(autoincrement())
 	quantity	Int
 	indications	String
 
-	medicationId	Int
-	pharmacyId		Int
 	clinicCareId	Int
 
-	status		Int		@default(1)
+	status			Int	@default(1)
 
 	creatorUserName		String
 	creationDate		DateTime
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
-	medication	Medication	@relation(fields: [medicationId], references: [id])
-	pharmacy	Pharmacy	@relation(fields: [pharmacyId], references: [id])
 	clinicCare	ClinicCare	@relation(fields: [clinicCareId], references: [id])
+
+	pharmacy	PrescriptionPharmacy?
+	medication	PrescriptionMedication?
 
 	creatorUser		User	@relation(name: "PrescriptionCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "PrescriptionLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-
-	@@id([ medicationId, pharmacyId, clinicCareId ])
 }
 
-model PrescriptionExtern {
-	id			Int		@unique @default(autoincrement())
-	quantity	Int
-	indications	String
+model PrescriptionPharmacy {
+	id				Int @id @default(autoincrement())
+	pharmacyName	String
 
-	medicationId	Int
-	clinicCareId	Int
+	pharmacyId		Int
+	prescriptionId	Int	@unique
 
-	status		Int		@default(1)
+	status			Int	@default(1)
 
 	creatorUserName		String
 	creationDate		DateTime
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
-	medication	Medication	@relation(fields: [medicationId], references: [id])
+	pharmacy		Pharmacy		@relation(fields: [pharmacyId], references: [id])
+	prescription	Prescription	@relation(fields: [prescriptionId], references: [id])
+
+	creatorUser		User	@relation(name: "PrescriptionPharmacyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "PrescriptionPharmacyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model PrescriptionMedication {
+	id						Int @id @default(autoincrement())
+	medicationCode			String
+	medicationName			String
+	medicationConcentration	String
+	medicationClass			String
+	medicationUnit			String
+
+	medicationId	Int
+	prescriptionId	Int	@unique
+
+	status			Int	@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medication		Medication		@relation(fields: [medicationId], references: [id])
+	prescription	Prescription	@relation(fields: [prescriptionId], references: [id])
+
+	creatorUser		User	@relation(name: "PrescriptionMedicationCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "PrescriptionMedicationLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+
+model PrescriptionExtern {
+	id			Int		@id @default(autoincrement())
+	quantity	Int
+	indications	String
+
+	clinicCareId	Int
+
+	status			Int	@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
 	clinicCare	ClinicCare	@relation(fields: [clinicCareId], references: [id])
+
+	medication	PrescriptionExternMedication?
 
 	creatorUser		User	@relation(name: "PrescriptionExternCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "PrescriptionExternLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
 
-	@@id([ medicationId, clinicCareId ])
+model PrescriptionExternMedication {
+	id						Int @id @default(autoincrement())
+	medicationCode			String
+	medicationName			String
+	medicationConcentration	String
+	medicationClass			String
+	medicationUnit			String
+
+	medicationId			Int
+	prescriptionExternId	Int	@unique
+
+	status				Int	@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medication			Medication			@relation(fields: [medicationId], references: [id])
+	prescriptionExtern	PrescriptionExtern	@relation(fields: [prescriptionExternId], references: [id])
+
+	creatorUser		User	@relation(name: "PrescriptionExternMedicationCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "PrescriptionExternMedicationLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }

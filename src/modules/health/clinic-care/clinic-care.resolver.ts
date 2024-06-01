@@ -7,6 +7,7 @@ import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
 import { InterclinicalResolver } from '../inter-clinical/inter-clinical.resolver'
 import { MedicalLeaveResolver } from '../medical-leave/medical-leave.resolver'
+import { PrescriptionResolver } from '../prescription/prescription.resolver'
 
 
 export class ClinicCareResolver extends Resolver {
@@ -54,10 +55,19 @@ export class ClinicCareResolver extends Resolver {
 						NOT: { status: Status.Removed }
 					},
 					include: {
-						pharmacy: true,
+						pharmacy: {
+							include: {
+								pharmacy: true
+							}
+						},
 						medication: {
 							include: {
-								unit: true
+								medication: {
+									include: {
+										class: true,
+										unit: true
+									}
+								}
 							}
 						}
 					}
@@ -69,7 +79,12 @@ export class ClinicCareResolver extends Resolver {
 					include: {
 						medication: {
 							include: {
-								unit: true
+								medication: {
+									include: {
+										class: true,
+										unit: true
+									}
+								}
 							}
 						}
 					}
@@ -130,6 +145,8 @@ export class ClinicCareResolver extends Resolver {
 
 		return {
 			...record,
+			prescriptions: record.prescriptions.map(prescription => PrescriptionResolver.format(prescription)),
+			prescriptionExterns: record.prescriptionExterns.map(prescriptionExtern => PrescriptionResolver.format(prescriptionExtern)),
 			interclinicals: record.interclinicals.map(interclinical => InterclinicalResolver.format(interclinical)),
 			medicalLeaves: record.medicalLeaves.map(medicalLeave => MedicalLeaveResolver.format(medicalLeave))
 		}

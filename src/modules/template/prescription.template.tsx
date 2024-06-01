@@ -111,11 +111,11 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 								<th>Cantidad</th>
 							</tr>
 							{
-								clinicCare.prescriptions.map(({ medication, quantity }) => (
-									<tr>
-										<td>{medication.code}</td>
-										<td>{medication.name}</td>
-										<td>{medication.concentration} - {medication.unit.name}</td>
+								clinicCare.prescriptions.map(({ medication, quantity }, i) => (
+									<tr key={i}>
+										<td>{medication.medicationCode}</td>
+										<td>{medication.medicationName}</td>
+										<td>{medication.medicationConcentration} - {medication.medicationUnit}</td>
 										<td>{quantity}</td>
 									</tr>
 								))
@@ -180,23 +180,21 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 								<th>Descripcion</th>
 								<th>Concentracion - Presentacion</th>
 								<th>Cantidad</th>
-								
 							</tr>
 							{
-								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity, indications }) => (
-									<>
+								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity, indications }, i) => (
+									<tbody key={i}>
 										<tr>
-											<td>{medication.code}</td>
-											<td>{medication.name}</td>
-											<td>{medication.concentration} - {medication.unit.name}</td>
+											<td>{medication.medicationCode}</td>
+											<td>{medication.medicationName}</td>
+											<td>{medication.medicationConcentration} - {medication.medicationUnit}</td>
 											<td>{quantity}</td>
 										</tr>
 										<tr>
 											<td>Indicaciones:</td>
 											<td style={{ colSpan: '3' }}>{indications}</td>
 										</tr>
-									</>
-									
+									</tbody>
 								))
 							}
 						</table>

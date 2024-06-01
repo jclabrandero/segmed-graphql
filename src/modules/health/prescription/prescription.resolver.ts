@@ -6,6 +6,7 @@ import { IContext, IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescripti
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 import { PrescriptionTemplate } from '../../template/prescription.template'
+import { MedicationResolver, PharmacyResolver } from '../../drugstore'
 
 
 export class PrescriptionResolver extends Resolver {
@@ -14,25 +15,61 @@ export class PrescriptionResolver extends Resolver {
 		super(SubscriptionEvent.ClinicCare)
 	}
 
+	static format(record) {
+		if (!record) return null
+		const { pharmacy, medication, ...prescription } = record
+		return {
+			...prescription,
+			medication: {
+				...medication.medication,
+				code: medication.medicationCode,
+				name: medication.medicationName,
+				concentration: medication.medicationConcentration,
+				class: {
+					...medication.medication.class,
+					name: medication.medicationClass
+				},
+				unit: {
+					...medication.medication.unit,
+					name: medication.medicationUnit
+				}
+			},
+			pharmacy: pharmacy ? {
+				...pharmacy.pharmacy,
+				name: pharmacy.pharmacyName
+			} : undefined
+		}
+	}
+
 	async findOne(_, { id }: { id: number }, { db }: IContext) {
-		return await db.prescription.findUnique({
+		const record = await db.prescription.findUnique({
 			where: {
 				id,
 				NOT: { status: Status.Removed }
 			},
 			include: {
-				pharmacy: true,
+				pharmacy: {
+					include: {
+						pharmacy: true
+					}
+				},
 				medication: {
 					include: {
-						unit: true
+						medication: {
+							include: {
+								class: true,
+								unit: true
+							}
+						}
 					}
 				}
 			}
 		})
+		return PrescriptionResolver.format(record)
 	}
 
 	async findOneExtern(_, { id }: { id: number }, { db }: IContext) {
-		return await db.prescriptionExtern.findUnique({
+		const record = await db.prescriptionExtern.findUnique({
 			where: {
 				id,
 				NOT: { status: Status.Removed }
@@ -40,37 +77,47 @@ export class PrescriptionResolver extends Resolver {
 			include: {
 				medication: {
 					include: {
-						unit: true
+						medication: {
+							include: {
+								class: true,
+								unit: true
+							}
+						}
 					}
 				}
 			}
 		})
+		return PrescriptionResolver.format(record)
 	}
 
 	async create(_, { data }: { data: IPrescriptionCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.ClinicCare
 		const { medicationId, pharmacyId, clinicCareId, ...remaining } = data
-		const exists = await db.prescription.findUnique({
-			where: {
-				medicationId_pharmacyId_clinicCareId: {
-					medicationId, pharmacyId, clinicCareId
-				}
-			}
-		})
+		const pharmacy = await PharmacyResolver.findOne({ id: pharmacyId }, { db } as IContext)
+		const medication = await MedicationResolver.findOne({ id: medicationId }, { db } as IContext)
 		const record = await db.clinicCare.update({
 			where: { id: clinicCareId },
 			data: {
-				prescriptions: exists ? {
-					update: {
-						where: {
-							medicationId_pharmacyId_clinicCareId: {
-								medicationId, pharmacyId, clinicCareId
-							}
+				prescriptions: {
+					create: withAuditForCreate(user, {
+						...remaining,
+						pharmacy: {
+							create: withAuditForCreate(user, {
+								pharmacyId,
+								pharmacyName: pharmacy.name
+							})
 						},
-						data: withAuditForUpdate(user, { status: Status.Active, ...remaining })
-					}
-				} : {
-					create: [withAuditForCreate(user, { medicationId, pharmacyId, ...remaining })]
+						medication: {
+							create: withAuditForCreate(user, {
+								medicationId,
+								medicationCode: medication.code,
+								medicationName: medication.name,
+								medicationConcentration: medication.concentration,
+								medicationClass: medication.class.name,
+								medicationUnit: medication.unit.name
+							})
+						}
+					})
 				}
 			}
 		})
@@ -131,27 +178,24 @@ export class PrescriptionResolver extends Resolver {
 	async createExtern(_, { data }: { data: IPrescriptionExternCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.ClinicCare
 		const { medicationId, clinicCareId, ...remaining } = data
-		const exists = await db.prescriptionExtern.findUnique({
-			where: {
-				medicationId_clinicCareId: {
-					medicationId, clinicCareId
-				}
-			}
-		})
+		const medication = await MedicationResolver.findOne({ id: medicationId }, { db } as IContext)
 		const record = await db.clinicCare.update({
 			where: { id: clinicCareId },
 			data: {
-				prescriptionExterns: exists ? {
-					update: {
-						where: {
-							medicationId_clinicCareId: {
-								medicationId, clinicCareId
-							}
-						},
-						data: withAuditForUpdate(user, { status: Status.Active, ...remaining })
-					}
-				} : {
-					create: [withAuditForCreate(user, { medicationId, ...remaining })]
+				prescriptionExterns: {
+					create: withAuditForCreate(user, {
+						...remaining,
+						medication: {
+							create: withAuditForCreate(user, {
+								medicationId,
+								medicationCode: medication.code,
+								medicationName: medication.name,
+								medicationConcentration: medication.concentration,
+								medicationClass: medication.class.name,
+								medicationUnit: medication.unit.name
+							})
+						}
+					})
 				}
 			}
 		})
@@ -232,7 +276,12 @@ export class PrescriptionResolver extends Resolver {
 						pharmacy: true,
 						medication: {
 							include: {
-								unit: true
+								medication: {
+									include: {
+										class: true,
+										unit: true
+									}
+								}
 							}
 						}
 					}
@@ -244,7 +293,12 @@ export class PrescriptionResolver extends Resolver {
 					include: {
 						medication: {
 							include: {
-								unit: true
+								medication: {
+									include: {
+										class: true,
+										unit: true
+									}
+								}
 							}
 						}
 					}
