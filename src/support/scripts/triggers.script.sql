@@ -478,6 +478,18 @@ BEGIN
 	EXECUTE dbo.SPCreateAuditLog 'InterclinicalMedicalSubspecialty', @trace, @inserted, @deleted, @columnsUpdated;
 END
 GO
+CREATE OR ALTER TRIGGER TRInterclinicalFileUploadUpdated ON InterclinicalFileUpload AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'InterclinicalFileUpload', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
 
 CREATE OR ALTER TRIGGER TRPrescriptionUpdated ON Prescription AFTER UPDATE AS
 BEGIN
@@ -491,6 +503,30 @@ BEGIN
 	EXECUTE dbo.SPCreateAuditLog 'Prescription', @trace, @inserted, @deleted, @columnsUpdated;
 END
 GO
+CREATE OR ALTER TRIGGER TRPrescriptionPharmacyUpdated ON PrescriptionPharmacy AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'PrescriptionPharmacy', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
+CREATE OR ALTER TRIGGER TRPrescriptionMedicationUpdated ON PrescriptionMedication AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'PrescriptionMedication', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
 
 CREATE OR ALTER TRIGGER TRPrescriptionExternUpdated ON PrescriptionExtern AFTER UPDATE AS
 BEGIN
@@ -502,5 +538,42 @@ BEGIN
 	SET @columnsUpdated = columns_updated();
 
 	EXECUTE dbo.SPCreateAuditLog 'PrescriptionExtern', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
+CREATE OR ALTER TRIGGER TRPrescriptionExternMedicationUpdated ON PrescriptionExternMedication AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'PrescriptionExternMedication', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
+
+CREATE OR ALTER TRIGGER TRMedicalLeaveUpdated ON MedicalLeave AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'MedicalLeave', @trace, @inserted, @deleted, @columnsUpdated;
+END
+GO
+CREATE OR ALTER TRIGGER TRMedicalLeaveDisabilityTypeUpdated ON MedicalLeaveDisabilityType AFTER UPDATE AS
+BEGIN
+	DECLARE @trace TTrace, @inserted VARCHAR(MAX), @deleted VARCHAR(MAX), @columnsUpdated VARBINARY(MAX);
+
+	INSERT INTO @trace(insertedId) SELECT id FROM INSERTED;
+	SET @inserted = (SELECT * FROM INSERTED FOR JSON AUTO);
+	SET @deleted = (SELECT * FROM DELETED FOR JSON AUTO);
+	SET @columnsUpdated = columns_updated();
+
+	EXECUTE dbo.SPCreateAuditLog 'MedicalLeaveDisabilityType', @trace, @inserted, @deleted, @columnsUpdated;
 END
 GO
