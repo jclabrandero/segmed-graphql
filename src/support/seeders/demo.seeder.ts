@@ -67,7 +67,7 @@ const data = {
 				description: 'Administrador del sistema',
 			},
 			permissions: [
-				'R_PRMSSN', 'R_GRP', 'W_GRP', 'R_USR', 'W_USR'
+				'R_PRMSSN', 'R_GRP', 'W_GRP', 'R_USR', 'W_USR', 'R_CLRK'
 			]
 		},
 		{
@@ -76,7 +76,24 @@ const data = {
 				description: 'Médico de atención en clínica',
 			},
 			permissions: [
-				'SEGMED'
+				'SEGMED', 'R_CLNCRST', 'R_BLNG', 'R_NSRD', 'R_CLNCR', 'W_CLNCR'
+			]
+		},
+		{
+			group: {
+				name: 'Administradores de catálogos',
+			},
+			permissions: [
+				'R_PDT', 'W_PDT', 'R_EMP', 'W_EMP', 'R_EMT', 'W_EMT', 'R_INT', 'W_INT', 'R_MDGRP', 'W_MDGRP', 'R_MDSPC', 'W_MDSPC',
+				'R_MDSSP', 'W_MDSSP', 'R_DRGCLS', 'W_DRGCLS', 'R_DRGUNT', 'W_DRGUNT', 'R_CLNCRST', 'W_CLNCRST', 'R_DSBLTT', 'W_DSBLTT'
+			]
+		},
+		{
+			group: {
+				name: 'Administradores de almacenes',
+			},
+			permissions: [
+				'R_MDCTN', 'W_MDCTN', 'R_PHRMC', 'W_PHRMC'
 			]
 		}
 	],
@@ -92,12 +109,21 @@ const data = {
 		},
 		{
 			user: {
-				userName: 'medico',
+				userName: 'mmedina',
 				displayName: 'Medina',
-				email: 'medina@company.com'
+				email: 'mmedina@company.com'
 			},
-			password: 'medina',
+			password: 'company',
 			groups: ['Médicos']
+		},
+		{
+			user: {
+				userName: 'pperez',
+				displayName: 'Perez',
+				email: 'pperez@company.com'
+			},
+			password: 'company',
+			groups: ['Administradores de catálogos', 'Administradores de almacenes']
 		}
 	],
 
