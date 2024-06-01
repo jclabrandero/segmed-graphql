@@ -13,6 +13,18 @@ export class PharmacyResolver extends Resolver {
 		super(SubscriptionEvent.Pharmacy)
 	}
 
+	public static async findOne({ id }: { id: number }, { db }: IContext) {
+		return await db.pharmacy.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				belonging: true
+			}
+		})
+	}
+
 	async index(_, args, { db }: IContext): Promise<Array<Pharmacy>> {
 		return await db.pharmacy.findMany({
 			where: {

@@ -22,7 +22,7 @@ export class MedicalLeaveResolver extends Resolver {
 			disabilityType: {
 				...disabilityType.disabilityType,
 				name: disabilityType.disabilityTypeName
-			},
+			}
 		}
 	}
 
