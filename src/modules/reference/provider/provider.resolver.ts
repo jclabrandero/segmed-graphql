@@ -1,7 +1,7 @@
 
 import { Provider } from '@prisma/client'
 
-import { Resolver } from '../../../support/classes'
+import { Relation, Resolver } from '../../../support/classes'
 import { IContext, IProviderCreateArgs, IProviderUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
@@ -23,19 +23,38 @@ export class ProviderResolver extends Resolver {
 			belonging: true,
 			medicalGroups: {
 				where: {
-					status: Status.Active
+					status: Status.Active,
+					medicalGroup: {
+						status: Status.Active
+					}
 				},
 				include: {
 					medicalGroup: true,
 					specialties: {
 						where: {
-							status: Status.Active
+							status: Status.Active,
+							medicalSpecialty: {
+								status: Status.Active,
+								groups: {
+									some: {
+										status: Status.Active
+									}
+								}
+							}
 						},
 						include: {
 							medicalSpecialty: true,
 							subspecialties: {
 								where: {
-									status: Status.Active
+									status: Status.Active,
+									medicalSubspecialty: {
+										status: Status.Active,
+										subspecialtyOf: {
+											some: {
+												status: Status.Active
+											}
+										}
+									}
 								},
 								include: {
 									medicalSubspecialty: true
@@ -57,7 +76,9 @@ export class ProviderResolver extends Resolver {
 				...um.medicalGroup,
 				specialties: um.specialties.map(em => ({
 					...em.medicalSpecialty,
-					subspecialties: em.subspecialties.map(sm => sm.medicalSubspecialty)
+					subspecialties: em.subspecialties.map(sm => {
+						return sm.medicalSubspecialty
+					})
 				}))
 			}))
 		}
@@ -94,7 +115,7 @@ export class ProviderResolver extends Resolver {
 				status: Status.Active,
 				belongingId,
 				medicalGroups: medicalGroupId ? {
-					every: {
+					some: {
 						medicalGroupId
 					}
 				} : undefined
@@ -148,9 +169,66 @@ export class ProviderResolver extends Resolver {
 
 	async update(_, { id, data }: { id: number, data: IProviderUpdateArgs }, { db, pubsub, user }: IContext): Promise<Provider> {
 		const { UPDATED, UPSERTED } = SubscriptionEvent.Provider
+		const { medicalGroups, ...remaining } = data
+
+		const specialtiesData = async medicalGroup => {
+			const dataset = []
+			const dbMG = await db.providerMedicalGroup.findUnique({
+				where: { medicalGroupId_providerId: {
+					medicalGroupId: medicalGroup.medicalGroupId,
+					providerId: id
+				}}
+			})
+			const providerMedicalGroupId = dbMG ? dbMG.id : -1
+			for (const specialty of medicalGroup.specialties) {
+				const dbSP = await db.providerMedicalSpecialty.findUnique({
+					where: {
+						medicalSpecialtyId_providerMedicalGroupId: {
+							medicalSpecialtyId: specialty.medicalSpecialtyId,
+							providerMedicalGroupId
+						}
+					}
+				})
+				const providerMedicalSpecialtyId = dbSP ? dbSP.id : -1
+				const subspecialties = await Relation.upsert({
+					model: db.providerMedicalSubspecialty,
+					where: { providerMedicalSpecialtyId },
+					dataset: specialty.subspecialties, field: 'medicalSubspecialtyId', user
+				})
+				dataset.push({
+					...specialty,
+					subspecialties,
+					__update: Boolean(subspecialties.update) || Boolean(subspecialties.create)
+				})
+			}
+			return await Relation.upsert({
+				model: db.providerMedicalSpecialty,
+				where: { providerMedicalGroupId },
+				dataset, field: 'medicalSpecialtyId', user
+			})
+		}
+		const groupsData = async () => {
+			const dataset = []
+			for (const medicalGroup of medicalGroups) {
+				const specialties = await specialtiesData(medicalGroup)
+				dataset.push({
+					...medicalGroup,
+					specialties,
+					__update: Boolean(specialties.update) || Boolean(specialties.create)
+				})
+			}
+			return await Relation.upsert({
+				model: db.providerMedicalGroup,
+				where: { providerId: id },
+				dataset, field: 'medicalGroupId', user
+			})
+		}
 		const record = await db.provider.update({
 			where: { id },
-			data: withAuditForUpdate(user, data)
+			data: withAuditForUpdate(user, {
+				...remaining,
+				medicalGroups: medicalGroups ? await groupsData() : undefined
+			})
 		})
 		super.publish({
 			pubsub,
