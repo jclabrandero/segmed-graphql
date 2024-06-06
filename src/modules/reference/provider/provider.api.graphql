@@ -42,6 +42,7 @@ input IProviderUpdateArgs {
 	phone:			String
 
 	belongingId:	Int
+	medicalGroups:	[IProviderMedicalGroup!]
 }
 
 input IProviderFilterArgs {

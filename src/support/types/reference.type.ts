@@ -43,4 +43,12 @@ export interface IProviderUpdateArgs {
 	phone?:			string
 
 	belongingId?:	number
+
+	medicalGroups?: Array<{
+		medicalGroupId:	number
+		specialties: Array<{
+			medicalSpecialtyId: number
+			subspecialties: Array<number>
+		}>
+	}>
 }
