@@ -105,13 +105,13 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 					<td>
 						<table>
 							<tr>
-								<th>Codigo</th>
-								<th>Descripcion</th>
-								<th>Concentracion - Presentacion</th>
-								<th>Cantidad</th>
+								<th style={{ width: '10%', border: 'none' }}>Codigo</th>
+								<th style={{ width: '40%', border: 'none' }}>Descripcion</th>
+								<th style={{ width: '40%', border: 'none' }}>Concentracion - Presentacion</th>
+								<th style={{ width: '10%', border: 'none' }}>Cantidad</th>
 							</tr>
 							{
-								clinicCare.prescriptions.map(({ medication, quantity }, i) => (
+								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity }, i) => (
 									<tr key={i}>
 										<td>{medication.medicationCode}</td>
 										<td>{medication.medicationName}</td>
@@ -135,7 +135,7 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 					<tr>
 						<td style={{ width: '70%', border: 'none', fontSize: '9px' }}>impreso por: {user.userName}</td>
 						<td style={{ width: '30%', fontSize: '12px', textAlign: 'center', border: 'none', borderTop: '1px solid black' }}>
-							<p>Firma del Dr. Cimar Casanova</p>
+							<p>Firma del Dr. ................</p>
 						</td>
 					</tr>
 					<tr>
@@ -176,10 +176,10 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 					<td>
 						<table>
 							<tr>
-								<th>Codigo</th>
-								<th>Descripcion</th>
-								<th>Concentracion - Presentacion</th>
-								<th>Cantidad</th>
+								<th style={{ width: '10%', border: 'none' }}>Codigo</th>
+								<th style={{ width: '40%', border: 'none' }}>Descripcion</th>
+								<th style={{ width: '40%', border: 'none' }}>Concentracion - Presentacion</th>
+								<th style={{ width: '10%', border: 'none' }}>Cantidad</th>
 							</tr>
 							{
 								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity, indications }, i) => (
@@ -190,8 +190,8 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 											<td>{medication.medicationConcentration} - {medication.medicationUnit}</td>
 											<td>{quantity}</td>
 										</tr>
-										<tr>
-											<td>Indicaciones:</td>
+										<tr style={{ borderBottom: '1px solid black' }}>
+											<td style={{ border: 'none' }}>Indicaciones:</td>
 											<td style={{ colSpan: '3' }}>{indications}</td>
 										</tr>
 									</tbody>
