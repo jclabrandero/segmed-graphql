@@ -28,7 +28,7 @@ model InterclinicalProvider {
 	id						Int @id @default(autoincrement())
 	providerBusinessName	String
 
-	providerId		Int	@unique
+	providerId		Int
 	interclinicalId	Int	@unique
 
 	status				Int		@default(1)
@@ -49,7 +49,7 @@ model InterclinicalMedicalGroup {
 	id					Int @id @default(autoincrement())
 	medicalGroupName	String
 
-	medicalGroupId		Int	@unique
+	medicalGroupId		Int
 	interclinicalId		Int	@unique
 
 	status				Int		@default(1)
