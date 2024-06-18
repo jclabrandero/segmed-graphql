@@ -140,24 +140,24 @@ export class ProviderResolver extends Resolver {
 		const { medicalGroups, ...remaining } = data
 
 		const record = await db.provider.create({
-			data: {
-				...withAuditForCreate(user, remaining),
+			data: withAuditForCreate(user, {
+				...remaining,
 				medicalGroups: medicalGroups ? {
-					create: medicalGroups.map(({ medicalGroupId, specialties }) => ({
-						...withAuditForCreate(user, { medicalGroupId }),
+					create: medicalGroups.map(({ medicalGroupId, specialties }) => withAuditForCreate(user, {
+						medicalGroupId,
 						specialties: {
-							create: specialties.map(({ medicalSpecialtyId, subspecialties }) => ({
-								...withAuditForCreate(user, { medicalSpecialtyId }),
+							create: specialties.map(({ medicalSpecialtyId, subspecialties }) => withAuditForCreate(user, {
+								medicalSpecialtyId,
 								subspecialties: {
-									create: subspecialties.map(medicalSubspecialtyId => 
-										withAuditForCreate(user, { medicalSubspecialtyId })
-									)
+									create: subspecialties.map(medicalSubspecialtyId => withAuditForCreate(user, {
+										medicalSubspecialtyId
+									}))
 								}
 							}))
 						}
 					}))
 				} : undefined
-			}
+			})
 		})
 		super.publish({
 			pubsub,
