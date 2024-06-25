@@ -42,6 +42,16 @@ export class InsuredResolver extends Resolver {
 		return result
 	}
 
+	public static async findOne({ id }: { id: number }, { db }: IContext) {
+		return await db.insured.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: InsuredResolver.include()
+		})
+	}
+
 	async index(_, args, { db }: IContext): Promise<Array<Insured>> {
 		return await InsuredResolver.findMany(db.insured, { NOT: { status: Status.Removed } })
 	}
