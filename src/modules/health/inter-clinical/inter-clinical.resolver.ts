@@ -8,6 +8,7 @@ import { now, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from 
 import { MedicalGroupResolver } from '../../catalog'
 import { InterclinicalTemplate } from '../../template/inter-clinical.template'
 import { ProviderResolver } from '../../reference'
+import { ClinicCareResolver } from '../'
 
 
 export class InterclinicalResolver extends Resolver {
@@ -18,9 +19,10 @@ export class InterclinicalResolver extends Resolver {
 
 	static format(record) {
 		if (!record) return null
-		const { medicalGroup, provider, files, ...interclinical } = record
+		const { medicalGroup, provider, files, clinicCare, ...interclinical } = record
 		return {
 			...interclinical,
+			clinicCare: clinicCare ? ClinicCareResolver.format(clinicCare) : undefined,
 			provider: {
 				...provider.provider,
 				businessName: provider.providerBusinessName
@@ -204,13 +206,21 @@ export class InterclinicalResolver extends Resolver {
 			include: {
 				clinicCare: {
 					include: {
-						medicalOffice: true,
 						insured: {
 							include: {
-								person: true,
-								belonging: true
+								insured: {
+									include: {
+										person: true,
+										belonging: true
+									}
+								}
 							}
-						}
+						},
+						medicalOffice: {
+							include: {
+								medicalOffice: true
+							}
+						},
 					}
 				},
 				...InterclinicalResolver.include()
