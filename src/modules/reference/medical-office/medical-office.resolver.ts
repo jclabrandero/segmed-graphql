@@ -13,6 +13,18 @@ export class MedicalOfficeResolver extends Resolver {
 		super(SubscriptionEvent.MedicalOffice)
 	}
 
+	public static async findOne({ id }: { id: number }, { db }: IContext) {
+		return await db.medicalOffice.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				belonging: true
+			}
+		})
+	}
+
 	async index(_, args, { db }: IContext): Promise<Array<MedicalOffice>> {
 		return await db.medicalOffice.findMany({
 			where: {
