@@ -7,6 +7,7 @@ import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 import { PrescriptionTemplate } from '../../template/prescription.template'
 import { MedicationResolver, PharmacyResolver } from '../../drugstore'
+import { ClinicCareResolver } from '../'
 
 
 export class PrescriptionResolver extends Resolver {
@@ -263,11 +264,19 @@ export class PrescriptionResolver extends Resolver {
 			include: {
 				insured: {
 					include: {
-						person: true,
-						belonging: true
+						insured: {
+							include: {
+								person: true,
+								belonging: true
+							}
+						}
 					}
 				},
-				medicalOffice: true,
+				medicalOffice: {
+					include: {
+						medicalOffice: true
+					}
+				},
 				prescriptions: {
 					where: {
 						status: Status.Active
@@ -305,7 +314,7 @@ export class PrescriptionResolver extends Resolver {
 				}
 			}
 		})
-		const buffer = await template.make(record, constext.user)
+		const buffer = await template.make(ClinicCareResolver.format(record), constext.user)
 
 		return {
 			info: {

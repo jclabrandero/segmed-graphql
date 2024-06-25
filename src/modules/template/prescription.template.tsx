@@ -113,9 +113,9 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 							{
 								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity }, i) => (
 									<tr key={i}>
-										<td>{medication.medicationCode}</td>
-										<td>{medication.medicationName}</td>
-										<td>{medication.medicationConcentration} - {medication.medicationUnit}</td>
+										<td>{medication.code}</td>
+										<td>{medication.name}</td>
+										<td>{medication.concentration} - {medication.unit.name}</td>
 										<td>{quantity}</td>
 									</tr>
 								))
@@ -185,9 +185,9 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity, indications }, i) => (
 									<tbody key={i}>
 										<tr>
-											<td>{medication.medicationCode}</td>
-											<td>{medication.medicationName}</td>
-											<td>{medication.medicationConcentration} - {medication.medicationUnit}</td>
+											<td>{medication.code}</td>
+											<td>{medication.name}</td>
+											<td>{medication.concentration} - {medication.unit.name}</td>
 											<td>{quantity}</td>
 										</tr>
 										<tr style={{ borderBottom: '1px solid black' }}>
