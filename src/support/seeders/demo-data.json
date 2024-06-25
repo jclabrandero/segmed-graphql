@@ -4,8 +4,10 @@
 	],
 	"insuredTypes": [
 		{ "name": "Titular", "description": "Trabajador obrero o funcionario de la empresa", "withDependents": true },
-		{ "name": "Hij@", "description": "Dependiente", "withDependents": false },
-		{ "name": "Espos@", "description": "Dependiente", "withDependents": false }
+		{ "name": "Hijo", "description": "Dependiente", "withDependents": false },
+		{ "name": "Hija", "description": "Dependiente", "withDependents": false },
+		{ "name": "Esposo", "description": "Dependiente", "withDependents": false },
+		{ "name": "Esposa", "description": "Dependiente", "withDependents": false }
 	],
 	"employeePositions": [
 		{ "name": "Jefe Médico" },
@@ -253,7 +255,7 @@
 			  "documentNumber": "8567332"
 			},
 			"holderInsuredIIN": 2,
-			"insuredType": "Espos@",
+			"insuredType": "Esposa",
 			"belonging": "San Vicente"
 		},
 		{
@@ -292,7 +294,7 @@
 			  "documentNumber": "8551723"
 			},
 			"holderInsuredIIN": 4,
-			"insuredType": "Espos@",
+			"insuredType": "Esposa",
 			"belonging": "San Vicente"
 		},
 		{
@@ -331,7 +333,7 @@
 			  "documentNumber": "5539522"
 			},
 			"holderInsuredIIN": 6,
-			"insuredType": "Espos@",
+			"insuredType": "Esposa",
 			"belonging": "San Vicente"
 		},
 		{
@@ -350,7 +352,7 @@
 			  "documentNumber": "16868060"
 			},
 			"holderInsuredIIN": 6,
-			"insuredType": "Hij@",
+			"insuredType": "Hijo",
 			"belonging": "San Vicente"
 		},
 		{
@@ -389,7 +391,7 @@
 			  "documentNumber": "1398354"
 			},
 			"holderInsuredIIN": 10,
-			"insuredType": "Espos@",
+			"insuredType": "Esposa",
 			"belonging": "San Vicente"
 		},
 		{
@@ -408,7 +410,7 @@
 			  "documentNumber": "14377273"
 			},
 			"holderInsuredIIN": 10,
-			"insuredType": "Hij@",
+			"insuredType": "Hijo",
 			"belonging": "San Vicente"
 		}
 	],

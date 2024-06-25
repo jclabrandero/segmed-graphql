@@ -95,6 +95,22 @@ const data = {
 			permissions: [
 				'R_MDCTN', 'W_MDCTN', 'R_PHRMC', 'W_PHRMC'
 			]
+		},
+		{
+			group: {
+				name: 'Administradores de referencias',
+			},
+			permissions: [
+				'R_BLNG', 'W_BLNG', 'R_MDOF', 'W_MDOF', 'R_PRVD', 'W_PRVD'
+			]
+		},
+		{
+			group: {
+				name: 'Administradores de identidades',
+			},
+			permissions: [
+				'R_PRSN', 'W_PRSN', 'R_CLRK', 'W_CLRK', 'R_NSRD', 'W_NSRD'
+			]
 		}
 	],
 	usuarios: [
@@ -123,7 +139,12 @@ const data = {
 				email: 'pperez@company.com'
 			},
 			password: 'company',
-			groups: ['Administradores de catálogos', 'Administradores de almacenes']
+			groups: [
+				'Administradores de catálogos',
+				'Administradores de almacenes',
+				'Administradores de referencias',
+				'Administradores de identidades'
+			]
 		}
 	],
 
