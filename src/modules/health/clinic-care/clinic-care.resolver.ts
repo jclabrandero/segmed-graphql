@@ -8,6 +8,8 @@ import { withAuditForCreate, withAuditForUpdate } from '../../../support/functio
 import { InterclinicalResolver } from '../inter-clinical/inter-clinical.resolver'
 import { MedicalLeaveResolver } from '../medical-leave/medical-leave.resolver'
 import { PrescriptionResolver } from '../prescription/prescription.resolver'
+import { InsuredResolver } from '../../folk'
+import { MedicalOfficeResolver } from '../../reference'
 
 
 export class ClinicCareResolver extends Resolver {
@@ -16,24 +18,61 @@ export class ClinicCareResolver extends Resolver {
 		super(SubscriptionEvent.ClinicCare)
 	}
 
+	static format(record) {
+		if (!record) return null
+		const { insured, medicalOffice, prescriptions, prescriptionExterns, interclinicals, medicalLeaves, ...clinicCare } = record
+		return {
+			...clinicCare,
+			insured: {
+				...insured.insured,
+				iin: insured.insuredIin,
+				person: {
+					firstName: insured.personFirstName,
+					lastName: insured.personLastName
+				},
+				insuredType: {
+					name: insured.insuredTypeName
+				}
+			},
+			medicalOffice: medicalOffice ? {
+				...medicalOffice.medicalOffice,
+				name: medicalOffice.medicalOfficeName
+			} : undefined,
+			prescriptions: prescriptions ? prescriptions.map(prescription => PrescriptionResolver.format(prescription)) : undefined,
+			prescriptionExterns: prescriptionExterns ? prescriptionExterns.map(prescriptionExtern => PrescriptionResolver.format(prescriptionExtern)) : undefined,
+			interclinicals: interclinicals ? interclinicals.map(interclinical => InterclinicalResolver.format(interclinical)) : undefined,
+			medicalLeaves: medicalLeaves ? medicalLeaves.map(medicalLeave => MedicalLeaveResolver.format(medicalLeave)) : undefined
+		}
+	}
+
 	async index(_, args, { db }: IContext): Promise<Array<ClinicCare>> {
-		return await db.clinicCare.findMany({
+		const records = await db.clinicCare.findMany({
 			where: {
 				NOT: { status: Status.Removed }
 			},
 			include: {
-				primary: true,
 				insured: {
 					include: {
-						person: true,
-						insuredType: true
+						insured: {
+							include: {
+								person: true,
+								insuredType: true
+							}
+						}
 					}
 				},
+				medicalOffice: {
+					include: {
+						medicalOffice: true
+					}
+				},
+				primary: true,
 				state: true,
-				medicalOffice: true,
 				creatorUser: true
 			}
 		})
+
+		return records.map(ClinicCareResolver.format)
 	}
 
 	async findOne(_, { id }: { id: number }, { db }: IContext) {
@@ -45,11 +84,19 @@ export class ClinicCareResolver extends Resolver {
 			include: {
 				insured: {
 					include: {
-						person: true,
-						insuredType: true,
+						insured: {
+							include: {
+								person: true,
+								insuredType: true
+							}
+						}
 					}
 				},
-				primary: true,
+				medicalOffice: {
+					include: {
+						medicalOffice: true
+					}
+				},
 				prescriptions: {
 					where: {
 						NOT: { status: Status.Removed }
@@ -137,19 +184,13 @@ export class ClinicCareResolver extends Resolver {
 						approvalUser: true
 					}
 				},
+				primary: true,
 				state: true,
-				medicalOffice: true,
 				creatorUser: true
 			}
 		})
 
-		return {
-			...record,
-			prescriptions: record.prescriptions.map(prescription => PrescriptionResolver.format(prescription)),
-			prescriptionExterns: record.prescriptionExterns.map(prescriptionExtern => PrescriptionResolver.format(prescriptionExtern)),
-			interclinicals: record.interclinicals.map(interclinical => InterclinicalResolver.format(interclinical)),
-			medicalLeaves: record.medicalLeaves.map(medicalLeave => MedicalLeaveResolver.format(medicalLeave))
-		}
+		return ClinicCareResolver.format(record)
 	}
 
 	async findState(_, { id }: { id: number }, { db }: IContext): Promise<ClinicalCareState> {
@@ -165,8 +206,28 @@ export class ClinicCareResolver extends Resolver {
 
 	async create(_, { data }: { data: IClinicCareCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
 		const { CREATED, UPSERTED } = SubscriptionEvent.ClinicCare
+		const { insuredId, medicalOfficeId, ...payload } = data
+		const insured = await InsuredResolver.findOne({ id: insuredId }, { db } as IContext)
+		const medicalOffice = await MedicalOfficeResolver.findOne({ id: medicalOfficeId }, { db } as IContext)
 		const record = await db.clinicCare.create({
-			data: withAuditForCreate(user, data)
+			data:withAuditForCreate(user, {
+				...payload,
+				insured: {
+					create: withAuditForCreate(user, {
+						insuredId,
+						insuredIin: insured.iin,
+						personFirstName: insured.person.firstName,
+						personLastName: insured.person.lastName,
+						insuredTypeName: insured.insuredType.name
+					})
+				},
+				medicalOffice: {
+					create: withAuditForCreate(user, {
+						medicalOfficeId,
+						medicalOfficeName: medicalOffice.name
+					})
+				}
+			})
 		})
 		super.publish({
 			pubsub,
