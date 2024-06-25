@@ -76,7 +76,7 @@ const data = {
 				description: 'Médico de atención en clínica',
 			},
 			permissions: [
-				'SEGMED', 'R_CLNCRST', 'R_BLNG', 'R_NSRD', 'R_CLNCR', 'W_CLNCR'
+				'SEGMED', 'R_CLNCRST', 'R_BLNG', 'R_NSRD', 'R_CLNCR', 'W_CLNCR', 'R_MDGRP', 'R_PRVD', 'R_PHRMC', 'R_MDCTN'
 			]
 		},
 		{
