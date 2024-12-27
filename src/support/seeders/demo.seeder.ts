@@ -55,6 +55,10 @@ const data = {
 		{ code: 'W_MDCTN', name: 'WriteMedication', description: 'Escritura de medicamentos' },
 		{ code: 'R_PHRMC', name: 'ReadPharmacy', description: 'Lectura de farmacias' },
 		{ code: 'W_PHRMC', name: 'WritePharmacy', description: 'Escritura de farmacias' },
+		{ code: 'R_BTCH', name: 'ReadBatch', description: 'Lectura de lotes' },
+		{ code: 'W_BTCH', name: 'WriteBatch', description: 'Escritura de lotes' },
+		{ code: 'R_INVT', name: 'ReadInventory', description: 'Lectura de inventarios' },
+		{ code: 'W_INVT', name: 'WriteInventory', description: 'Escritura de inventarios' },
 
 		{ code: 'R_CLNCR', name: 'ReadClinicCare', description: 'Lectura de consultas médicas' },
 		{ code: 'W_CLNCR', name: 'WriteClinicCare', description: 'Escritura de consultas médicas' },
@@ -93,7 +97,7 @@ const data = {
 				name: 'Administradores de almacenes',
 			},
 			permissions: [
-				'R_MDCTN', 'W_MDCTN', 'R_PHRMC', 'W_PHRMC'
+				'R_MDCTN', 'W_MDCTN', 'R_PHRMC', 'W_PHRMC', 'R_INVT', 'W_INVT', 'R_BTCH', 'W_BTCH'
 			]
 		},
 		{

@@ -1,5 +1,6 @@
 
-import { Pharmacy, Medication } from "@prisma/client"
+import { Pharmacy, Medication } from '@prisma/client'
+import { Decimal } from '@prisma/client/runtime/library'
 
 export interface IMedicationCreateArgs {
 	code:			string
@@ -35,4 +36,40 @@ export interface IPharmacyCreateArgs {
 export interface IPharmacyUpdateArgs {
 	name?:			string
 	belongingId?:	number
+}
+
+export interface IBatchCreateArgs {
+	code:			string
+	expireAt:		Date
+	medicationId:	number
+}
+
+export interface IBatchUpdateArgs {
+	expireAt?:	Date
+}
+
+export interface IArrivalCreateArgs {
+	remark:			string
+	arrivalDate:	Date
+	pharmacyId:		number
+}
+
+export interface IArrivalItemCreateArgs {
+	quantity:	number
+	price:		Decimal
+	batchId:	number
+	arrivalId:	number
+}
+
+export interface IDepartureCreateArgs {
+	remark:			string
+	departureDate:	Date
+	pharmacyId:		number
+}
+
+export interface IDepartureItemCreateArgs {
+	quantity:		number
+	price:			Decimal
+	batchId:		number
+	departureId:	number
 }
