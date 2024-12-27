@@ -5,6 +5,7 @@ import { loadFilesSync } from '@graphql-tools/load-files'
 import { IResolvers, mapSchema, MapperKind, getDirective } from '@graphql-tools/utils'
 import { GraphQLSchema, DocumentNode, GraphQLScalarType } from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
+import Big from 'big.js'
 
 import { IContext } from '../support/types'
 
@@ -20,14 +21,18 @@ import {
 } from '../modules/catalog'
 import { BelongingResolver, MedicalOfficeResolver, ProviderResolver } from '../modules/reference'
 import { PersonResolver, ClerkResolver, InsuredResolver } from '../modules/folk'
-import { MedicationResolver, PharmacyResolver } from '../modules/drugstore'
+import { MedicationResolver } from '../modules/drugstore/medication/medication.resolver'
+import { PharmacyResolver } from '../modules/drugstore/pharmacy/pharmacy.resolver'
+import { BatchResolver } from '../modules/drugstore/batch/batch.resolver'
+import { InventoryResolver } from '../modules/drugstore/inventory/inventory.resolver'
+import { ArrivalResolver } from '../modules/drugstore/inventory/arrival.resolver'
+import { DepartureResolver } from '../modules/drugstore/inventory/departure.resolver'
 import {
 	ClinicCareResolver, ClinicCarePrimaryResolver,
 	InterclinicalResolver,
 	PrescriptionResolver,
 	MedicalLeaveResolver
 } from '../modules/health'
-
 
 export class GraphqlResolver {
 	schema:	GraphQLSchema
@@ -94,6 +99,10 @@ export class GraphqlResolver {
 			, insured = new InsuredResolver()
 			, medication = new MedicationResolver()
 			, pharmacy = new PharmacyResolver()
+			, batch = new BatchResolver()
+			, inventory = new InventoryResolver()
+			, arrival = new ArrivalResolver()
+			, departure = new DepartureResolver()
 			, clinicCare = new ClinicCareResolver()
 			, clinicCarePrimary = new ClinicCarePrimaryResolver()
 			, interclinical = new InterclinicalResolver()
@@ -104,8 +113,18 @@ export class GraphqlResolver {
 			DateTime: new GraphQLScalarType({
 				name: 'DateTime',
 				description: 'Date custom scalar type',
+				// value from the client
 				parseValue: (value: number) => new Date(value),
+				// value sent to the client
 				serialize: (value: Date) => value.getTime()
+			}),
+			Decimal: new GraphQLScalarType({
+				name: 'Decimal',
+				description: 'The `Decimal` scalar type to represent currency values',
+				// value from the client
+				parseValue: (value: number) => Big(value),
+				// value sent to the client
+				serialize: (value) => new Big(value),
 			}),
 			Query: {
 				users: user.index,
@@ -183,6 +202,13 @@ export class GraphqlResolver {
 				activePharmacies: pharmacy.active,
 				pharmacy: pharmacy.findOne,
 				pharmacyStock: pharmacy.stock,
+				batches: batch.index,
+				batchesStocks: batch.stocks,
+				inventories: inventory.index,
+				arrivals: arrival.index,
+				arrivalItems: arrival.items,
+				departures: departure.index,
+				departureItems: departure.items,
 
 				clinicCares: clinicCare.index,
 				clinicCare: clinicCare.findOne,
@@ -260,6 +286,13 @@ export class GraphqlResolver {
 				createPharmacy: pharmacy.create,
 				updatePharmacy: pharmacy.update,
 				deletePharmacy: pharmacy.delete,
+				createBatch: batch.create,
+				updateBatch: batch.update,
+				deleteBatch: batch.delete,
+				createArrival: arrival.create,
+				createArrivalItem: arrival.createItem,
+				createDeparture: departure.create,
+				createDepartureItem: departure.createItem,
 
 				createClinicCare: clinicCare.create,
 				updateClinicCareState: clinicCare.updateState,
@@ -368,6 +401,18 @@ export class GraphqlResolver {
 				pharmacyUpdated: pharmacy.updated({ pubsub }),
 				pharmacyDeleted: pharmacy.deleted({ pubsub }),
 				pharmacyUpserted: pharmacy.upserted({ pubsub }),
+				batchCreated: batch.created({ pubsub }),
+				batchUpdated: batch.updated({ pubsub }),
+				batchDeleted: batch.deleted({ pubsub }),
+				batchUpserted: batch.upserted({ pubsub }),
+				arrivalCreated: arrival.created({ pubsub }),
+				arrivalUpdated: arrival.updated({ pubsub }),
+				arrivalDeleted: arrival.deleted({ pubsub }),
+				arrivalUpserted: arrival.upserted({ pubsub }),
+				departureCreated: departure.created({ pubsub }),
+				departureUpdated: departure.updated({ pubsub }),
+				departureDeleted: departure.deleted({ pubsub }),
+				departureUpserted: departure.upserted({ pubsub }),
 
 				clinicCareCreated: clinicCare.created({ pubsub }),
 				clinicCareUpdated: clinicCare.updated({ pubsub }),
