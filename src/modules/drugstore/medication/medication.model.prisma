@@ -18,8 +18,8 @@ model Medication {
 
 	class			DrugClass	@relation(fields: [classId], references: [id])
 	unit			DrugUnit	@relation(fields: [unitId], references: [id])
-
 	inventory		Inventory[]
+	batches			Batch[]
 
 	creatorUser		User	@relation(name: "MedicationCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "MedicationLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

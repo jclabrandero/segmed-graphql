@@ -183,12 +183,22 @@ model User {
   createdInsureds            Insured[]            @relation(name: "InsuredCreatorUser")
   updatedInsureds            Insured[]            @relation(name: "InsuredLastUpdateUser")
 
-  createdMedications Medication[] @relation(name: "MedicationCreatorUser")
-  updatedMedications Medication[] @relation(name: "MedicationLastUpdateUser")
-  createdPharmacies  Pharmacy[]   @relation(name: "PharmacyCreatorUser")
-  updatedPharmacies  Pharmacy[]   @relation(name: "PharmacyLastUpdateUser")
-  createdInventories Inventory[]  @relation(name: "InventoryCreatorUser")
-  updatedInventories Inventory[]  @relation(name: "InventoryLastUpdateUser")
+  createdMedications    Medication[]    @relation(name: "MedicationCreatorUser")
+  updatedMedications    Medication[]    @relation(name: "MedicationLastUpdateUser")
+  createdPharmacies     Pharmacy[]      @relation(name: "PharmacyCreatorUser")
+  updatedPharmacies     Pharmacy[]      @relation(name: "PharmacyLastUpdateUser")
+  createdBatches        Batch[]         @relation(name: "BatchCreatorUser")
+  updatedBatches        Batch[]         @relation(name: "BatchLastUpdateUser")
+  createdInventories    Inventory[]     @relation(name: "InventoryCreatorUser")
+  updatedInventories    Inventory[]     @relation(name: "InventoryLastUpdateUser")
+  createdArrivals       Arrival[]       @relation(name: "ArrivalCreatorUser")
+  updatedArrivals       Arrival[]       @relation(name: "ArrivalLastUpdateUser")
+  createdArrivalItems   ArrivalItem[]   @relation(name: "ArrivalItemCreatorUser")
+  updatedArrivalItems   ArrivalItem[]   @relation(name: "ArrivalItemLastUpdateUser")
+  createdDepartures     Departure[]     @relation(name: "DepartureCreatorUser")
+  updatedDepartures     Departure[]     @relation(name: "DepartureLastUpdateUser")
+  createdDepartureItems DepartureItem[] @relation(name: "DepartureItemCreatorUser")
+  updatedDepartureItems DepartureItem[] @relation(name: "DepartureItemLastUpdateUser")
 
   createdClinicCares                        ClinicCare[]                       @relation(name: "ClinicCareCreatorUser")
   updatedClinicCares                        ClinicCare[]                       @relation(name: "ClinicCareLastUpdateUser")
@@ -565,6 +575,148 @@ model PersonDocumentType {
 }
 
 //
+// batch.model.prisma
+//
+
+model Batch {
+  id       Int      @id @default(autoincrement())
+  code     String   @unique
+  expireAt DateTime
+
+  medicationId Int
+
+  status Int @default(1)
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  medication Medication      @relation(fields: [medicationId], references: [id])
+  arrivals   ArrivalItem[]
+  departures DepartureItem[]
+
+  creatorUser    User  @relation(name: "BatchCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "BatchLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([medicationId, code])
+}
+
+//
+// inventory.model.prisma
+//
+
+model Inventory {
+  id    Int @id @default(autoincrement())
+  stock Int @default(0)
+  min   Int @default(0)
+
+  pharmacyId   Int
+  medicationId Int
+
+  status Int @default(1)
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  pharmacy   Pharmacy   @relation(fields: [pharmacyId], references: [id])
+  medication Medication @relation(fields: [medicationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  creatorUser    User  @relation(name: "InventoryCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "InventoryLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([pharmacyId, medicationId])
+}
+
+model Arrival {
+  id          Int      @id @default(autoincrement())
+  remark      String
+  arrivalDate DateTime
+
+  pharmacyId Int
+
+  status Int @default(1)
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  pharmacy Pharmacy      @relation(fields: [pharmacyId], references: [id])
+  items    ArrivalItem[]
+
+  creatorUser    User  @relation(name: "ArrivalCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "ArrivalLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ArrivalItem {
+  id       Int     @id @default(autoincrement())
+  quantity Int
+  price    Decimal
+
+  arrivalId Int
+  batchId   Int
+
+  status Int @default(1)
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  arrival Arrival @relation(fields: [arrivalId], references: [id])
+  batch   Batch   @relation(fields: [batchId], references: [id])
+
+  creatorUser    User  @relation(name: "ArrivalItemCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "ArrivalItemLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Departure {
+  id            Int      @id @default(autoincrement())
+  remark        String
+  departureDate DateTime
+
+  pharmacyId Int
+
+  status Int @default(1)
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  pharmacy Pharmacy        @relation(fields: [pharmacyId], references: [id])
+  items    DepartureItem[]
+
+  creatorUser    User  @relation(name: "DepartureCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "DepartureLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model DepartureItem {
+  id       Int     @id @default(autoincrement())
+  quantity Int
+  price    Decimal
+
+  departureId Int
+  batchId     Int
+
+  status Int @default(1)
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  departure Departure @relation(fields: [departureId], references: [id])
+  batch     Batch     @relation(fields: [batchId], references: [id])
+
+  creatorUser    User  @relation(name: "DepartureItemCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "DepartureItemLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+//
 // medication.model.prisma
 //
 
@@ -585,10 +737,10 @@ model Medication {
   lastUpdateUserName String?
   lastUpdateDate     DateTime?
 
-  class DrugClass @relation(fields: [classId], references: [id])
-  unit  DrugUnit  @relation(fields: [unitId], references: [id])
-
+  class     DrugClass   @relation(fields: [classId], references: [id])
+  unit      DrugUnit    @relation(fields: [unitId], references: [id])
   inventory Inventory[]
+  batches   Batch[]
 
   creatorUser                  User                           @relation(name: "MedicationCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser               User?                          @relation(name: "MedicationLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -613,37 +765,14 @@ model Pharmacy {
   lastUpdateUserName String?
   lastUpdateDate     DateTime?
 
-  belonging Belonging   @relation(fields: [belongingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  inventory Inventory[]
+  belonging  Belonging   @relation(fields: [belongingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  inventory  Inventory[]
+  arrivals   Arrival[]
+  departures Departure[]
 
   creatorUser          User                   @relation(name: "PharmacyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser       User?                  @relation(name: "PharmacyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   PrescriptionPharmacy PrescriptionPharmacy[]
-}
-
-model Inventory {
-  id       Int      @unique @default(autoincrement())
-  lot      String
-  quantity Int
-  expireAt DateTime
-
-  pharmacyId   Int
-  medicationId Int
-
-  status Int @default(1)
-
-  creatorUserName    String
-  creationDate       DateTime
-  lastUpdateUserName String?
-  lastUpdateDate     DateTime?
-
-  pharmacy   Pharmacy   @relation(fields: [pharmacyId], references: [id])
-  medication Medication @relation(fields: [medicationId], references: [id])
-
-  creatorUser    User  @relation(name: "InventoryCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-  lastUpdateUser User? @relation(name: "InventoryLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([lot, pharmacyId, medicationId])
 }
 
 //
