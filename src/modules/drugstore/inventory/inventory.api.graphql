@@ -1,0 +1,101 @@
+
+type Inventory {
+	id:		Int!
+	stock:	Int!
+	min:	Int!
+
+	status:	Int!
+
+	pharmacy:	Pharmacy!
+	medication:	Medication!
+}
+
+type Arrival {
+	id:				Int!
+	remark:			String!
+	arrivalDate:	DateTime!
+
+	status:	Int!
+
+	pharmacy:	Pharmacy!
+}
+
+type ArrivalItem {
+	id:			Int!
+	quantity:	Int!
+	price:		Decimal!
+
+	batch:		Batch!
+	Arrival:	Arrival!
+}
+
+type Departure {
+	id:				Int!
+	remark:			String!
+	departureDate:	DateTime!
+
+	status:	Int!
+
+	pharmacy:	Pharmacy!
+}
+
+type DepartureItem {
+	id:			Int!
+	quantity:	Int!
+	price:		Decimal!
+
+	batch:		Batch!
+	departure:	Departure!
+}
+
+input IArrivalCreateArgs {
+	remark:			String
+	arrivalDate:	DateTime!
+	pharmacyId:		Int!
+}
+
+input IArrivalItemCreateArgs {
+	quantity:	Int!
+	price:		Decimal!
+	batchId:	Int!
+	arrivalId:	Int!
+}
+
+input IDepartureCreateArgs {
+	remark:			String
+	departureDate:	DateTime!
+	pharmacyId:		Int!
+}
+
+input IDepartureItemCreateArgs {
+	quantity:		Int!
+	price:			Decimal!
+	batchId:		Int!
+	departureId:	Int!
+}
+
+type Query {
+	inventories(pharmacyId: Int!): [Inventory!]! @authorized @has(permissions: [ReadMedication, ReadPharmacy, ReadInventory])
+	arrivals(pharmacyId: Int!): [Arrival!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
+	arrivalItems(arrivalId: Int!): [ArrivalItem!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory, ReadBatch])
+	departures(pharmacyId: Int!): [Departure!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
+	departureItems(departureId: Int!): [DepartureItem!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory, ReadBatch])
+}
+
+type Mutation {
+	createArrival(data: IArrivalCreateArgs!): Arrival! @authorized @has(permissions: [WriteInventory])
+	createArrivalItem(data: IArrivalItemCreateArgs!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
+	createDeparture(data: IDepartureCreateArgs!): Departure! @authorized @has(permissions: [WriteInventory])
+	createDepartureItem(data: IDepartureItemCreateArgs!): DepartureItem! @authorized @has(permissions: [WriteInventory])
+}
+
+type Subscription {
+	arrivalCreated: Arrival!
+	arrivalUpdated: Arrival!
+	arrivalDeleted: Arrival!
+	arrivalUpserted: Arrival!
+	departureCreated: Departure!
+	departureUpdated: Departure!
+	departureDeleted: Departure!
+	departureUpserted: Departure!
+}
