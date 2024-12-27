@@ -150,6 +150,42 @@ enum Pharmacy {
 	UPSERTED = 'PHRM-UPSERT'
 }
 
+enum Batch {
+	CREATED = 'BTCH-C',
+	UPDATED = 'BTCH-U',
+	DELETED = 'BTCH-D',
+	UPSERTED = 'BTCH-UPSERT'
+}
+
+enum Arrival {
+	CREATED = 'ARRVL-C',
+	UPDATED = 'ARRVL-U',
+	DELETED = 'ARRVL-D',
+	UPSERTED = 'ARRVL-UPSERT'
+}
+
+enum ArrivalItem {
+	CREATED = 'ARRVLITM-C',
+	UPDATED = 'ARRVLITM-U',
+	DELETED = 'ARRVLITM-D',
+	UPSERTED = 'ARRVLITM-UPSERT'
+}
+
+
+enum Departure {
+	CREATED = 'DPRTR-C',
+	UPDATED = 'DPRTR-U',
+	DELETED = 'DPRTR-D',
+	UPSERTED = 'DPRTR-UPSERT'
+}
+
+enum DepartureItem {
+	CREATED = 'DPRTRITM-C',
+	UPDATED = 'DPRTRITM-U',
+	DELETED = 'DPRTRITM-D',
+	UPSERTED = 'DPRTRITM-UPSERT'
+}
+
 
 enum ClinicCare {
 	CREATED = 'CLNCCR-C',
@@ -171,7 +207,7 @@ export const SubscriptionEvent = {
 	
 	Person, Clerk, Insured,
 
-	Medication, Pharmacy,
+	Medication, Pharmacy, Batch, Arrival, ArrivalItem, Departure, DepartureItem,
 
 	ClinicCare
 }
