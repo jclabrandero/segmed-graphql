@@ -1,11 +1,12 @@
 {
   "name": "segmed-graphql",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Seguro Médico",
   "main": "index.js",
   "scripts": {
     "db:gen": "prisma-import -s src/modules/**/*.prisma -o prisma/schema.prisma --force && prisma generate --schema=./prisma/schema.prisma",
     "db:migrate": "npm run db:gen && prisma migrate dev --schema=./prisma/schema.prisma",
+    "db:push": "prisma db push",
     "build": "node src/utils/graphql-build.js && npm run db:gen && webpack --mode production",
     "dev:graphql": "nodemon -w src -e graphql --exec \"node src/utils/graphql-build.js\"",
     "dev:js": "webpack --watch --mode development",
@@ -41,6 +42,7 @@
     "@graphql-tools/utils": "^10.1.0",
     "@prisma/client": "^5.10.2",
     "bcrypt": "^5.1.1",
+    "big.js": "^6.2.2",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
