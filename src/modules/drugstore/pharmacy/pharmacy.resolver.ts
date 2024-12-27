@@ -93,7 +93,7 @@ export class PharmacyResolver extends Resolver {
 					}
 				},
 				_sum: {
-					quantity: true
+					stock: true
 				}
 			})
 
@@ -104,7 +104,7 @@ export class PharmacyResolver extends Resolver {
 				}
 			})
 			return inventory.map(inv => ({
-				total: inv._sum.quantity,
+				total: inv._sum.stock,
 				pharmacy,
 				medication: medications.find(m => m.id === inv.medicationId)
 			}))

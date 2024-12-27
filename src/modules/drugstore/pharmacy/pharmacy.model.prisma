@@ -14,32 +14,9 @@ model Pharmacy {
 
 	belonging	Belonging	@relation(fields: [belongingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 	inventory	Inventory[]
+	arrivals	Arrival[]
+	departures	Departure[]
 
 	creatorUser		User	@relation(name: "PharmacyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "PharmacyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model Inventory {
-	id			Int	@unique @default(autoincrement())
-	lot			String
-	quantity	Int
-	expireAt	DateTime
-
-	pharmacyId		Int
-	medicationId	Int
-
-	status		Int		@default(1)
-
-	creatorUserName		String
-	creationDate		DateTime
-	lastUpdateUserName	String?
-	lastUpdateDate		DateTime?
-
-	pharmacy	Pharmacy	@relation(fields: [pharmacyId], references: [id])
-	medication	Medication	@relation(fields: [medicationId], references: [id])
-
-	creatorUser		User	@relation(name: "InventoryCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-	lastUpdateUser	User?	@relation(name: "InventoryLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-
-	@@id([ lot, pharmacyId, medicationId ])
 }

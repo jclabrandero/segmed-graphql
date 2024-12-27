@@ -1,16 +1,4 @@
 
-type Inventory {
-	id:			Int!
-	lot:		String!
-	quantity:	Int!
-	expireAt:	DateTime!
-
-	status:	Int!
-
-	pharmacy:	Pharmacy!
-	medication:	Medication!
-}
-
 type Pharmacy {
 	id:		Int!
 	name:	String!
@@ -19,6 +7,8 @@ type Pharmacy {
 
 	belonging:	Belonging!
 	inventory:	[Inventory!]!
+	arrivals:	[Arrival!]!
+	departures:	[Departure!]!
 }
 
 type MedicationStock {
