@@ -1,0 +1,48 @@
+
+type Batch {
+	id:			Int!
+	code:		String!
+	expireAt:	DateTime!
+
+	status:	Int!
+
+	medication:	Medication!
+}
+
+type BatchStock {
+	batch:	Batch!
+	stock:	Int!
+}
+
+input IBatchCreateArgs {
+	code:			String!
+	expireAt:		DateTime!
+	medicationId:	Int!
+}
+
+input IBatchUpdateArgs {
+	expireAt:		DateTime
+}
+
+input IBatchStockArgs {
+	pharmacyId:		Int!
+	medicationId:	Int!
+}
+
+type Query {
+	batches: [Batch!]! @authorized @has(permissions: [ReadBatch])
+	batchesStocks(data: IBatchStockArgs!): [BatchStock!]! @authorized @has(permissions: [ReadBatch])
+}
+
+type Mutation {
+	createBatch(data: IBatchCreateArgs!): Batch! @authorized @has(permissions: [WriteBatch])
+	updateBatch(id: Int!, data: IBatchUpdateArgs!): Batch! @authorized @has(permissions: [WriteBatch])
+	deleteBatch(id: Int!): Batch! @authorized @has(permissions: [WriteBatch])
+}
+
+type Subscription {
+	batchCreated: Batch!
+	batchUpdated: Batch!
+	batchDeleted: Batch!
+	batchUpserted: Batch!
+}

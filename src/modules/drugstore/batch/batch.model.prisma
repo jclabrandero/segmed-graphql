@@ -1,0 +1,24 @@
+
+model Batch {
+	id			Int		@id @default(autoincrement())
+	code		String	@unique
+	expireAt	DateTime
+
+	medicationId	Int
+
+	status		Int		@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	medication	Medication	@relation(fields: [medicationId], references: [id])
+	arrivals	ArrivalItem[]
+	departures	DepartureItem[]
+
+	creatorUser		User	@relation(name: "BatchCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "BatchLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+
+	@@unique([medicationId, code])
+}
