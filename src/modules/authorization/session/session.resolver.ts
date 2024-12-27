@@ -43,6 +43,8 @@ export class SessionResolver {
 						where: { name: permission }
 					})
 
+					if (!ref) throw `El permiso: ${permission}, No existe en la base de datos.`
+
 					throw `No tienes permisos de: ${ref.description}`
 				}
 			}
