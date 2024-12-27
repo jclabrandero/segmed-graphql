@@ -28,7 +28,9 @@ import {
 } from './folk.type'
 import {
 	IMedicationCreateArgs, IMedicationUpdateArgs,
-	IPharmacyCreateArgs, IPharmacyUpdateArgs, MedicationStock
+	IPharmacyCreateArgs, IPharmacyUpdateArgs, MedicationStock,
+	IBatchCreateArgs, IBatchUpdateArgs,
+	IArrivalCreateArgs, IArrivalItemCreateArgs, IDepartureCreateArgs, IDepartureItemCreateArgs
 } from './drugstore'
 import {
 	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
@@ -67,6 +69,8 @@ export {
 
 	IMedicationCreateArgs, IMedicationUpdateArgs,
 	IPharmacyCreateArgs, IPharmacyUpdateArgs, MedicationStock,
+	IBatchCreateArgs, IBatchUpdateArgs,
+	IArrivalCreateArgs, IArrivalItemCreateArgs, IDepartureCreateArgs, IDepartureItemCreateArgs,
 
 	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
 	IInterclinicalCreateArgs, IInterclinicalUpdateArgs,

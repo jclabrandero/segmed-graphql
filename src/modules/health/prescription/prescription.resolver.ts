@@ -6,7 +6,8 @@ import { IContext, IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescripti
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 import { PrescriptionTemplate } from '../../template/prescription.template'
-import { MedicationResolver, PharmacyResolver } from '../../drugstore'
+import { MedicationResolver } from '../../drugstore/medication/medication.resolver'
+import { PharmacyResolver } from '../../drugstore/pharmacy/pharmacy.resolver'
 import { ClinicCareResolver } from '../'
 
 
