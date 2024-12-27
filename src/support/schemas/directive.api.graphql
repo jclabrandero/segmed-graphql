@@ -52,6 +52,10 @@ enum PermissionName {
 	WriteMedication
 	ReadPharmacy
 	WritePharmacy
+	ReadInventory
+	WriteInventory
+	ReadBatch
+	WriteBatch
 
 	ReadClinicCare
 	WriteClinicCare
