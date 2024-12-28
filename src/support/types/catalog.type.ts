@@ -36,12 +36,16 @@ export interface IInsuredTypeCreateArgs {
 	name:			string
 	description?:	string
 	withDependents:	boolean
+	codeFormat:		string
+	outletAge?:		number
 }
 
 export interface IInsuredTypeUpdateArgs {
 	name?:				string
 	description?:		string
 	withDependents?:	boolean
+	codeFormat?:		string
+	outletAge?:			number
 }
 
 export interface IMedicalSubspecialtyCreateArgs {

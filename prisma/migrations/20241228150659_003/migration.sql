@@ -1,0 +1,20 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- AlterTable
+ALTER TABLE [dbo].[InsuredType] ADD [codeFormat] NVARCHAR(1000) NOT NULL CONSTRAINT [InsuredType_codeFormat_df] DEFAULT 'AA-MMDD-XXX',
+[outletAge] INT;
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

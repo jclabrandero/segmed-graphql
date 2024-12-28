@@ -415,6 +415,8 @@ model InsuredType {
   name           String  @unique
   description    String?
   withDependents Boolean
+  codeFormat     String  @default("AA-MMDD-XXX")
+  outletAge      Int?
 
   status Int @default(1)
 

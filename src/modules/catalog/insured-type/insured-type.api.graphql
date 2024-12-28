@@ -4,6 +4,8 @@ type InsuredType {
 	name:			String!
 	description:	String
 	withDependents:	Boolean!
+	codeFormat:		String!
+	outletAge:		Int
 
 	status:			Int!
 }
@@ -13,12 +15,16 @@ input IInsuredTypeCreateArgs {
 	name:			String!
 	description:	String
 	withDependents:	Boolean!
+	codeFormat:		String!
+	outletAge:		Int
 }
 
 input IInsuredTypeUpdateArgs {
 	name:			String
 	description:	String
 	withDependents:	Boolean
+	codeFormat:		String
+	outletAge:		Int
 }
 
 type Query {
