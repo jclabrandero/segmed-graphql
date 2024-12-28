@@ -21,9 +21,8 @@ type Insured {
 
 
 input IInsuredCreateArgs {
-	code:		String!
 	iin:		Int
-	inletDate:	DateTime!
+	inletDate:	DateTime
 	tradeUnion:	Boolean
 	address:	String
 	phone:		String

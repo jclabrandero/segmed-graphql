@@ -1,10 +1,11 @@
 
-import { Insured } from '@prisma/client'
+import { Insured, Person } from '@prisma/client'
+import { format, getMonth, addYears } from 'date-fns'
 
 import { Resolver } from '../../../support/classes'
 import { IContext, IInsuredCreateArgs, IInsuredUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { now, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
 
 export class InsuredResolver extends Resolver {
@@ -81,10 +82,26 @@ export class InsuredResolver extends Resolver {
 
 	async create(_, { data }: { data: IInsuredCreateArgs }, { db, pubsub, user }: IContext): Promise<Insured> {
 		const { CREATED, UPSERTED } = SubscriptionEvent.Insured
-		const { tradeUnion, ...remaining } = data
+		const { tradeUnion, inletDate, ...remaining } = data
+
+		const person = await db.person.findUnique({
+			where: { id: data.personId, NOT: { status: Status.Removed } }
+		})
+		if (!person) throw new Error('Persona no encontrada.')
+
+		const insuredType = await db.insuredType.findUnique({
+			where: { id: data.insuredTypeId, NOT: { status: Status.Removed } }
+		})
+		if (!insuredType) throw new Error('Tipo de beneficiario no encontrado.')
+
+		const code = InsuredResolver.genCode(person, insuredType.codeFormat)
+		const outletDate = InsuredResolver.genOutletDate(person, insuredType.outletAge)
 		const record = await db.insured.create({
 			data: withAuditForCreate(user, {
 				...remaining,
+				code,
+				inletDate: inletDate || now().utc,
+				outletDate,
 				tradeUnion: Boolean(tradeUnion)
 			})
 		})
@@ -125,4 +142,24 @@ export class InsuredResolver extends Resolver {
 		return record
 	}
 
+	private static genCode(person: Person, codeFormat: string): string {
+		const { firstName, lastName } = person
+		const lastNames = lastName.split(' ')
+		const isMale = (person.sex === 'M') || (person.sex == 'Masculino') || (person.sex == 'Hombre') || (person.sex == 'MACULINO') || (person.sex == 'Varon') || (person.sex == 'VARON')
+		const aa = format(person.birthDate, 'yy')
+		const mm = format(person.birthDate, 'MM')
+		const ff = (getMonth(person.birthDate) + 51).toString()
+		const dd = format(person.birthDate, 'dd')
+		const xxx = lastNames[1] ? `${lastNames[0][0]}${lastNames[1][0]}${firstName[0]}` : `${lastNames[0][0]}${firstName[0]}${firstName[1]}`
+		const code = codeFormat
+			.replace('AA', aa)
+			.replace('MM', isMale ? mm : ff)
+			.replace('DD', dd)
+			.replace('XXX', xxx.toUpperCase())
+		return code
+	}
+
+	private static genOutletDate(person: Person, outletAge?: number): Date | undefined {
+		return outletAge ? addYears(person.birthDate, outletAge) : undefined
+	}
 }

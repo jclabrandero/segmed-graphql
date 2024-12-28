@@ -40,9 +40,8 @@ export interface IClerkUpdateArgs {
 }
 
 export interface IInsuredCreateArgs {
-	code:			string
 	iin?:			number
-	inletDate:		Date
+	inletDate?:		Date
 	tradeUnion?:	boolean
 	address?:		string
 	phone?:			string
