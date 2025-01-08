@@ -609,9 +609,10 @@ model Batch {
 //
 
 model Inventory {
-  id    Int @id @default(autoincrement())
-  stock Int @default(0)
-  min   Int @default(0)
+  id    Int     @id @default(autoincrement())
+  stock Int     @default(0)
+  price Decimal @default(0)
+  min   Int     @default(0)
 
   pharmacyId   Int
   medicationId Int

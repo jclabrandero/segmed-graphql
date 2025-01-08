@@ -2,6 +2,7 @@
 type Inventory {
 	id:		Int!
 	stock:	Int!
+	price:	Decimal!
 	min:	Int!
 
 	status:	Int!
@@ -69,7 +70,6 @@ input IDepartureCreateArgs {
 
 input IDepartureItemCreateArgs {
 	quantity:		Int!
-	price:			Decimal!
 	batchId:		Int!
 	departureId:	Int!
 }
