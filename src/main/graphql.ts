@@ -33,6 +33,7 @@ import {
 	PrescriptionResolver,
 	MedicalLeaveResolver
 } from '../modules/health'
+import { Decimal } from '@prisma/client/runtime/library'
 
 export class GraphqlResolver {
 	schema:	GraphQLSchema
@@ -122,7 +123,7 @@ export class GraphqlResolver {
 				name: 'Decimal',
 				description: 'The `Decimal` scalar type to represent currency values',
 				// value from the client
-				parseValue: (value: number) => Big(value),
+				parseValue: (value: number) => new Decimal(value),
 				// value sent to the client
 				serialize: (value) => new Big(value),
 			}),
