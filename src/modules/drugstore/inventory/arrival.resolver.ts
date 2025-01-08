@@ -1,5 +1,6 @@
 
 import { Arrival, ArrivalItem } from '@prisma/client'
+import { Decimal } from '@prisma/client/runtime/library'
 
 import { Resolver } from '../../../support/classes'
 import { Status, SubscriptionEvent } from '../../../support/constants'
@@ -64,7 +65,17 @@ export class ArrivalResolver extends Resolver {
 		})
 		if (!arrival) throw new Error('Ingreso no encontrado.')
 
-		const [record, inventory] = await db.$transaction([
+		const inventory = await db.inventory.findUnique({
+			where: {
+				pharmacyId_medicationId: {
+					pharmacyId: arrival.pharmacyId,
+					medicationId: batch.medicationId
+				}
+			},
+			select: { stock: true, price: true }
+		})
+
+		const [record, inventoryUpserted] = await db.$transaction([
 			db.arrivalItem.create({
 				data: withAuditForCreate(user, data)
 			}),
@@ -79,16 +90,18 @@ export class ArrivalResolver extends Resolver {
 					pharmacyId: arrival.pharmacyId,
 					medicationId: batch.medicationId,
 					stock: data.quantity,
+					price: data.price
 				}),
 				update: withAuditForUpdate(user, {
-					stock: { increment: data.quantity }
+					stock: { increment: data.quantity },
+					price: inventory ? inventory.price.mul(inventory.stock).add(data.price.mul(data.quantity)).dividedBy(new Decimal(inventory.stock + data.quantity)) : data.price
 				})
 			})
 		])
 		super.publish({
 			pubsub,
 			events: [CREATED, UPSERTED],
-			dataset: [{ arrivalItemCreated: record }, { arrivalItemUpserted: record }, { inventoryUpserted: inventory }]
+			dataset: [{ arrivalItemCreated: record }, { arrivalItemUpserted: record }, { inventoryUpserted }]
 		})
 		return record
 	}

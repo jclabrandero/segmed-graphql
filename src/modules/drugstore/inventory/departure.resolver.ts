@@ -83,7 +83,10 @@ export class DepartureResolver extends Resolver {
 
 		const [record, inventoryRecord] = await db.$transaction([
 			db.departureItem.create({
-				data: withAuditForCreate(user, data)
+				data: withAuditForCreate(user, {
+					...data,
+					price: inventory.price,
+				})
 			}),
 			db.inventory.update({
 				where: {

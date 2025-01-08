@@ -69,7 +69,6 @@ export interface IDepartureCreateArgs {
 
 export interface IDepartureItemCreateArgs {
 	quantity:		number
-	price:			Decimal
 	batchId:		number
 	departureId:	number
 }
