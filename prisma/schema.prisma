@@ -634,11 +634,15 @@ model Inventory {
 }
 
 model Arrival {
-  id          Int      @id @default(autoincrement())
-  remark      String
-  arrivalDate DateTime
+  id                       Int      @id @default(autoincrement())
+  remark                   String
+  arrivalDate              DateTime
+  invoiceNumber            Int?
+  invoiceAuthorizationCode String?
+  invoiceControlCode       String?
 
   pharmacyId Int
+  providerId Int?
 
   status Int @default(1)
 
@@ -648,6 +652,7 @@ model Arrival {
   lastUpdateDate     DateTime?
 
   pharmacy Pharmacy      @relation(fields: [pharmacyId], references: [id])
+  provider Provider?     @relation(fields: [providerId], references: [id])
   items    ArrivalItem[]
 
   creatorUser    User  @relation(name: "ArrivalCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -1407,12 +1412,13 @@ model Provider {
   lastUpdateUserName String?
   lastUpdateDate     DateTime?
 
-  belonging     Belonging              @relation(fields: [belongingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  medicalGroups ProviderMedicalGroup[]
+  belonging      Belonging               @relation(fields: [belongingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  medicalGroups  ProviderMedicalGroup[]
+  interclinicals InterclinicalProvider[]
+  arrivals       Arrival[]
 
-  creatorUser           User                    @relation(name: "ProviderCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-  lastUpdateUser        User?                   @relation(name: "ProviderLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-  InterclinicalProvider InterclinicalProvider[]
+  creatorUser    User  @relation(name: "ProviderCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "ProviderLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model ProviderMedicalGroup {

@@ -51,7 +51,12 @@ export interface IBatchUpdateArgs {
 export interface IArrivalCreateArgs {
 	remark:			string
 	arrivalDate:	Date
+	invoiceNumber:				number
+	invoiceAuthorizationCode?:	string
+	invoiceControlCode?:		string
+
 	pharmacyId:		number
+	providerId?:	number
 }
 
 export interface IArrivalItemCreateArgs {

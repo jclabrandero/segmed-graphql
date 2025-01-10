@@ -15,10 +15,14 @@ type Arrival {
 	id:				Int!
 	remark:			String!
 	arrivalDate:	DateTime!
+	invoiceNumber:				Int
+	invoiceAuthorizationCode:	String
+	invoiceControlCode:			String
 
 	status:	Int!
 
 	pharmacy:	Pharmacy!
+	provider:	Provider
 }
 
 type ArrivalItem {
@@ -52,7 +56,12 @@ type DepartureItem {
 input IArrivalCreateArgs {
 	remark:			String
 	arrivalDate:	DateTime!
-	pharmacyId:		Int!
+	invoiceNumber:				Int!
+	invoiceAuthorizationCode:	String
+	invoiceControlCode:			String
+
+	pharmacyId:	Int!
+	providerId:	Int
 }
 
 input IArrivalItemCreateArgs {

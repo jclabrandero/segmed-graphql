@@ -28,8 +28,12 @@ model Arrival {
 	id			Int		@id @default(autoincrement())
 	remark		String
 	arrivalDate	DateTime
+	invoiceNumber				Int?
+	invoiceAuthorizationCode	String?
+	invoiceControlCode			String?
 
 	pharmacyId	Int
+	providerId	Int?
 
 	status		Int		@default(1)
 
@@ -39,6 +43,7 @@ model Arrival {
 	lastUpdateDate		DateTime?
 	
 	pharmacy	Pharmacy	@relation(fields: [pharmacyId], references: [id])
+	provider	Provider?	@relation(fields: [providerId], references: [id])
 	items		ArrivalItem[]
 
 	creatorUser		User	@relation(name: "ArrivalCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

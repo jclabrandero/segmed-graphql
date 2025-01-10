@@ -18,6 +18,9 @@ export class ArrivalResolver extends Resolver {
 				pharmacyId,
 				NOT: { status: Status.Removed }
 			},
+			include: {
+				provider: true
+			}
 		})
 	}
 
