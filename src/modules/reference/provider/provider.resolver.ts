@@ -8,8 +8,8 @@ import { withAuditForCreate, withAuditForUpdate } from '../../../support/functio
 
 
 interface IProviderFilterArgs {
-	belongingId:	number
-	medicalGroupId:	number
+	belongingId?:		number
+	medicalGroupId?:	number
 }
 
 export class ProviderResolver extends Resolver {
@@ -113,7 +113,7 @@ export class ProviderResolver extends Resolver {
 		return await db.provider.findMany({
 			where: {
 				status: Status.Active,
-				belongingId,
+				belongingId: belongingId || undefined,
 				medicalGroups: medicalGroupId ? {
 					some: {
 						medicalGroupId
