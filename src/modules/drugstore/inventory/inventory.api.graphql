@@ -83,6 +83,11 @@ input IDepartureItemCreateArgs {
 	departureId:	Int!
 }
 
+input IInventoryPrintReportArgs {
+	reportId: Int!
+	pharmacyId:	Int!
+}
+
 type Query {
 	inventories(pharmacyId: Int!): [Inventory!]! @authorized @has(permissions: [ReadMedication, ReadPharmacy, ReadInventory])
 	arrivals(pharmacyId: Int!): [Arrival!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
@@ -96,6 +101,7 @@ type Mutation {
 	createArrivalItem(data: IArrivalItemCreateArgs!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
 	createDeparture(data: IDepartureCreateArgs!): Departure! @authorized @has(permissions: [WriteInventory])
 	createDepartureItem(data: IDepartureItemCreateArgs!): DepartureItem! @authorized @has(permissions: [WriteInventory])
+	printReport(data: IInventoryPrintReportArgs!): FileBase64! @authorized @has(permissions: [ReadInventory])
 }
 
 type Subscription {

@@ -294,6 +294,7 @@ export class GraphqlResolver {
 				createArrivalItem: arrival.createItem,
 				createDeparture: departure.create,
 				createDepartureItem: departure.createItem,
+				printReport: inventory.printReport,
 
 				createClinicCare: clinicCare.create,
 				updateClinicCareState: clinicCare.updateState,

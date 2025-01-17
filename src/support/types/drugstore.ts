@@ -77,3 +77,8 @@ export interface IDepartureItemCreateArgs {
 	batchId:		number
 	departureId:	number
 }
+
+export interface IInventoryPrintReportArgs {
+	reportId: number
+	pharmacyId:	number
+}

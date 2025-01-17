@@ -30,7 +30,8 @@ import {
 	IMedicationCreateArgs, IMedicationUpdateArgs,
 	IPharmacyCreateArgs, IPharmacyUpdateArgs, MedicationStock,
 	IBatchCreateArgs, IBatchUpdateArgs,
-	IArrivalCreateArgs, IArrivalItemCreateArgs, IDepartureCreateArgs, IDepartureItemCreateArgs
+	IArrivalCreateArgs, IArrivalItemCreateArgs, IDepartureCreateArgs, IDepartureItemCreateArgs,
+	IInventoryPrintReportArgs
 } from './drugstore'
 import {
 	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
@@ -71,6 +72,7 @@ export {
 	IPharmacyCreateArgs, IPharmacyUpdateArgs, MedicationStock,
 	IBatchCreateArgs, IBatchUpdateArgs,
 	IArrivalCreateArgs, IArrivalItemCreateArgs, IDepartureCreateArgs, IDepartureItemCreateArgs,
+	IInventoryPrintReportArgs,
 
 	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
 	IInterclinicalCreateArgs, IInterclinicalUpdateArgs,
