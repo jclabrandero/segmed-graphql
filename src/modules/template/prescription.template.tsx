@@ -209,6 +209,6 @@ export class PrescriptionTemplate extends Template {
 	async make(data: ClinicCare, user: User) {
 		// const logo: FileBuffer = {} as FileBuffer
 		const html = renderToString(<RecetaMedicaView data={data} user={user}/>)
-		return this.build(html)
+		return this.buildFromHTML(html)
 	}
 }

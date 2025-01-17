@@ -27,7 +27,7 @@ export class Template {
 		})
 	}
 
-	async build(html: string) {
+	async buildFromHTML(html: string) {
 		const { window } = new JSDOM('')
 		const content = htmlToPdfmake(html, { window, tableAutoSize: true })
 
@@ -47,6 +47,12 @@ export class Template {
 		const printer = new PdfPrinter(this.fonts)
 		const pdfDoc = printer.createPdfKitDocument(docDefinition)
 
+		return await this.toBuffer(pdfDoc)
+	}
+
+	async build(docDefinition) {
+		const printer = new PdfPrinter(this.fonts)
+		const pdfDoc = printer.createPdfKitDocument(docDefinition)
 		return await this.toBuffer(pdfDoc)
 	}
 }
