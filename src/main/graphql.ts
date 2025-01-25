@@ -294,6 +294,7 @@ export class GraphqlResolver {
 				createArrival: arrival.create,
 				approveArrival: arrival.approve,
 				closeArrival: arrival.close,
+				updateArrival: arrival.update,
 				createArrivalItem: arrival.createItem,
 				createDeparture: departure.create,
 				createDepartureItem: departure.createItem,

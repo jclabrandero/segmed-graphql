@@ -72,6 +72,17 @@ input IArrivalCreateArgs {
 	providerId:	Int
 }
 
+input IArrivalUpdateArgs {
+	remark:			String
+	arrivalDate:	DateTime
+	invoiceNumber:				Int
+	invoiceAuthorizationCode:	String
+	invoiceControlCode:			String
+	invoiceTotalRefPrice:		Decimal
+
+	providerId:	Int
+}
+
 input IArrivalItemCreateArgs {
 	quantity:	Int!
 	price:		Decimal!
@@ -109,6 +120,7 @@ type Mutation {
 	createArrival(data: IArrivalCreateArgs!): Arrival! @authorized @has(permissions: [WriteInventory])
 	approveArrival(id: Int!): Arrival! @authorized @has(permissions: [ApproveArrival])
 	closeArrival(id: Int!): Arrival! @authorized @has(permissions: [WriteInventory])
+	updateArrival(id: Int!, data: IArrivalUpdateArgs!): Arrival! @authorized @has(permissions: [WriteInventory])
 	createArrivalItem(data: IArrivalItemCreateArgs!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
 	createDeparture(data: IDepartureCreateArgs!): Departure! @authorized @has(permissions: [WriteInventory])
 	createDepartureItem(data: IDepartureItemCreateArgs!): DepartureItem! @authorized @has(permissions: [WriteInventory])

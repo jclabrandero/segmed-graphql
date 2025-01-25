@@ -60,6 +60,18 @@ export interface IArrivalCreateArgs {
 	providerId?:	number
 }
 
+export interface IArrivalUpdateArgs {
+	remark?:		string
+	arrivalDate?:	Date
+
+	invoiceNumber?:				number
+	invoiceAuthorizationCode?:	string
+	invoiceControlCode?:		string
+	invoiceTotalRefPrice?:		Decimal
+
+	providerId?:	number
+}
+
 export interface IArrivalItemCreateArgs {
 	quantity:	number
 	price:		Decimal

@@ -4,7 +4,7 @@ import { Decimal } from '@prisma/client/runtime/library'
 
 import { Resolver } from '../../../support/classes'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { IContext, IArrivalCreateArgs, IArrivalItemCreateArgs } from '../../../support/types'
+import { IContext, IArrivalCreateArgs, IArrivalUpdateArgs, IArrivalItemCreateArgs } from '../../../support/types'
 import { now, withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
 
 export class ArrivalResolver extends Resolver {
@@ -104,6 +104,26 @@ export class ArrivalResolver extends Resolver {
 			pubsub,
 			events: [CREATED, UPSERTED],
 			dataset: [{ arrivalCreated: record }, { arrivalUpserted: record }]
+		})
+		return record
+	}
+
+	async update(_, { id, data }: { id: number, data: IArrivalUpdateArgs }, { db, pubsub, user }: IContext): Promise<Arrival> {
+		const arrival = await db.arrival.findUnique({
+			where: { id, NOT: { status: Status.Removed } }
+		})
+		if (!arrival) throw new Error('Ingreso no encontrado.')
+		if (arrival.closed) throw new Error('Ingreso ya finalizado.')
+
+		const { UPDATED, UPSERTED } = SubscriptionEvent.Arrival
+		const record = await db.arrival.update({
+			where: { id },
+			data: withAuditForUpdate(user, data)
+		})
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ arrivalUpdated: record }, { arrivalUpserted: record }]
 		})
 		return record
 	}
