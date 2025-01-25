@@ -642,6 +642,12 @@ model Arrival {
   invoiceControlCode       String?
   invoiceTotalRefPrice     Decimal  @default(0)
 
+  approvalState    Int       @default(0)
+  approvalDate     DateTime?
+  approvalUserName String?
+
+  closed Boolean @default(false)
+
   pharmacyId Int
   providerId Int?
 

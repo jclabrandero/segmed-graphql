@@ -1,0 +1,22 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- AlterTable
+ALTER TABLE [dbo].[Arrival] ADD [approvalDate] DATETIME2,
+[approvalState] INT NOT NULL CONSTRAINT [Arrival_approvalState_df] DEFAULT 0,
+[approvalUserName] NVARCHAR(1000),
+[closed] BIT NOT NULL CONSTRAINT [Arrival_closed_df] DEFAULT 0;
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

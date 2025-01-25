@@ -1,15 +1,31 @@
 
-import { Arrival, ArrivalItem } from '@prisma/client'
+import { Arrival, ArrivalItem, PrismaClient } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
 
 import { Resolver } from '../../../support/classes'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { IContext, IArrivalCreateArgs, IArrivalItemCreateArgs } from '../../../support/types'
-import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
+import { now, withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
 
 export class ArrivalResolver extends Resolver {
 	constructor() {
 		super(SubscriptionEvent.Arrival)
+	}
+
+	private static async getTotal(id: number, db: PrismaClient): Promise<Decimal> {
+		let total: Decimal = new Decimal(0)
+		const arrivalItems = await db.arrivalItem.findMany({
+			where: {
+				arrivalId: id,
+				NOT: { status: Status.Removed }
+			},
+			select: { quantity: true, price: true }
+		})
+		for (const { quantity, price } of arrivalItems) {
+			total = total.add(price.mul(quantity))
+		}
+
+		return total
 	}
 
 	async index(_, { pharmacyId }: { pharmacyId: number }, { db }: IContext): Promise<Array<Arrival>> {
@@ -26,19 +42,7 @@ export class ArrivalResolver extends Resolver {
 		const result = []
 
 		for (const arrival of data) {
-			let total: Decimal = new Decimal(0)
-			const arrivalItems = await db.arrivalItem.findMany({
-				where: {
-					arrivalId: arrival.id,
-					NOT: { status: Status.Removed }
-				},
-				select: { quantity: true, price: true }
-			})
-			for (const { quantity, price } of arrivalItems) {
-				total = total.add(price.mul(quantity))
-			}
-
-			result.push({ ...arrival, total })
+			result.push({ ...arrival, total: await ArrivalResolver.getTotal(arrival.id, db) })
 		}
 
 		return result
@@ -72,6 +76,25 @@ export class ArrivalResolver extends Resolver {
 		return result
 	}
 
+	async findOne(_, { id }: { id: number }, { db }: IContext) {
+		const arrival = await db.arrival.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				provider: true,
+				items: {
+					where: {
+						NOT: { status: Status.Removed }
+					}
+				}
+			}
+		})
+
+		return { ...arrival, total: await ArrivalResolver.getTotal(id, db) }
+	}
+
 	async create(_, { data }: { data: IArrivalCreateArgs }, { db, pubsub, user }: IContext): Promise<Arrival> {
 		const { CREATED, UPSERTED } = SubscriptionEvent.Arrival
 		const record = await db.arrival.create({
@@ -95,6 +118,7 @@ export class ArrivalResolver extends Resolver {
 			where: { id: data.arrivalId, NOT: { status: Status.Removed } }
 		})
 		if (!arrival) throw new Error('Ingreso no encontrado.')
+		if (arrival.closed) throw new Error('Ingreso ya finalizado.')
 
 		const inventory = await db.inventory.findUnique({
 			where: {
@@ -127,12 +151,67 @@ export class ArrivalResolver extends Resolver {
 					stock: { increment: data.quantity },
 					price: inventory ? inventory.price.mul(inventory.stock).add(data.price.mul(data.quantity)).dividedBy(new Decimal(inventory.stock + data.quantity)) : data.price
 				})
+			}),
+			db.arrival.update({
+				where: { id: data.arrivalId },
+				data: withAuditForUpdate(user, {
+					approvalState: 0,
+					approvalDate: null,
+					approvalUserName: null
+				})
 			})
 		])
 		super.publish({
 			pubsub,
 			events: [CREATED, UPSERTED],
 			dataset: [{ arrivalItemCreated: record }, { arrivalItemUpserted: record }, { inventoryUpserted }]
+		})
+		return record
+	}
+
+	async approve(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Arrival> {
+		const arrival = await db.arrival.findUnique({
+			where: { id, NOT: { status: Status.Removed } }
+		})
+		if (!arrival) throw new Error('Ingreso no encontrado.')
+		if (arrival.approvalState === 1) throw new Error('Ingreso ya aprobado.')
+		if (arrival.closed) throw new Error('Ingreso ya finalizado.')
+
+		const { UPDATED, UPSERTED } = SubscriptionEvent.Arrival
+		const record = await db.arrival.update({
+			where: { id },
+			data: withAuditForUpdate(user, {
+				approvalState: 1,
+				approvalDate: now().utc,
+				approvalUserName: user.userName
+			})
+		})
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ arrivalUpdated: record }, { arrivalUpserted: record }]
+		})
+		return record
+	}
+
+	async close(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Arrival> {
+		const arrival = await db.arrival.findUnique({
+			where: { id, NOT: { status: Status.Removed } }
+		})
+		if (!arrival) throw new Error('Ingreso no encontrado.')
+		if (arrival.closed) throw new Error('Ingreso ya finalizado.')
+
+		const { UPDATED, UPSERTED } = SubscriptionEvent.Arrival
+		const record = await db.arrival.update({
+			where: { id },
+			data: withAuditForUpdate(user, {
+				closed: true
+			})
+		})
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ arrivalUpdated: record }, { arrivalUpserted: record }]
 		})
 		return record
 	}

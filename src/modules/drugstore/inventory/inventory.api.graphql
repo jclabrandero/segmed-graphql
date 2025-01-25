@@ -23,7 +23,9 @@ type Arrival {
 
 	total:	Decimal!
 
-	status:	Int!
+	approvalState:	Int!
+	closed:			Boolean!
+	status:			Int!
 
 	pharmacy:	Pharmacy!
 	provider:	Provider
@@ -97,6 +99,7 @@ input IInventoryPrintReportArgs {
 type Query {
 	inventories(pharmacyId: Int!): [Inventory!]! @authorized @has(permissions: [ReadMedication, ReadPharmacy, ReadInventory])
 	arrivals(pharmacyId: Int!): [Arrival!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
+	arrival(id: Int!): Arrival! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
 	arrivalItems(arrivalId: Int!): [ArrivalItem!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory, ReadBatch])
 	departures(pharmacyId: Int!): [Departure!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
 	departureItems(departureId: Int!): [DepartureItem!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory, ReadBatch])
@@ -104,6 +107,8 @@ type Query {
 
 type Mutation {
 	createArrival(data: IArrivalCreateArgs!): Arrival! @authorized @has(permissions: [WriteInventory])
+	approveArrival(id: Int!): Arrival! @authorized @has(permissions: [ApproveArrival])
+	closeArrival(id: Int!): Arrival! @authorized @has(permissions: [WriteInventory])
 	createArrivalItem(data: IArrivalItemCreateArgs!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
 	createDeparture(data: IDepartureCreateArgs!): Departure! @authorized @has(permissions: [WriteInventory])
 	createDepartureItem(data: IDepartureItemCreateArgs!): DepartureItem! @authorized @has(permissions: [WriteInventory])

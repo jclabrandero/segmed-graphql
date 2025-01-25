@@ -59,6 +59,7 @@ const data = {
 		{ code: 'W_BTCH', name: 'WriteBatch', description: 'Escritura de lotes' },
 		{ code: 'R_INVT', name: 'ReadInventory', description: 'Lectura de inventarios' },
 		{ code: 'W_INVT', name: 'WriteInventory', description: 'Escritura de inventarios' },
+		{ code: 'AP_ARVL', name: 'ApproveArrival', description: 'Aprobación de ingresos de medicamentos' },
 
 		{ code: 'R_CLNCR', name: 'ReadClinicCare', description: 'Lectura de consultas médicas' },
 		{ code: 'W_CLNCR', name: 'WriteClinicCare', description: 'Escritura de consultas médicas' },
