@@ -13,7 +13,7 @@ export class ArrivalResolver extends Resolver {
 	}
 
 	async index(_, { pharmacyId }: { pharmacyId: number }, { db }: IContext): Promise<Array<Arrival>> {
-		return await db.arrival.findMany({
+		const data = await db.arrival.findMany({
 			where: {
 				pharmacyId,
 				NOT: { status: Status.Removed }
@@ -22,10 +22,30 @@ export class ArrivalResolver extends Resolver {
 				provider: true
 			}
 		})
+
+		const result = []
+
+		for (const arrival of data) {
+			let total: Decimal = new Decimal(0)
+			const arrivalItems = await db.arrivalItem.findMany({
+				where: {
+					arrivalId: arrival.id,
+					NOT: { status: Status.Removed }
+				},
+				select: { quantity: true, price: true }
+			})
+			for (const { quantity, price } of arrivalItems) {
+				total = total.add(price.mul(quantity))
+			}
+
+			result.push({ ...arrival, total })
+		}
+
+		return result
 	}
 
 	async items(_, { arrivalId }: { arrivalId: number }, { db }: IContext): Promise<Array<ArrivalItem>> {
-		return await db.arrivalItem.findMany({
+		const data = await db.arrivalItem.findMany({
 			where: {
 				arrivalId,
 				NOT: { status: Status.Removed }
@@ -42,6 +62,14 @@ export class ArrivalResolver extends Resolver {
 				}
 			}
 		})
+
+		const result = []
+
+		for (const arrivalItem of data) {
+			result.push({ ...arrivalItem, total: arrivalItem.price.mul(arrivalItem.quantity) })
+		}
+
+		return result
 	}
 
 	async create(_, { data }: { data: IArrivalCreateArgs }, { db, pubsub, user }: IContext): Promise<Arrival> {

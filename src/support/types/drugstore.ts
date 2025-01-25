@@ -54,6 +54,7 @@ export interface IArrivalCreateArgs {
 	invoiceNumber:				number
 	invoiceAuthorizationCode?:	string
 	invoiceControlCode?:		string
+	invoiceTotalRefPrice:		Decimal
 
 	pharmacyId:		number
 	providerId?:	number

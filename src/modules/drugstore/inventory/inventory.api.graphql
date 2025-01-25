@@ -15,9 +15,13 @@ type Arrival {
 	id:				Int!
 	remark:			String!
 	arrivalDate:	DateTime!
+
 	invoiceNumber:				Int
 	invoiceAuthorizationCode:	String
 	invoiceControlCode:			String
+	invoiceTotalRefPrice:		Decimal!
+
+	total:	Decimal!
 
 	status:	Int!
 
@@ -29,6 +33,7 @@ type ArrivalItem {
 	id:			Int!
 	quantity:	Int!
 	price:		Decimal!
+	total:		Decimal!
 
 	batch:		Batch!
 	Arrival:	Arrival!
@@ -59,6 +64,7 @@ input IArrivalCreateArgs {
 	invoiceNumber:				Int!
 	invoiceAuthorizationCode:	String
 	invoiceControlCode:			String
+	invoiceTotalRefPrice:		Decimal!
 
 	pharmacyId:	Int!
 	providerId:	Int

@@ -640,6 +640,7 @@ model Arrival {
   invoiceNumber            Int?
   invoiceAuthorizationCode String?
   invoiceControlCode       String?
+  invoiceTotalRefPrice     Decimal  @default(0)
 
   pharmacyId Int
   providerId Int?
