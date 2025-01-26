@@ -209,6 +209,7 @@ export class GraphqlResolver {
 				arrivals: arrival.index,
 				arrival: arrival.findOne,
 				arrivalItems: arrival.items,
+				arrivalItem: arrival.findOneItem,
 				departures: departure.index,
 				departureItems: departure.items,
 
@@ -296,6 +297,7 @@ export class GraphqlResolver {
 				closeArrival: arrival.close,
 				updateArrival: arrival.update,
 				createArrivalItem: arrival.createItem,
+				updateArrivalItem: arrival.updateItem,
 				createDeparture: departure.create,
 				createDepartureItem: departure.createItem,
 				printReport: inventory.printReport,

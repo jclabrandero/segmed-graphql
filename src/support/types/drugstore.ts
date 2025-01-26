@@ -79,6 +79,11 @@ export interface IArrivalItemCreateArgs {
 	arrivalId:	number
 }
 
+export interface IArrivalItemUpdateArgs {
+	quantity?:	number
+	price?:		Decimal
+}
+
 export interface IDepartureCreateArgs {
 	remark:			string
 	departureDate:	Date

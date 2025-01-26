@@ -90,6 +90,11 @@ input IArrivalItemCreateArgs {
 	arrivalId:	Int!
 }
 
+input IArrivalItemUpdateArgs {
+	quantity:	Int
+	price:		Decimal
+}
+
 input IDepartureCreateArgs {
 	remark:			String
 	departureDate:	DateTime!
@@ -112,6 +117,7 @@ type Query {
 	arrivals(pharmacyId: Int!): [Arrival!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
 	arrival(id: Int!): Arrival! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
 	arrivalItems(arrivalId: Int!): [ArrivalItem!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory, ReadBatch])
+	arrivalItem(id: Int!): ArrivalItem! @authorized @has(permissions: [ReadPharmacy, ReadInventory, ReadBatch])
 	departures(pharmacyId: Int!): [Departure!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory])
 	departureItems(departureId: Int!): [DepartureItem!]! @authorized @has(permissions: [ReadPharmacy, ReadInventory, ReadBatch])
 }
@@ -122,6 +128,7 @@ type Mutation {
 	closeArrival(id: Int!): Arrival! @authorized @has(permissions: [WriteInventory])
 	updateArrival(id: Int!, data: IArrivalUpdateArgs!): Arrival! @authorized @has(permissions: [WriteInventory])
 	createArrivalItem(data: IArrivalItemCreateArgs!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
+	updateArrivalItem(id: Int!, data: IArrivalItemUpdateArgs!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
 	createDeparture(data: IDepartureCreateArgs!): Departure! @authorized @has(permissions: [WriteInventory])
 	createDepartureItem(data: IDepartureItemCreateArgs!): DepartureItem! @authorized @has(permissions: [WriteInventory])
 	printReport(data: IInventoryPrintReportArgs!): FileBase64! @authorized @has(permissions: [ReadInventory])
