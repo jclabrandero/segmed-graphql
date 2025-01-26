@@ -82,6 +82,7 @@ export interface IArrivalItemCreateArgs {
 export interface IArrivalItemUpdateArgs {
 	quantity?:	number
 	price?:		Decimal
+	batchId?:	number
 }
 
 export interface IDepartureCreateArgs {

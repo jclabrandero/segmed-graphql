@@ -93,6 +93,7 @@ input IArrivalItemCreateArgs {
 input IArrivalItemUpdateArgs {
 	quantity:	Int
 	price:		Decimal
+	batchId:	Int
 }
 
 input IDepartureCreateArgs {
@@ -127,8 +128,10 @@ type Mutation {
 	approveArrival(id: Int!): Arrival! @authorized @has(permissions: [ApproveArrival])
 	closeArrival(id: Int!): Arrival! @authorized @has(permissions: [WriteInventory])
 	updateArrival(id: Int!, data: IArrivalUpdateArgs!): Arrival! @authorized @has(permissions: [WriteInventory])
+	deleteArrival(id: Int!): Arrival! @authorized @has(permissions: [WriteInventory])
 	createArrivalItem(data: IArrivalItemCreateArgs!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
 	updateArrivalItem(id: Int!, data: IArrivalItemUpdateArgs!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
+	deleteArrivalItem(id: Int!): ArrivalItem! @authorized @has(permissions: [WriteInventory])
 	createDeparture(data: IDepartureCreateArgs!): Departure! @authorized @has(permissions: [WriteInventory])
 	createDepartureItem(data: IDepartureItemCreateArgs!): DepartureItem! @authorized @has(permissions: [WriteInventory])
 	printReport(data: IInventoryPrintReportArgs!): FileBase64! @authorized @has(permissions: [ReadInventory])
