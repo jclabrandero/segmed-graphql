@@ -272,6 +272,7 @@ export class GraphqlResolver {
 				deleteMedicalOffice: medicalOffice.delete,
 				createProvider: provider.create,
 				updateProvider: provider.update,
+				deleteProvider: provider.delete,
 
 				createPerson: person.create,
 				updatePerson: person.update,

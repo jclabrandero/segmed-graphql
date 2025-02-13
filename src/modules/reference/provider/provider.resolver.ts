@@ -4,7 +4,7 @@ import { Provider } from '@prisma/client'
 import { Relation, Resolver } from '../../../support/classes'
 import { IContext, IProviderCreateArgs, IProviderUpdateArgs } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
-import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
+import { withAuditForCreate, withAuditForUpdate, withAuditForDelete } from '../../../support/functions'
 
 
 interface IProviderFilterArgs {
@@ -235,6 +235,28 @@ export class ProviderResolver extends Resolver {
 			events: [UPDATED, UPSERTED],
 			dataset: [{ providerUpdated: record }, { providerUpserted: record }]
 		})
+		return record
+	}
+
+	async delete(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Provider> {
+		const { DELETED, UPSERTED } = SubscriptionEvent.Provider
+	
+		// Verificar que el proveedor existe
+		await super.findOneOrFail(db.provider, id)
+	
+		// Cambiar el estatus del proveedor y guardar el registro de quién lo está eliminando
+		const record = await db.provider.update({
+			where: { id },
+			data: withAuditForDelete(user)
+		})
+	
+		// Publicar eventos de eliminación y actualización
+		super.publish({
+			pubsub,
+			events: [DELETED, UPSERTED],
+			dataset: [{ providerDeleted: record }, { providerUpserted: record }]
+		})
+	
 		return record
 	}
 
