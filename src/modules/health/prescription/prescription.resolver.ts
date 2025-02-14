@@ -312,7 +312,8 @@ export class PrescriptionResolver extends Resolver {
 							}
 						}
 					}
-				}
+				},
+				creatorUser: true // Agregamos el campo creatorUser aquí
 			}
 		})
 		const buffer = await template.make(ClinicCareResolver.format(record), constext.user)

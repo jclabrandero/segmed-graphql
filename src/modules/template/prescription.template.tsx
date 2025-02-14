@@ -91,6 +91,7 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 								</td>
 								<td style={{ width: '25%', textAlign: 'center', fontSize: '10', border: 'none' }}>
 									<p>{clinicCare.medicalOffice.name}</p>
+									<p style={{ fontSize: '8'}}>impreso por: {user.userName}</p>
 								</td>
 							</tr>
 						</table>
@@ -100,23 +101,23 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
  
 			<InsuredTable insured={clinicCare.insured} />
  
-			<table style={{ width: '100%', fontSize: '12px' }}>
+			<table style={{ width: '100%', fontSize: '12px', border: 'none' }}>
 				<tr>
 					<td>
-						<table>
+						<table style={{ border: 'none' }}>
 							<tr>
-								<th style={{ width: '10%', border: 'none' }}>Codigo</th>
-								<th style={{ width: '40%', border: 'none' }}>Descripcion</th>
+								<th style={{ width: '15%', border: 'none' }}>Codigo</th>
+								<th style={{ width: '35%', border: 'none' }}>Descripcion</th>
 								<th style={{ width: '40%', border: 'none' }}>Concentracion - Presentacion</th>
 								<th style={{ width: '10%', border: 'none' }}>Cantidad</th>
 							</tr>
 							{
 								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity }, i) => (
 									<tr key={i}>
-										<td>{medication.code}</td>
-										<td>{medication.name}</td>
-										<td>{medication.concentration} - {medication.unit.name}</td>
-										<td>{quantity}</td>
+										<td style={{ border: 'none' }}>{medication.code}</td>
+										<td style={{ border: 'none' }}>{medication.name}</td>
+										<td style={{ border: 'none' }}>{medication.concentration} - {medication.unit.name}</td>
+										<td style={{ border: 'none' }}>{quantity}</td>
 									</tr>
 								))
 							}
@@ -128,18 +129,25 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 			<div>
 				<table style={{ width: '100%', border: 'none' }}>
 					<tr>
-						<td style={{ fontSize: '12px', border: 'none', colSpan: '2' }}>
-							<p>Fecha de Solicitud: {fechaInicio}</p>
-							<p>Orden Valida hasta fecha: {fechaFinal2}</p></td>
+						<td style={{ fontSize: '10px', border: 'none', colSpan: '3'}}>
+							<p>Fecha de Solicitud: {fechaInicio} - Orden Valida hasta fecha: {fechaFinal2}</p></td>
 					</tr>
 					<tr>
-						<td style={{ width: '70%', border: 'none', fontSize: '9px' }}>impreso por: {user.userName}</td>
+						<td style={{border: 'none', colSpan: '3'}}>
+							<p>&nbsp;</p></td>
+					</tr>
+					<tr>
 						<td style={{ width: '30%', fontSize: '12px', textAlign: 'center', border: 'none', borderTop: '1px solid black' }}>
-							<p>Firma del Dr. ................</p>
+							<p>Firma del Beneficiario</p>
+						</td>
+						<td style={{ width: '40%', fontSize: '12px', textAlign: 'center', border: 'none'}}>
+							<p></p></td>
+						<td style={{ width: '30%', fontSize: '12px', textAlign: 'center', border: 'none', borderTop: '1px solid black' }}>
+							<p>Firma del Dr. {data.creatorUser.displayName}</p>
 						</td>
 					</tr>
 					<tr>
-						<td style={{ border: 'none', colSpan: '2', fontSize: '9px' }}><p>Este formulario debe ser enviado adjuntando el informe de la atencion y factura a nombre de PAN AMERICAN SILVER BOLIVIA S.A. - NIT 1002673025</p></td>
+						<td style={{ border: 'none', fontSize: '9px', colSpan: '3'}}><p>Este formulario debe ser enviado adjuntando el informe de la atencion y factura a nombre de PAN AMERICAN SILVER BOLIVIA S.A. - NIT 1002673025</p></td>
 					</tr>
 				</table>
 			</div>
@@ -171,13 +179,13 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
  
 			<InsuredTable insured={clinicCare.insured} />
  
-			<table style={{ width: '100%', fontSize: '12px' }}>
+			<table style={{ width: '100%', fontSize: '12px',  border: 'none'}}>
 				<tr>
 					<td>
 						<table>
 							<tr>
-								<th style={{ width: '10%', border: 'none' }}>Codigo</th>
-								<th style={{ width: '40%', border: 'none' }}>Descripcion</th>
+								<th style={{ width: '15%', border: 'none' }}>Codigo</th>
+								<th style={{ width: '35%', border: 'none' }}>Descripcion</th>
 								<th style={{ width: '40%', border: 'none' }}>Concentracion - Presentacion</th>
 								<th style={{ width: '10%', border: 'none' }}>Cantidad</th>
 							</tr>
@@ -185,14 +193,14 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity, indications }, i) => (
 									<tbody key={i}>
 										<tr>
-											<td>{medication.code}</td>
-											<td>{medication.name}</td>
-											<td>{medication.concentration} - {medication.unit.name}</td>
-											<td>{quantity}</td>
+											<td style={{ border: 'none' }}>{medication.code}</td>
+											<td style={{ border: 'none' }}>{medication.name}</td>
+											<td style={{ border: 'none' }}>{medication.concentration} - {medication.unit.name}</td>
+											<td style={{ border: 'none' }}>{quantity}</td>
 										</tr>
 										<tr style={{ borderBottom: '1px solid black' }}>
 											<td style={{ border: 'none' }}>Indicaciones:</td>
-											<td style={{ colSpan: '3' }}>{indications}</td>
+											<td style={{ border: 'none', colSpan: '3' }}>{indications}</td>
 										</tr>
 									</tbody>
 								))
