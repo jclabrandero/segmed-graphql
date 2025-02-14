@@ -322,7 +322,8 @@ export class GraphqlResolver {
 				createMedicalLeave: medicalLeave.create,
 				updateMedicalLeave: medicalLeave.update,
 				deleteMedicalLeave: medicalLeave.delete,
-				approveMedicalLeave: medicalLeave.approve
+				approveMedicalLeave: medicalLeave.approve,
+				printMedicalLeave: medicalLeave.print
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),

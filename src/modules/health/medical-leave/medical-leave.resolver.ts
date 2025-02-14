@@ -6,7 +6,7 @@ import { IContext, IMedicalLeaveCreateArgs, IMedicalLeaveUpdateArgs } from '../.
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { now, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 import { DisabilityTypeResolver } from '../../catalog'
-
+import { MedicalLeaveTemplate } from '../../template/medical-leave.template'
 
 export class MedicalLeaveResolver extends Resolver {
 
@@ -150,4 +150,22 @@ export class MedicalLeaveResolver extends Resolver {
 		return record
 	}
 
+	async print(_, args: { id: number }, context: IContext) {
+		const template = new MedicalLeaveTemplate()
+		const record = await context.db.medicalLeave.findUnique({
+			where: {
+				id: args.id,
+				NOT: { status: Status.Removed }
+			}
+		})
+	
+		const buffer = await template.make(MedicalLeaveResolver.format(record), context.user)
+	
+		return {
+			info: {
+				type: 'application/pdf'
+			},
+			data: buffer.toString('base64')
+		}
+	}
 }

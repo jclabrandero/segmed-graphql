@@ -33,6 +33,10 @@ input IMedicalLeaveUpdateArgs {
 	endDate:	DateTime
 }
 
+input IPrescriptionPrintArgs {
+	clinicCareId:	Int!
+}
+
 type Query {
 	medicalLeave(id: Int!): MedicalLeave! @authorized @has(permissions: [ReadClinicCare])
 }
@@ -42,4 +46,5 @@ type Mutation {
 	updateMedicalLeave(id: Int!, data: IMedicalLeaveUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
 	deleteMedicalLeave(id: Int!, data: IMedicalLeaveUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
 	approveMedicalLeave(id: Int!, data: IMedicalLeaveUpdateArgs!): ClinicCare! @authorized @has(permissions: [ApprovalMedicalLeave])
+	printMedicalLeave(id: Int!): FileBase64! @authorized @has(permissions: [ReadClinicCare])
 }
