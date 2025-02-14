@@ -31,7 +31,7 @@ model MedicalLeaveDisabilityType {
 	id					Int	@id @default(autoincrement())
 	disabilityTypeName	String
 
-	disabilityTypeId	Int	@unique
+	disabilityTypeId	Int
 	medicalLeaveId		Int	@unique
 
 	status				Int	@default(1)
