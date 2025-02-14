@@ -69,6 +69,9 @@ export class ClinicCareResolver extends Resolver {
 				primary: true,
 				state: true,
 				creatorUser: true
+			},
+			orderBy: {
+				creationDate: 'desc' // Ordenar por la fecha de creación en orden descendente
 			}
 		})
 
