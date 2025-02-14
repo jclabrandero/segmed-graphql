@@ -221,6 +221,8 @@ export class InterclinicalResolver extends Resolver {
 								medicalOffice: true
 							}
 						},
+						creatorUser: true
+						
 					}
 				},
 				...InterclinicalResolver.include()

@@ -104,7 +104,7 @@ function TemplateView({ data, user }: { data, user: User, logo?: FileBuffer }) {
 
 	return (
 		<div>
-			<table style={{ width: '100%' }}>
+			<table style={{ width: '100%'}}>
 				<tr>
 					<td>
 						<table>
@@ -122,7 +122,9 @@ function TemplateView({ data, user }: { data, user: User, logo?: FileBuffer }) {
 								</td>
 								<td style={{ width: '25%', textAlign: 'center', fontSize: '10', border: 'none' }}>
 									<p>{data.clinicCare.medicalOffice.name}</p>
+									<p style={{fontSize: '8'}}>impreso por: {user.userName}</p>
 								</td>
+								
 							</tr>
 						</table>
 					</td>
@@ -132,7 +134,7 @@ function TemplateView({ data, user }: { data, user: User, logo?: FileBuffer }) {
 			<InsuredTable insured={data.clinicCare.insured} />
 			<ProviderTable provider={data.provider}/>
 
-			<table style={{ width: '100%', fontSize: '12px' }}>
+			<table style={{ width: '100%', fontSize: '12px', border: 'none' }}>
 				<tr>
 					<td>
 						<table style={{ border: 'none' }}>
@@ -180,9 +182,9 @@ function TemplateView({ data, user }: { data, user: User, logo?: FileBuffer }) {
 							<p>Orden Valida hasta fecha: {feDate}</p></td>
 					</tr>
 					<tr>
-						<td style={{ width: '70%', border: 'none', fontSize: '9px' }}>impreso por: {user.userName}</td>
+						<td style={{border: 'none'}}></td>
 						<td style={{ width: '30%', fontSize: '12px', textAlign: 'center', border: 'none', borderTop: '1px solid black' }}>
-							<p>Firma del Dr. Cimar Casanova</p>
+							<p>Firma del Dr. {data.clinicCare.creatorUser.displayName}</p>
 						</td>
 					</tr>
 					<tr>
