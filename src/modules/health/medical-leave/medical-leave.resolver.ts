@@ -156,16 +156,39 @@ export class MedicalLeaveResolver extends Resolver {
 			where: {
 				id: args.id,
 				NOT: { status: Status.Removed }
+			},
+			include: {
+				disabilityType: true,
+				clinicCare: {
+					include: {
+						medicalOffice: true,
+						insured: {
+							include: {
+								insured: {
+									include: {
+										person: true,
+										belonging: true
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		})
-	
-		const buffer = await template.make(MedicalLeaveResolver.format(record), context.user)
-	
-		return {
-			info: {
-				type: 'application/pdf'
-			},
-			data: buffer.toString('base64')
+
+		try {
+			const buffer = await template.make(MedicalLeaveResolver.format(record), context.user)
+
+			return {
+				info: {
+					type: 'application/pdf'
+				},
+				data: buffer.toString('base64')
+			}
+		} catch (error) {
+			console.error(error)
+			throw 'Error al generar el documento.'
 		}
 	}
 }

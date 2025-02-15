@@ -56,7 +56,6 @@ export function MedicalLeaveView({ data, user }: { data, user: User, logo?: File
 						<table>
 							<tr>
 								<td style={{ width: '35%', border: 'none' }}>
-									{/* <img style={{ width: '200px' }} src={`data:${logo.info.mimetype};base64, ${logo.data.toString('base64')}`} /> */}
 								</td>
 								<td style={{ width: '40%', textAlign: 'center', border: 'none' }}>
 									<h6>CERTIFICADO DE INCAPACIDAD TEMPORAL</h6>
@@ -75,7 +74,7 @@ export function MedicalLeaveView({ data, user }: { data, user: User, logo?: File
 				</tr>
 			</table>
 
-			<InsuredTable insured={data.clinicCare.insured} />
+			<InsuredTable insured={data.clinicCare.insured.insured} />
 			
 			<table style={{ width: '100%', fontSize: '12px' }}>
 				<tr>
@@ -85,24 +84,7 @@ export function MedicalLeaveView({ data, user }: { data, user: User, logo?: File
 								<tr>
 									<td style={{ border: 'none' }}>
 										<p>DATOS DE LA INCAPACIDAD:</p>
-										{
-											data.medicalGroup.specialties.map((specialty) => (
-												<div key={`${specialty.id}`}>
-													<label>{ specialty.name }</label>
-													{
-														(specialty.subspecialties.length > 0) ?
-															<ul>
-																{
-																	specialty.subspecialties.map(sbsp => (
-																		<li key={`${specialty.id}-${sbsp.id}`}>{ sbsp.name }</li>
-																	))
-																}
-															</ul>
-															: null
-													}
-												</div>
-											))
-										}
+
 									</td>
 								</tr>
 								<tr>
@@ -142,7 +124,7 @@ export class MedicalLeaveTemplate extends Template {
 	async make(data: Interclinical, user: User) {
 		// const logo: FileBuffer = {} as FileBuffer
 		const html = renderToString(<MedicalLeaveView data={data} user={user}/>)
-		return this.build(html)
+		return this.buildFromHTML(html)
 	}
 
 }
