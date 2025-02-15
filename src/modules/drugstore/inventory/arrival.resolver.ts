@@ -6,6 +6,7 @@ import { Resolver } from '../../../support/classes'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { IContext, IArrivalCreateArgs, IArrivalUpdateArgs, IArrivalItemCreateArgs, IArrivalItemUpdateArgs } from '../../../support/types'
 import { now, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
+import { PubSub } from 'graphql-subscriptions'
 
 export class ArrivalResolver extends Resolver {
 	constructor() {
@@ -447,5 +448,11 @@ export class ArrivalResolver extends Resolver {
 			dataset: [{ arrivalUpdated: record }, { arrivalUpserted: record }]
 		})
 		return record
+	}
+
+	public upsertedItem({ pubsub }: { pubsub: PubSub }) {
+		return {
+			subscribe: () => pubsub.asyncIterator(SubscriptionEvent.ArrivalItem.UPSERTED)
+		}
 	}
 }

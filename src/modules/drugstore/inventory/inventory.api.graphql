@@ -142,6 +142,7 @@ type Subscription {
 	arrivalUpdated: Arrival!
 	arrivalDeleted: Arrival!
 	arrivalUpserted: Arrival!
+	arrivalItemUpserted: ArrivalItem!
 	departureCreated: Departure!
 	departureUpdated: Departure!
 	departureDeleted: Departure!

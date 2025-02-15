@@ -421,6 +421,7 @@ export class GraphqlResolver {
 				arrivalUpdated: arrival.updated({ pubsub }),
 				arrivalDeleted: arrival.deleted({ pubsub }),
 				arrivalUpserted: arrival.upserted({ pubsub }),
+				arrivalItemUpserted: arrival.upsertedItem({ pubsub }),
 				departureCreated: departure.created({ pubsub }),
 				departureUpdated: departure.updated({ pubsub }),
 				departureDeleted: departure.deleted({ pubsub }),
