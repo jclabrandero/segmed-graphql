@@ -268,7 +268,12 @@ export class PrescriptionResolver extends Resolver {
 						insured: {
 							include: {
 								person: true,
-								belonging: true
+								belonging: true,
+								holderInsured: {
+									include: {
+										person: true
+									}
+								}
 							}
 						}
 					}
