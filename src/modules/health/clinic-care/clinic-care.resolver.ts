@@ -2,7 +2,7 @@
 import { ClinicCare, ClinicalCareState } from '@prisma/client'
 
 import { Resolver } from '../../../support/classes'
-import { IContext, IClinicCareCreateArgs } from '../../../support/types'
+import { IContext, IClinicCareCreateArgs, IFilterClinicCare } from '../../../support/types'
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { withAuditForCreate, withAuditForUpdate } from '../../../support/functions'
 import { InterclinicalResolver } from '../inter-clinical/inter-clinical.resolver'
@@ -205,6 +205,42 @@ export class ClinicCareResolver extends Resolver {
 			include: { state: true }
 		})
 		return record.state
+	}
+
+	async filter(_, { filter }: { filter: IFilterClinicCare }, { db }: IContext): Promise<Array<ClinicCare>> {
+		const records = await db.clinicCare.findMany({
+			where: {
+				insured: filter.insuredId ? {
+					insuredId: filter.insuredId
+				} : undefined,
+				creatorUserName: filter.creatorUserName || undefined,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				insured: {
+					include: {
+						insured: {
+							include: {
+								person: true,
+								insuredType: true
+							}
+						}
+					}
+				},
+				medicalOffice: {
+					include: {
+						medicalOffice: true
+					}
+				},
+				primary: true,
+				state: true,
+				creatorUser: true
+			},
+			orderBy: {
+				creationDate: 'desc' // Ordenar por la fecha de creación en orden descendente
+			}
+		})
+		return records.map(ClinicCareResolver.format)
 	}
 
 	async create(_, { data }: { data: IClinicCareCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {

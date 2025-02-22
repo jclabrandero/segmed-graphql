@@ -30,8 +30,14 @@ input IClinicCareStateUpdateArgs {
 	stateId:	Int!
 }
 
+input IFilterClinicCare {
+	insuredId:			Int
+	creatorUserName:	String
+}
+
 type Query {
 	clinicCares: [ClinicCare!]! @authorized @has(permissions: [ReadClinicCare])
+	filterClinicCares(filter: IFilterClinicCare!): [ClinicCare!]! @authorized @has(permissions: [ReadClinicCare])
 	clinicCare(id: Int!): ClinicCare! @authorized @has(permissions: [ReadClinicCare])
 	clinicCareState(id: Int!): ClinicalCareState! @authorized @has(permissions: [ReadClinicCare])
 }

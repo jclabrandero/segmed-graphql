@@ -35,7 +35,7 @@ import {
 	IInventoryPrintReportArgs
 } from './drugstore'
 import {
-	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
+	IClinicCareCreateArgs, IFilterClinicCare, IClinicCarePrimaryUpsertArgs,
 	IInterclinicalCreateArgs, IInterclinicalUpdateArgs,
 	IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs,
 	IMedicalLeaveCreateArgs, IMedicalLeaveUpdateArgs
@@ -76,7 +76,7 @@ export {
 	IDepartureCreateArgs, IDepartureItemCreateArgs,
 	IInventoryPrintReportArgs,
 
-	IClinicCareCreateArgs, IClinicCarePrimaryUpsertArgs,
+	IClinicCareCreateArgs, IFilterClinicCare, IClinicCarePrimaryUpsertArgs,
 	IInterclinicalCreateArgs, IInterclinicalUpdateArgs,
 	IPrescriptionCreateArgs, IPrescriptionUpdateArgs, IPrescriptionExternCreateArgs,
 	IMedicalLeaveCreateArgs, IMedicalLeaveUpdateArgs

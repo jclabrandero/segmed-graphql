@@ -216,6 +216,7 @@ export class GraphqlResolver {
 				clinicCares: clinicCare.index,
 				clinicCare: clinicCare.findOne,
 				clinicCareState: clinicCare.findState,
+				filterClinicCares: clinicCare.filter,
 				clinicCarePrimary: clinicCarePrimary.findOne,
 				interclinical: interclinical.findOne,
 				prescription: prescription.findOne,

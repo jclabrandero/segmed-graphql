@@ -6,6 +6,11 @@ export interface IClinicCareCreateArgs {
 	medicalOfficeId:	number
 }
 
+export interface IFilterClinicCare {
+	insuredId?: number
+	creatorUserName?: string
+}
+
 export interface IClinicCarePrimaryUpsertArgs {
 	clinicCareId:	number
 
