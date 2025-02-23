@@ -19,7 +19,7 @@ export class PrescriptionResolver extends Resolver {
 
 	static format(record) {
 		if (!record) return null
-		const { pharmacy, medication, ...prescription } = record
+		const { pharmacy, medication, departureItemPrescription, ...prescription } = record
 		return {
 			...prescription,
 			medication: {
@@ -36,6 +36,7 @@ export class PrescriptionResolver extends Resolver {
 					name: medication.medicationUnit
 				}
 			},
+			departured: Boolean(departureItemPrescription),
 			pharmacy: pharmacy ? {
 				...pharmacy.pharmacy,
 				name: pharmacy.pharmacyName

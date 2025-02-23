@@ -119,7 +119,8 @@ export class ClinicCareResolver extends Resolver {
 									}
 								}
 							}
-						}
+						},
+						departureItemPrescription: true
 					}
 				},
 				prescriptionExterns: {
