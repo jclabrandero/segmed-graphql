@@ -88,13 +88,15 @@ export interface IArrivalItemUpdateArgs {
 export interface IDepartureCreateArgs {
 	remark:			string
 	departureDate:	Date
+	clinicCareId?:	number
 	pharmacyId:		number
 }
 
 export interface IDepartureItemCreateArgs {
-	quantity:		number
-	batchId:		number
-	departureId:	number
+	quantity:			number
+	batchId:			number
+	departureId:		number
+	prescriptionId?:	number
 }
 
 export interface IInventoryPrintReportArgs {

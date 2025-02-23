@@ -243,6 +243,38 @@ export class ClinicCareResolver extends Resolver {
 		return records.map(ClinicCareResolver.format)
 	}
 
+	async withoutDeparturePrescriptions(_, { pharmacyId }, { db }: IContext) {
+		const records = await db.clinicCare.findMany({
+			where: {
+				prescriptions: {
+					some: {
+						pharmacy: {
+							pharmacyId
+						},
+						NOT: { status: Status.Removed }
+					},
+				},
+				departureClinicCare: null,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				insured: {
+					include: {
+						insured: {
+							include: {
+								person: true
+							}
+						}
+					}
+				}
+			},
+			orderBy: {
+				creationDate: 'desc'
+			}
+		})
+		return records.map(ClinicCareResolver.format)
+	}
+
 	async create(_, { data }: { data: IClinicCareCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
 		const { CREATED, UPSERTED } = SubscriptionEvent.ClinicCare
 		const { insuredId, medicalOfficeId, ...payload } = data

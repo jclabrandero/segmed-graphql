@@ -48,6 +48,7 @@ type Departure {
 
 	status:	Int!
 
+	clinicCare:	ClinicCare
 	pharmacy:	Pharmacy!
 }
 
@@ -99,6 +100,7 @@ input IArrivalItemUpdateArgs {
 input IDepartureCreateArgs {
 	remark:			String
 	departureDate:	DateTime!
+	clinicCareId:	Int
 	pharmacyId:		Int!
 }
 
@@ -106,6 +108,7 @@ input IDepartureItemCreateArgs {
 	quantity:		Int!
 	batchId:		Int!
 	departureId:	Int!
+	prescriptionId:	Int
 }
 
 input IInventoryPrintReportArgs {
@@ -147,4 +150,5 @@ type Subscription {
 	departureUpdated: Departure!
 	departureDeleted: Departure!
 	departureUpserted: Departure!
+	departureItemUpserted: DepartureItem!
 }

@@ -217,9 +217,11 @@ export class GraphqlResolver {
 				clinicCare: clinicCare.findOne,
 				clinicCareState: clinicCare.findState,
 				filterClinicCares: clinicCare.filter,
+				clinicCaresWithoutDeparturePrescriptions: clinicCare.withoutDeparturePrescriptions,
 				clinicCarePrimary: clinicCarePrimary.findOne,
 				interclinical: interclinical.findOne,
 				prescription: prescription.findOne,
+				prescriptionsFromPharmacyWithoutDeparture: prescription.prescriptionsFromPharmacyWithoutDeparture,
 				prescriptionExtern: prescription.findOneExtern,
 				medicalLeave: medicalLeave.findOne
 			},
@@ -427,6 +429,7 @@ export class GraphqlResolver {
 				departureUpdated: departure.updated({ pubsub }),
 				departureDeleted: departure.deleted({ pubsub }),
 				departureUpserted: departure.upserted({ pubsub }),
+				departureItemUpserted: departure.upsertedItem({ pubsub }),
 
 				clinicCareCreated: clinicCare.created({ pubsub }),
 				clinicCareUpdated: clinicCare.updated({ pubsub }),

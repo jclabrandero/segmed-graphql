@@ -49,6 +49,7 @@ input IPrescriptionPrintArgs {
 
 type Query {
 	prescription(id: Int!): Prescription! @authorized @has(permissions: [ReadClinicCare])
+	prescriptionsFromPharmacyWithoutDeparture(clinicCareId: Int!, pharmacyId: Int!): [Prescription!]! @authorized
 	prescriptionExtern(id: Int!): PrescriptionExtern! @authorized @has(permissions: [ReadClinicCare])
 }
 

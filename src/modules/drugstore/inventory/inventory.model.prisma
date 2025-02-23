@@ -93,11 +93,32 @@ model Departure {
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
-	pharmacy	Pharmacy	@relation(fields: [pharmacyId], references: [id])
-	items		DepartureItem[]
+	pharmacy			Pharmacy		@relation(fields: [pharmacyId], references: [id])
+	items				DepartureItem[]
+	departureClinicCare DepartureClinicCare?
 
 	creatorUser		User	@relation(name: "DepartureCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "DepartureLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model DepartureClinicCare {
+	id				Int	@id @default(autoincrement())
+
+	departureId		Int @unique
+	clinicCareId	Int	@unique
+
+	status	Int	@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	departure	Departure	@relation(fields: [departureId], references: [id])
+	clinicCare	ClinicCare	@relation(fields: [clinicCareId], references: [id])
+
+	creatorUser		User	@relation(name: "DepartureClinicCareCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "DepartureClinicCareLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model DepartureItem {
@@ -115,9 +136,30 @@ model DepartureItem {
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
-	departure	Departure	@relation(fields: [departureId], references: [id])
-	batch		Batch		@relation(fields: [batchId], references: [id])
+	departure					Departure	@relation(fields: [departureId], references: [id])
+	batch						Batch		@relation(fields: [batchId], references: [id])
+	departureItemPrescription	DepartureItemPrescription?
 
 	creatorUser		User	@relation(name: "DepartureItemCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "DepartureItemLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model DepartureItemPrescription {
+	id				Int	@id @default(autoincrement())
+
+	departureItemId	Int	@unique
+	prescriptionId	Int	@unique
+
+	status			Int	@default(1)
+
+	creatorUserName		String
+	creationDate		DateTime
+	lastUpdateUserName	String?
+	lastUpdateDate		DateTime?
+
+	departureItem	DepartureItem	@relation(fields: [departureItemId], references: [id])
+	prescription	Prescription	@relation(fields: [prescriptionId], references: [id])
+
+	creatorUser		User	@relation(name: "DepartureItemPrescriptionCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	lastUpdateUser	User?	@relation(name: "DepartureItemPrescriptionLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }

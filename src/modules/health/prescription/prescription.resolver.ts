@@ -70,6 +70,32 @@ export class PrescriptionResolver extends Resolver {
 		return PrescriptionResolver.format(record)
 	}
 
+	async prescriptionsFromPharmacyWithoutDeparture(_, { clinicCareId, pharmacyId }: { clinicCareId: number, pharmacyId: number }, { db }: IContext) {
+		const record = await db.prescription.findMany({
+			where: {
+				clinicCareId,
+				pharmacy: {
+					pharmacyId
+				},
+				departureItemPrescription: null,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				medication: {
+					include: {
+						medication: {
+							include: {
+								class: true,
+								unit: true
+							}
+						}
+					}
+				}
+			}
+		})
+		return record.map(PrescriptionResolver.format)
+	}
+
 	async findOneExtern(_, { id }: { id: number }, { db }: IContext) {
 		const record = await db.prescriptionExtern.findUnique({
 			where: {
