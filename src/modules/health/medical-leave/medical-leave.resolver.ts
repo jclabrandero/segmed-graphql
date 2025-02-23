@@ -177,18 +177,13 @@ export class MedicalLeaveResolver extends Resolver {
 			}
 		})
 
-		try {
-			const buffer = await template.make(MedicalLeaveResolver.format(record), context.user)
+		const buffer = await template.make(MedicalLeaveResolver.format(record), context.user)
 
-			return {
-				info: {
-					type: 'application/pdf'
-				},
-				data: buffer.toString('base64')
-			}
-		} catch (error) {
-			console.error(error)
-			throw 'Error al generar el documento.'
+		return {
+			info: {
+				type: 'application/pdf'
+			},
+			data: buffer.toString('base64')
 		}
 	}
 }
