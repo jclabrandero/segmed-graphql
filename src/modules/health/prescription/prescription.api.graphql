@@ -61,4 +61,5 @@ type Mutation {
 	updatePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
 	deletePrescriptionExtern(id: Int!, data: IPrescriptionUpdateArgs!): ClinicCare! @authorized @has(permissions: [WriteClinicCare])
 	printPrescription(data: IPrescriptionPrintArgs!): FileBase64! @authorized @has(permissions: [ReadClinicCare])
+	printPrescriptionExtern(data: IPrescriptionPrintArgs!): FileBase64! @authorized @has(permissions: [ReadClinicCare])
 }

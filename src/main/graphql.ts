@@ -322,6 +322,7 @@ export class GraphqlResolver {
 				updatePrescriptionExtern: prescription.updateExtern,
 				deletePrescriptionExtern: prescription.deleteExtern,
 				printPrescription: prescription.print,
+				printPrescriptionExtern: prescription.printExtern,
 				createMedicalLeave: medicalLeave.create,
 				updateMedicalLeave: medicalLeave.update,
 				deleteMedicalLeave: medicalLeave.delete,

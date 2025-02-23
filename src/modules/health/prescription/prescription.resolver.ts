@@ -327,6 +327,47 @@ export class PrescriptionResolver extends Resolver {
 						}
 					}
 				},
+				creatorUser: true
+			}
+		})
+		const buffer = await template.make(ClinicCareResolver.format(record), constext.user)
+
+		return {
+			info: {
+				type: 'application/pdf'
+			},
+			data: buffer.toString('base64')
+		}
+	}
+
+	async printExtern(_, args: { data: { clinicCareId: number } }, constext: IContext) {
+		const template = new PrescriptionTemplate()
+		const record = await constext.db.clinicCare.findUnique({
+			where: {
+				id: args.data.clinicCareId,
+				NOT: { status: Status.Removed }
+			},
+			include: {
+				insured: {
+					include: {
+						insured: {
+							include: {
+								person: true,
+								belonging: true,
+								holderInsured: {
+									include: {
+										person: true
+									}
+								}
+							}
+						}
+					}
+				},
+				medicalOffice: {
+					include: {
+						medicalOffice: true
+					}
+				},
 				prescriptionExterns: {
 					where: {
 						status: Status.Active
@@ -344,7 +385,7 @@ export class PrescriptionResolver extends Resolver {
 						}
 					}
 				},
-				creatorUser: true // Agregamos el campo creatorUser aquí
+				creatorUser: true
 			}
 		})
 		const buffer = await template.make(ClinicCareResolver.format(record), constext.user)

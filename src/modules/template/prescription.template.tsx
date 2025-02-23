@@ -70,6 +70,7 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 	// Formatear las fechas
 	fechaInicio = new Intl.DateTimeFormat('es-MX').format(fechaInicio)
 	const fechaFinal2 = new Intl.DateTimeFormat('es-MX').format(fechaFinal)
+	const dataset = clinicCare.prescriptions || clinicCare.prescriptionExterns
  
 	return (
 		<div>
@@ -112,7 +113,7 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 								<th style={{ width: '10%', border: 'none' }}>Cantidad</th>
 							</tr>
 							{
-								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity }, i) => (
+								dataset.map(({ medication, quantity }, i) => (
 									<tr key={i}>
 										<td style={{ border: 'none' }}>{medication.code}</td>
 										<td style={{ border: 'none' }}>{medication.name}</td>
@@ -190,7 +191,7 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 								<th style={{ width: '10%', border: 'none' }}>Cantidad</th>
 							</tr>
 							{
-								[ ...clinicCare.prescriptions, ...clinicCare.prescriptionExterns ].map(({ medication, quantity, indications }, i) => (
+								dataset.map(({ medication, quantity, indications }, i) => (
 									<tbody key={i}>
 										<tr>
 											<td style={{ border: 'none' }}>{medication.code}</td>
