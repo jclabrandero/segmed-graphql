@@ -80,8 +80,10 @@ export class BatchResolver extends Resolver {
 					medicationId
 				},
 				arrival: {
-					pharmacyId
-				}
+					pharmacyId,
+					closed: true
+				},
+				NOT: { status: Status.Removed }
 			},
 		})
 		const departureItems = await db.departureItem.groupBy({
@@ -95,7 +97,8 @@ export class BatchResolver extends Resolver {
 				},
 				departure: {
 					pharmacyId
-				}
+				},
+				NOT: { status: Status.Removed }
 			},
 		})
 
@@ -130,8 +133,10 @@ export class BatchResolver extends Resolver {
 			where: {
 				batchId,
 				arrival: {
-					pharmacyId
-				}
+					pharmacyId,
+					closed: true
+				},
+				NOT: { status: Status.Removed }
 			},
 		})
 		if (!arrivalItems.length) throw new Error('Lote sin ingresos.')
@@ -145,7 +150,8 @@ export class BatchResolver extends Resolver {
 				batchId,
 				departure: {
 					pharmacyId
-				}
+				},
+				NOT: { status: Status.Removed }
 			},
 		})
 
