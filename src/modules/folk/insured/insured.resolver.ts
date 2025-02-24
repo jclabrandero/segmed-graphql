@@ -70,6 +70,17 @@ export class InsuredResolver extends Resolver {
 		})
 	}
 
+	async insuredsWithClinicCares(_, args, { db }: IContext): Promise<Array<Insured>> {
+		return await InsuredResolver.findMany(db.insured, {
+			status: Status.Active,
+			clinicCareInsured: {
+				some: {
+					NOT: { status: Status.Removed }
+				}
+			}
+		})
+	}
+
 	async findOne(_, { id }: { id: number }, { db }: IContext): Promise<Insured> {
 		return await db.insured.findUnique({
 			where: {

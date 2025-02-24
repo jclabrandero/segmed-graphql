@@ -21,11 +21,12 @@ model Insured {
 	lastUpdateUserName	String?
 	lastUpdateDate		DateTime?
 
-	holderInsured	Insured?	@relation(name: "HolderInsured", fields: [holderInsuredId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-	dependents		Insured[]	@relation(name: "HolderInsured")
-	person			Person		@relation(fields: [personId], references: [id])
-	insuredType		InsuredType	@relation(fields: [insuredTypeId], references: [id])
-	belonging		Belonging	@relation(fields: [belongingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	holderInsured		Insured?	@relation(name: "HolderInsured", fields: [holderInsuredId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	dependents			Insured[]	@relation(name: "HolderInsured")
+	person				Person		@relation(fields: [personId], references: [id])
+	insuredType			InsuredType	@relation(fields: [insuredTypeId], references: [id])
+	belonging			Belonging	@relation(fields: [belongingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	clinicCareInsured	ClinicCareInsured[]
 
 	creatorUser		User		@relation(name: "InsuredCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?		@relation(name: "InsuredLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

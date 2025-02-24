@@ -51,6 +51,7 @@ type Query {
 	insureds: [Insured!]! @authorized @has(permissions: [ReadInsured])
 	activeInsureds: [Insured!]! @authorized @has(permissions: [ReadInsured])
 	activeHolderInsureds: [Insured!]! @authorized @has(permissions: [ReadInsured])
+	insuredsWithClinicCares: [Insured!]! @authorized @has(permissions: [ReadInsured])
 	insured(id: Int!): Insured! @authorized @has(permissions: [ReadInsured])
 }
 
