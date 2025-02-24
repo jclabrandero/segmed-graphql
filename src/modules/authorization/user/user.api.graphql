@@ -46,6 +46,7 @@ type Query {
 	user(id: Int!): User! @authorized @has(permissions: [ReadUser])
 	userByUserName(userName: String!): User! @authorized @has(permissions: [ReadUser])
 	userByMyUserName(userName: String!): User! @authorized
+	usersWithClinicCares: [User!]! @authorized
 }
 
 type Mutation {

@@ -133,6 +133,7 @@ export class GraphqlResolver {
 				user: user.findOne,
 				userByUserName: user.findOneByUserName,
 				userByMyUserName: user.findOneSelf,
+				usersWithClinicCares: user.usersWithClinicCares,
 				groups: group.index,
 				activeGroups: group.active,
 				group: group.findOne,
@@ -194,6 +195,7 @@ export class GraphqlResolver {
 				insureds: insured.index,
 				activeInsureds: insured.active,
 				activeHolderInsureds: insured.activeHolders,
+				insuredsWithClinicCares: insured.insuredsWithClinicCares,
 				insured: insured.findOne,
 
 				medications: medication.index,

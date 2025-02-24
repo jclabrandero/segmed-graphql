@@ -146,6 +146,20 @@ export class UserResolver extends Resolver {
 		return UserResolver.format(record)
 	}
 
+	async usersWithClinicCares(_, args, { db }: IContext): Promise<User[]> {
+		const records = await db.user.findMany({
+			where: {
+				createdClinicCares: {
+					some: {
+						NOT: { status: Status.Removed }
+					}
+				}
+			}
+		})
+
+		return records.map(record => UserResolver.format(record))
+	}
+
 	async create(_, args: { data: IUserCreateArgs }, { db, pubsub, user }: IContext): Promise<User> {
 		const { groups, password, confirmPassword, clerkId, ...payload } = args.data
 		const { CREATED, UPSERTED } = SubscriptionEvent.User
