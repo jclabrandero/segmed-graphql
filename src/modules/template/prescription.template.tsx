@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
  
@@ -34,8 +36,8 @@ function InsuredTable({ insured }) {
 				<td>
 					<p>DATOS DEL PACIENTE</p>
 					<table style={{ border: 'none' }}>
-						<InsuredInfo label='Código Titular' ficha={true} insured={insured.holderInsured || insured}/>
 						<InsuredInfo label='Código Beneficiario' ficha={false} insured={insured}/>
+						<InsuredInfo label='Código Titular' ficha={true} insured={insured.holderInsured || insured}/>
 						<tr>
 							<td style={{ textAlign: 'right', fontSize: '9', border: 'none' }}>Pertinencia:</td>
 							<td style={{ fontSize: '9', border: 'none', colSpan: '4' }}>{insured.belonging.name}</td>
@@ -59,7 +61,7 @@ function addBusinessDays(date, days) {
 	return result
 }
  
-function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
+function RecetaMedicaView({ data, user, logo }: { data, user, logo?: FileBuffer }) {
 	const clinicCare = data
 	let { startDate: fechaInicio } = clinicCare
 	fechaInicio = new Date(fechaInicio)
@@ -80,7 +82,7 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 						<table>
 							<tr>
 								<td style={{ width: '35%', border: 'none' }}>
-									{/* <img style={{ width: '200px' }} src={`data:${logo.info.mimetype};base64, ${logo.data.toString('base64')}`} /> */}
+									{logo && <img src={`data:image/jpeg;base64,${logo.data.toString('base64')}`} alt="Logo" style={{ width: '200px' }} />}
 								</td>
 								<td style={{ width: '40%', textAlign: 'center', border: 'none' }}>
 									<h6>RECETA MEDICA</h6>
@@ -139,16 +141,16 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 					</tr>
 					<tr>
 						<td style={{ width: '30%', fontSize: '12px', textAlign: 'center', border: 'none', borderTop: '1px solid black' }}>
-							<p>Firma del Beneficiario</p>
+							<p>Firma {data.insured.person.firstName} {data.insured.person.lastName}</p>
 						</td>
 						<td style={{ width: '40%', fontSize: '12px', textAlign: 'center', border: 'none'}}>
 							<p></p></td>
 						<td style={{ width: '30%', fontSize: '12px', textAlign: 'center', border: 'none', borderTop: '1px solid black' }}>
-							<p>Firma del Dr. {data.creatorUser.displayName}</p>
+							<p>Firma {data.creatorUser.displayName}</p>
 						</td>
 					</tr>
 					<tr>
-						<td style={{ border: 'none', fontSize: '9px', colSpan: '3'}}><p>Este formulario debe ser enviado adjuntando el informe de la atencion y factura a nombre de PAN AMERICAN SILVER BOLIVIA S.A. - NIT 1002673025</p></td>
+						<td style={{ border: 'none', fontSize: '9px', colSpan: '3'}}><p>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</p></td>
 					</tr>
 				</table>
 			</div>
@@ -217,7 +219,18 @@ function RecetaMedicaView({ data, user }: { data, user, logo?: FileBuffer }) {
 export class PrescriptionTemplate extends Template {
 	async make(data: ClinicCare, user: User) {
 		// const logo: FileBuffer = {} as FileBuffer
-		const html = renderToString(<RecetaMedicaView data={data} user={user}/>)
+		const logoPath = path.join(__dirname, '..', 'src', 'assets', 'logo_seguro.jpg') // aca viene la ruta del logo
+		const logoBuffer = fs.readFileSync(logoPath)
+		const logoFileBuffer: FileBuffer = {
+			info: {
+				md5: 'md5hash', // Se puede calcular el hash MD5 si es necesario
+				name: 'logo.jpg',
+				type: 'image/jpeg',
+				extension: 'jpg'
+			},
+			data: logoBuffer
+		}
+		const html = renderToString(<RecetaMedicaView data={data} user={user} logo={logoFileBuffer} />)
 		return this.buildFromHTML(html)
 	}
 }
