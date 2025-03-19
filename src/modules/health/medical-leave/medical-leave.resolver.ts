@@ -167,18 +167,24 @@ export class MedicalLeaveResolver extends Resolver {
 								insured: {
 									include: {
 										person: true,
-										belonging: true
+										belonging: true,
+										holderInsured: { // Aquí se incluye holderInsured
+											include: {
+												person: true,
+												belonging: true
+											}
+										}
 									}
 								}
 							}
-						}
+						},
+						creatorUser: true
 					}
 				}
 			}
 		})
 
 		const buffer = await template.make(MedicalLeaveResolver.format(record), context.user)
-
 		return {
 			info: {
 				type: 'application/pdf'
