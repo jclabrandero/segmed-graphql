@@ -1,4 +1,6 @@
 
+import fs from 'fs'
+import path from 'path'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Interclinical, User } from '@prisma/client'
@@ -34,8 +36,8 @@ function InsuredTable({ insured }) {
 				<td>
 					<p>DATOS DEL PACIENTE</p>
 					<table style={{ border: 'none' }}>
-						<InsuredInfo label='Código Titular' ficha={true} insured={insured.holderInsured || insured}/>
 						<InsuredInfo label='Código Beneficiario' ficha={false} insured={insured}/>
+						<InsuredInfo label='Código Titular' ficha={true} insured={insured.holderInsured || insured}/>
 						<tr>
 							<td style={{ textAlign: 'right', fontSize: '9', border: 'none' }}>Pertinencia:</td>
 							<td style={{ fontSize: '9', border: 'none', colSpan: '4' }}>{insured.belonging.name}</td>
@@ -93,7 +95,7 @@ function addBusinessDays(date, days) {
 	return result
 }
 
-function TemplateView({ data, user }: { data, user: User, logo?: FileBuffer }) {
+function TemplateView({ data, user, logo}: { data, user: User, logo?: FileBuffer }) {
 	const { startDate } = data.clinicCare
 	const sDate = new Date(startDate)
 
@@ -110,7 +112,7 @@ function TemplateView({ data, user }: { data, user: User, logo?: FileBuffer }) {
 						<table>
 							<tr>
 								<td style={{ width: '35%', border: 'none' }}>
-									{/* <img style={{ width: '200px' }} src={`data:${logo.info.mimetype};base64, ${logo.data.toString('base64')}`} /> */}
+									{logo && <img src={`data:image/jpeg;base64,${logo.data.toString('base64')}`} alt="Logo" style={{ width: '200px' }} />}
 								</td>
 								<td style={{ width: '40%', textAlign: 'center', border: 'none' }}>
 									<h6>SERVICIO DE {data.medicalGroup.name.toUpperCase()}</h6>
@@ -184,7 +186,7 @@ function TemplateView({ data, user }: { data, user: User, logo?: FileBuffer }) {
 					<tr>
 						<td style={{border: 'none'}}></td>
 						<td style={{ width: '30%', fontSize: '12px', textAlign: 'center', border: 'none', borderTop: '1px solid black' }}>
-							<p>Firma del Dr. {data.clinicCare.creatorUser.displayName}</p>
+							<p>Firma {data.clinicCare.creatorUser.displayName}</p>
 						</td>
 					</tr>
 					<tr>
@@ -200,7 +202,18 @@ export class InterclinicalTemplate extends Template {
 
 	async make(data: Interclinical, user: User) {
 		// const logo: FileBuffer = {} as FileBuffer
-		const html = renderToString(<TemplateView data={data} user={user}/>)
+		const logoPath = path.join(__dirname, '..', 'src', 'assets', 'logo_seguro.jpg') // aca viene la ruta del logo
+		const logoBuffer = fs.readFileSync(logoPath)
+		const logoFileBuffer: FileBuffer = {
+			info: {
+				md5: 'md5hash', // Se puede calcular el hash MD5 si es necesario
+				name: 'logo.jpg',
+				type: 'image/jpeg',
+				extension: 'jpg'
+			},
+			data: logoBuffer
+		}
+		const html = renderToString(<TemplateView data={data} user={user} logo={logoFileBuffer} />)
 		return this.buildFromHTML(html)
 	}
 

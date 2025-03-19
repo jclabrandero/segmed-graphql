@@ -210,8 +210,13 @@ export class InterclinicalResolver extends Resolver {
 							include: {
 								insured: {
 									include: {
-										person: true,
-										belonging: true
+										belonging: true,
+										holderInsured: { // Aquí se incluye holderInsured
+											include: {
+												person: true,
+												belonging: true
+											}
+										}
 									}
 								}
 							}
