@@ -18,9 +18,9 @@ export class ClinicCareResolver extends Resolver {
 		super(SubscriptionEvent.ClinicCare)
 	}
 
-	static format(record) {
+	static format(record, prescriptions = undefined) {
 		if (!record) return null
-		const { insured, medicalOffice, prescriptions, prescriptionExterns, interclinicals, medicalLeaves, ...clinicCare } = record
+		const { insured, medicalOffice, prescriptionExterns, interclinicals, medicalLeaves, ...clinicCare } = record
 		return {
 			...clinicCare,
 			insured: {
@@ -38,7 +38,7 @@ export class ClinicCareResolver extends Resolver {
 				...medicalOffice.medicalOffice,
 				name: medicalOffice.medicalOfficeName
 			} : undefined,
-			prescriptions: prescriptions ? prescriptions.map(prescription => PrescriptionResolver.format(prescription)) : undefined,
+			prescriptions: prescriptions && Array.isArray(prescriptions) ? prescriptions.map(prescription => PrescriptionResolver.format(prescription)) : undefined,
 			prescriptionExterns: prescriptionExterns ? prescriptionExterns.map(prescriptionExtern => PrescriptionResolver.format(prescriptionExtern)) : undefined,
 			interclinicals: interclinicals ? interclinicals.map(interclinical => InterclinicalResolver.format(interclinical)) : undefined,
 			medicalLeaves: medicalLeaves ? medicalLeaves.map(medicalLeave => MedicalLeaveResolver.format(medicalLeave)) : undefined
@@ -120,7 +120,6 @@ export class ClinicCareResolver extends Resolver {
 								}
 							}
 						},
-						departureItemPrescription: true
 					}
 				},
 				prescriptionExterns: {
@@ -194,7 +193,25 @@ export class ClinicCareResolver extends Resolver {
 			}
 		})
 
-		return ClinicCareResolver.format(record)
+		if (!record) throw new Error('Consulta médica no encontrada.')
+
+		const prescriptions = []
+		for (const prescription of record.prescriptions) {
+			const { _sum } = await db.departureItem.aggregate({
+				where: {
+					departureItemPrescription: {
+						prescription: {
+							id: prescription.id
+						}
+					},
+					NOT: { status: Status.Removed }
+				},
+				_sum: { quantity: true }
+			})
+			prescriptions.push({ ...prescription, departuredQuantity: _sum.quantity ?? 0 })
+		}
+
+		return ClinicCareResolver.format(record, prescriptions)
 	}
 
 	async findState(_, { id }: { id: number }, { db }: IContext): Promise<ClinicalCareState> {
@@ -255,7 +272,13 @@ export class ClinicCareResolver extends Resolver {
 						NOT: { status: Status.Removed }
 					},
 				},
-				departureClinicCare: null,
+				departureClinicCares: {
+					none: {
+						departure: {
+							pharmacyId
+						}
+					}
+				},
 				NOT: { status: Status.Removed }
 			},
 			include: {
