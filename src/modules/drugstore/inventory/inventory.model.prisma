@@ -105,7 +105,7 @@ model DepartureClinicCare {
 	id				Int	@id @default(autoincrement())
 
 	departureId		Int @unique
-	clinicCareId	Int	@unique
+	clinicCareId	Int
 
 	status	Int	@default(1)
 
@@ -148,7 +148,7 @@ model DepartureItemPrescription {
 	id				Int	@id @default(autoincrement())
 
 	departureItemId	Int	@unique
-	prescriptionId	Int	@unique
+	prescriptionId	Int
 
 	status			Int	@default(1)
 

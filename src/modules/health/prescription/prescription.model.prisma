@@ -17,7 +17,7 @@ model Prescription {
 
 	pharmacy					PrescriptionPharmacy?
 	medication					PrescriptionMedication?
-	departureItemPrescription	DepartureItemPrescription?
+	departureItemPrescriptions	DepartureItemPrescription[]
 
 	creatorUser		User	@relation(name: "PrescriptionCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "PrescriptionLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
