@@ -19,7 +19,7 @@ export class PrescriptionResolver extends Resolver {
 
 	static format(record) {
 		if (!record) return null
-		const { pharmacy, medication, departureItemPrescription, ...prescription } = record
+		const { pharmacy, medication, ...prescription } = record
 		return {
 			...prescription,
 			medication: {
@@ -36,7 +36,6 @@ export class PrescriptionResolver extends Resolver {
 					name: medication.medicationUnit
 				}
 			},
-			departured: Boolean(departureItemPrescription),
 			pharmacy: pharmacy ? {
 				...pharmacy.pharmacy,
 				name: pharmacy.pharmacyName
@@ -72,13 +71,12 @@ export class PrescriptionResolver extends Resolver {
 	}
 
 	async prescriptionsFromPharmacyWithoutDeparture(_, { clinicCareId, pharmacyId }: { clinicCareId: number, pharmacyId: number }, { db }: IContext) {
-		const record = await db.prescription.findMany({
+		const prescriptions = await db.prescription.findMany({
 			where: {
 				clinicCareId,
 				pharmacy: {
 					pharmacyId
 				},
-				departureItemPrescription: null,
 				NOT: { status: Status.Removed }
 			},
 			include: {
@@ -94,7 +92,25 @@ export class PrescriptionResolver extends Resolver {
 				}
 			}
 		})
-		return record.map(PrescriptionResolver.format)
+
+		const result = []
+		for (const prescription of prescriptions) {
+			const { _sum } = await db.departureItem.aggregate({
+				where: {
+					departureItemPrescription: {
+						prescription: {
+							id: prescription.id
+						}
+					},
+					NOT: { status: Status.Removed }
+				},
+				_sum: { quantity: true }
+			})
+			const departuredQuantity = _sum.quantity ?? 0
+			departuredQuantity < prescription.quantity && result.push({ ...prescription, departuredQuantity })
+		}
+
+		return result.map(PrescriptionResolver.format)
 	}
 
 	async findOneExtern(_, { id }: { id: number }, { db }: IContext) {
@@ -331,7 +347,7 @@ export class PrescriptionResolver extends Resolver {
 				creatorUser: true
 			}
 		})
-		const buffer = await template.make(ClinicCareResolver.format(record), constext.user)
+		const buffer = await template.make(ClinicCareResolver.format(record, record.prescriptions), constext.user)
 
 		return {
 			info: {
