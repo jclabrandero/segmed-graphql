@@ -4,7 +4,7 @@ type Prescription {
 	quantity:	Int!
 	indications:	String!
 
-	departured:	Boolean!
+	departuredQuantity:	Int!
 
 	medication:	Medication!
 	pharmacy:	Pharmacy!
