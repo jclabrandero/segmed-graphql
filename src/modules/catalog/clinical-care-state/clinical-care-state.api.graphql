@@ -28,6 +28,7 @@ type Query {
 	clinicalCareStates: [ClinicalCareState!]! @authorized @has(permissions: [ReadClinicalCareState])
 	activeClinicalCareState: [ClinicalCareState!]! @authorized @has(permissions: [ReadClinicalCareState])
 	clinicalCareState(id: Int!): ClinicalCareState! @authorized @has(permissions: [ReadClinicalCareState])
+	clinicalCareStateWithClinicCares: [ClinicalCareState!]! @authorized @has(permissions: [ReadClinicalCareState])
 }
 
 type Mutation {

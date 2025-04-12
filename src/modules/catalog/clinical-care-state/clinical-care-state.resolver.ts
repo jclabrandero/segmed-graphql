@@ -38,6 +38,19 @@ export class ClinicalCareStateResolver extends Resolver {
 		})
 	}
 
+	async clinicalCareStateWithClinicCares(_, args, { db }: IContext): Promise<Array<ClinicalCareState>> {
+		return await db.clinicalCareState.findMany({
+			where: {
+				status: Status.Active,
+				clinicCareRecords: {
+					some: {
+						NOT: { status: Status.Removed }
+					}
+				}
+			}
+		})
+	}
+
 	async create(_, { data }: { data: IClinicalCareStateCreateArgs }, { db, pubsub, user }: IContext): Promise<ClinicalCareState> {
 		const { CREATED, UPSERTED } = SubscriptionEvent.ClinicalCareState
 		const { lock, ...remaining } = data
