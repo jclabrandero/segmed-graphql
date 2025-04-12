@@ -5,6 +5,7 @@ type Medication {
 	name:			String!
 	concentration:	String!
 	liname:			Boolean!
+	withStock:	Boolean
 
 	status:	Int!
 
@@ -43,6 +44,8 @@ type Mutation {
 	createMedication(data: IMedicationCreateArgs!): Medication! @authorized @has(permissions: [WriteMedication])
 	updateMedication(id: Int!, data: IMedicationUpdateArgs!): Medication! @authorized @has(permissions: [WriteMedication])
 	deleteMedication(id: Int!): Medication! @authorized @has(permissions: [WriteMedication])
+	upgradeMedication(id: Int!): Medication! @authorized @has(permissions: [WriteMedication])
+	downgradeMedication(id: Int!): Medication! @authorized @has(permissions: [WriteMedication])
 }
 
 type Subscription {

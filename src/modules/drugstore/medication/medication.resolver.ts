@@ -27,15 +27,23 @@ export class MedicationResolver extends Resolver {
 	}
 
 	async index(_, args, { db }: IContext): Promise<Array<Medication>> {
-		return await db.medication.findMany({
+		const medications = await db.medication.findMany({
 			where: {
 				NOT: { status: Status.Removed }
 			},
 			include: {
 				class: true,
-				unit: true
+				unit: true,
+				inventory: {
+					where: { stock: { gt: 0 } }
+				}
 			}
 		})
+
+		return medications.map(({ inventory, ...medication }) => ({
+			...medication,
+			withStock: Boolean(inventory.length)
+		}))
 	}
 
 	async liname(_, args, { db }: IContext): Promise<Array<Medication>> {
@@ -110,6 +118,67 @@ export class MedicationResolver extends Resolver {
 			events: [DELETED, UPSERTED],
 			dataset: [{ medicationDeleted: record }, { medicationUpserted: record }]
 		})
+		return record
+	}
+
+	async upgradeMedication(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Medication> {
+		const medication = await db.medication.findUnique({
+			where: { id }
+		})
+		if (!medication) throw 'Medicamento no encontrado.'
+		if (medication.status == Status.Active) throw 'El medicamento ya tiene el estado activo.'
+		if (medication.status == Status.Removed) throw 'El medicamento fue eliminado y no puede cambiarse de estado.'
+
+		const record = await db.medication.update({
+			where: { id },
+			data: withAuditForUpdate(user, {
+				status: Status.Active,
+			})
+		})
+
+		const { UPDATED, UPSERTED } = SubscriptionEvent.Medication
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ medicationUpdated: record }, { medicationUpserted: record }]
+		})
+
+		return record
+	}
+
+	async downgradeMedication(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Medication> {
+		const medication = await db.medication.findUnique({
+			where: {
+				id,
+				status: Status.Active
+			},
+			select: {
+				status: true,
+				inventory: {
+					where: { stock: { gt: 0 } }
+				}
+			}
+		})
+
+		if (!medication) throw 'Medicamento no encontrado.'
+		if (medication.status == Status.Idle) throw 'El medicamento ya tiene el estado inactivo.'
+		if (medication.status == Status.Removed) throw 'El medicamento fue eliminado y no puede cambiarse de estado.'
+		if (medication.inventory.length > 0) throw 'El medicamento cuenta con stock en farmacias.'
+
+		const record = await db.medication.update({
+			where: { id },
+			data: withAuditForUpdate(user, {
+				status: Status.Idle,
+			})
+		})
+
+		const { UPDATED, UPSERTED } = SubscriptionEvent.Medication
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ medicationUpdated: record }, { medicationUpserted: record }]
+		})
+
 		return record
 	}
 

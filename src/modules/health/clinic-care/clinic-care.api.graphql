@@ -33,6 +33,7 @@ input IClinicCareStateUpdateArgs {
 input IFilterClinicCare {
 	insuredId:			Int
 	creatorUserName:	String
+	stateId:			Int
 }
 
 type Query {
