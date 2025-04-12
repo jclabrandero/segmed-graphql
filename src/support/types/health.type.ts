@@ -9,6 +9,7 @@ export interface IClinicCareCreateArgs {
 export interface IFilterClinicCare {
 	insuredId?: number
 	creatorUserName?: string
+	stateId?: number
 }
 
 export interface IClinicCarePrimaryUpsertArgs {

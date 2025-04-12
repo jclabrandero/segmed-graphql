@@ -232,6 +232,7 @@ export class ClinicCareResolver extends Resolver {
 					insuredId: filter.insuredId
 				} : undefined,
 				creatorUserName: filter.creatorUserName || undefined,
+				stateId: filter.stateId || undefined,
 				NOT: { status: Status.Removed }
 			},
 			include: {
