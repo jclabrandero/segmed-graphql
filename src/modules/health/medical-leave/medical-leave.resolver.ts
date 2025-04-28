@@ -150,6 +150,35 @@ export class MedicalLeaveResolver extends Resolver {
 		return record
 	}
 
+	async disapprove(source, { id, data }: { id: number, data: IMedicalLeaveUpdateArgs }, { db, pubsub, user }: IContext): Promise<ClinicCare> {
+		const { UPDATED, UPSERTED } = SubscriptionEvent.ClinicCare
+		const { clinicCareId } = data
+		const found = await super.findOneOrFail(db.medicalLeave, id)
+		if (found.approvalState != 1) throw 'El estado de éste registro no permite realizar modificaciones.'
+	
+		const record = await db.clinicCare.update({
+			where: { id: clinicCareId },
+			data: {
+				medicalLeaves: {
+					update: {
+						where: { id },
+						data: withAuditForUpdate(user, {
+							approvalState: 0,
+							approvalDate: now().local,
+							approvalUserName: user.userName
+						})
+					}
+				}
+			}
+		})
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ clinicCareUpdated: record }, { clinicCareUpserted: record }]
+		})
+		return record
+	}
+
 	async print(_, args: { id: number }, context: IContext) {
 		const template = new MedicalLeaveTemplate()
 		const record = await context.db.medicalLeave.findUnique({
