@@ -70,7 +70,7 @@ export function MedicalLeaveView({ data, user, logo }: { data, user: User, logo?
 								<td style={{ width: '25%', textAlign: 'right', fontSize: '10', border: 'none' }}>
 									<p style={{fontSize: '9'}}>{data.clinicCare.medicalOffice.medicalOfficeName}</p>
 									<p style={{fontSize: '8'}}>impreso por: {user.userName}</p>
-									<p style={{fontSize: '8'}}>{new Date(data.startDate).toLocaleString()}</p>
+									<p style={{fontSize: '8'}}>{new Date(data.startDate).toLocaleDateString()}</p>
 								</td>
 							</tr>
 						</table>
