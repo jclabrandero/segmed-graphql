@@ -164,7 +164,7 @@ function RecetaMedicaView({ data, user, logo }: { data, user, logo?: FileBuffer 
 									{logo && <img src={`data:image/jpeg;base64,${logo.data.toString('base64')}`} alt="Logo" style={{ width: '200px' }} />}
 								</td>
 								<td style={{ width: '40%', textAlign: 'center', border: 'none' }}>
-									<h6>RECETA MEDICA - COPIA BENEFICIARIO</h6>
+									<h6>INDICACIONES RECETA COPIA BENEFICIARIO</h6>
 									<table style={{ width: '100%' }}>
 										<tr>
 											<td style={{ fontSize: '12px' }}>Nro de Consulta:  {clinicCare.id}</td>
