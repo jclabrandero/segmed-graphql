@@ -289,6 +289,8 @@ export class GraphqlResolver {
 				createInsured: insured.create,
 				updateInsured: insured.update,
 				deleteInsured: insured.delete,
+				upgradeInsured: insured.upgradeInsured,
+				downgradeInsured: insured.downgradeInsured,
 
 				createMedication: medication.create,
 				updateMedication: medication.update,
