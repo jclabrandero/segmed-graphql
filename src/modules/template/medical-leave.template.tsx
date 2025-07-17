@@ -70,7 +70,8 @@ export function MedicalLeaveView({ data, user, logo }: { data, user: User, logo?
 								<td style={{ width: '25%', textAlign: 'right', fontSize: '10', border: 'none' }}>
 									<p style={{fontSize: '9'}}>{data.clinicCare.medicalOffice.medicalOfficeName}</p>
 									<p style={{fontSize: '8'}}>impreso por: {user.userName}</p>
-									<p style={{fontSize: '8'}}>{new Date(data.startDate).toLocaleDateString()}</p>
+									<p style={{fontSize: '8'}}>fecha: {new Date(data.startDate).toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
+
 								</td>
 							</tr>
 						</table>
@@ -111,7 +112,7 @@ export function MedicalLeaveView({ data, user, logo }: { data, user: User, logo?
 					<tr>
 						<td style={{border: 'none', colSpan: '3'}}>
 							<p style={{fontSize: '9'}}>Fecha de baja del {new Date(data.startDate).toLocaleDateString()} al {new Date(data.endDate).toLocaleDateString()}  </p>
-							<p style={{fontSize: '9'}}>Total de días de baja: {Math.ceil((new Date(new Date(data.endDate).getTime() + (1000 * 60 * 60 * 24)).getTime() - new Date(data.startDate).getTime()) / (1000 * 60 * 60 * 24))}</p>
+							<p style={{fontSize: '10'}}>Total de días de baja: {Math.ceil((new Date(new Date(data.endDate).getTime() + (1000 * 60 * 60 * 24)).getTime() - new Date(data.startDate).getTime()) / (1000 * 60 * 60 * 24))}</p>
 						</td>
 					</tr>
 					<tr>
