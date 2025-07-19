@@ -7,7 +7,6 @@ import { IContext, IInsuredCreateArgs, IInsuredUpdateArgs } from '../../../suppo
 import { Status, SubscriptionEvent } from '../../../support/constants'
 import { now, withAuditForCreate, withAuditForDelete, withAuditForUpdate } from '../../../support/functions'
 
-
 export class InsuredResolver extends Resolver {
 
 	constructor() {
@@ -172,5 +171,55 @@ export class InsuredResolver extends Resolver {
 
 	private static genOutletDate(person: Person, outletAge?: number): Date | undefined {
 		return outletAge ? addYears(person.birthDate, outletAge) : undefined
+	}
+	
+	async upgradeInsured(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Insured> {
+		const insured = await db.insured.findUnique({
+			where: { id }
+		})
+		if (!insured) throw 'Beneficiario no encontrado.'
+		if (insured.status == Status.Active) throw 'Beneficiario ya se encuentra activo.'
+		if (insured.status == Status.Removed) throw 'Beneficiario fue eliminado y no puede cambiarse de estado.'
+
+		const record = await db.insured.update({
+			where: { id },
+			data: withAuditForUpdate(user, {
+				status: Status.Active,
+			})
+		})
+
+		const { UPDATED, UPSERTED } = SubscriptionEvent.Insured
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ insuredDeleted: record }, { insuredUpserted: record }]
+		})
+
+		return record
+	}
+
+	async downgradeInsured(_, { id }: { id: number }, { db, pubsub, user }: IContext): Promise<Insured> {
+		const insured = await db.insured.findUnique({
+			where: { id }
+		})
+		if (!insured) throw 'Beneficiario no encontrado.'
+		if (insured.status == Status.Idle) throw 'Beneficiario ya se encuentra inactivo.'
+		if (insured.status == Status.Removed) throw 'Beneficiario fue eliminado y no puede cambiarse de estado.'
+
+		const record = await db.insured.update({
+			where: { id },
+			data: withAuditForUpdate(user, {
+				status: Status.Idle,
+			})
+		})
+
+		const { UPDATED, UPSERTED } = SubscriptionEvent.Insured
+		super.publish({
+			pubsub,
+			events: [UPDATED, UPSERTED],
+			dataset: [{ insuredDeleted: record }, { insuredUpserted: record }]
+		})
+
+		return record
 	}
 }

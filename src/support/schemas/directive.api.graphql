@@ -61,4 +61,7 @@ enum PermissionName {
 	ReadClinicCare
 	WriteClinicCare
 	ApprovalMedicalLeave
+
+	ReadAgreement
+	WriteAgreement
 }

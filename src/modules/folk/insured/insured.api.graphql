@@ -59,6 +59,8 @@ type Mutation {
 	createInsured(data: IInsuredCreateArgs!): Insured! @authorized @has(permissions: [WriteInsured])
 	updateInsured(id: Int!, data: IInsuredUpdateArgs!): Insured! @authorized @has(permissions: [WriteInsured])
 	deleteInsured(id: Int!): Insured! @authorized @has(permissions: [WriteInsured])
+	upgradeInsured(id: Int!): Insured! @authorized @has(permissions: [WriteInsured])
+	downgradeInsured(id: Int!): Insured! @authorized @has(permissions: [WriteInsured])
 }
 
 type Subscription {

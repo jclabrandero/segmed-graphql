@@ -143,7 +143,7 @@ function TemplateView({ data, user, logo}: { data, user: User, logo?: FileBuffer
 							<tbody>
 								<tr>
 									<td style={{ border: 'none' }}>
-										<p>REALIZAR EL SIGUIENTE SERVICIO:</p>
+										<p>Por favor, realizar la atención en el servicio correspondiente:</p>
 										{
 											data.medicalGroup.specialties.map((specialty) => (
 												<div key={`${specialty.id}`}>

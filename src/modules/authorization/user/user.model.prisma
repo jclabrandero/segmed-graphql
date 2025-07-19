@@ -128,6 +128,9 @@ model User {
 	updatedMedicalLeaves				MedicalLeave[]					@relation(name: "MedicalLeaveLastUpdateUser")
 	createdMedicalLeaveDisabilityTypes	MedicalLeaveDisabilityType[]	@relation(name: "MedicalLeaveDisabilityTypeCreatorUser")
 	updatedMedicalLeaveDisabilityTypes	MedicalLeaveDisabilityType[]	@relation(name: "MedicalLeaveDisabilityTypeLastUpdateUser")
+
+	createdAgreements	Agreement[]	@relation(name: "AgreementCreatorUser")
+	updatedAgreements	Agreement[]	@relation(name: "AgreementLastUpdateUser")
 }
 
 

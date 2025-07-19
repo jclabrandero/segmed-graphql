@@ -194,6 +194,12 @@ enum ClinicCare {
 	UPSERTED = 'CLNCCR-UPSERT'
 }
 
+enum Agreement {
+	CREATED = 'AGRMNT-C',
+	UPDATED = 'AGRMNT-U',
+	DELETED = 'AGRMNT-D',
+	UPSERTED = 'AGRMNT-UPSERT'
+}
 
 export const SubscriptionEvent = {
 	User, Group,
@@ -209,5 +215,7 @@ export const SubscriptionEvent = {
 
 	Medication, Pharmacy, Batch, Arrival, ArrivalItem, Departure, DepartureItem,
 
-	ClinicCare
+	ClinicCare,
+
+	Agreement
 }

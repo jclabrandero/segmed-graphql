@@ -34,6 +34,7 @@ import {
 	MedicalLeaveResolver
 } from '../modules/health'
 import { Decimal } from '@prisma/client/runtime/library'
+import { AgreementResolver } from '../modules/cost/agreement/agreement.resolver'
 
 export class GraphqlResolver {
 	schema:	GraphQLSchema
@@ -109,6 +110,7 @@ export class GraphqlResolver {
 			, interclinical = new InterclinicalResolver()
 			, prescription = new PrescriptionResolver()
 			, medicalLeave = new MedicalLeaveResolver()
+			, agreement = new AgreementResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -226,7 +228,9 @@ export class GraphqlResolver {
 				prescription: prescription.findOne,
 				prescriptionsFromPharmacyWithoutDeparture: prescription.prescriptionsFromPharmacyWithoutDeparture,
 				prescriptionExtern: prescription.findOneExtern,
-				medicalLeave: medicalLeave.findOne
+				medicalLeave: medicalLeave.findOne,
+
+				agreements: agreement.index,
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -289,6 +293,8 @@ export class GraphqlResolver {
 				createInsured: insured.create,
 				updateInsured: insured.update,
 				deleteInsured: insured.delete,
+				upgradeInsured: insured.upgradeInsured,
+				downgradeInsured: insured.downgradeInsured,
 
 				createMedication: medication.create,
 				updateMedication: medication.update,
@@ -333,7 +339,9 @@ export class GraphqlResolver {
 				deleteMedicalLeave: medicalLeave.delete,
 				approveMedicalLeave: medicalLeave.approve,
 				disapproveMedicalLeave: medicalLeave.disapprove,
-				printMedicalLeave: medicalLeave.print
+				printMedicalLeave: medicalLeave.print,
+
+				createAgreement: agreement.create,
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
@@ -441,7 +449,12 @@ export class GraphqlResolver {
 				clinicCareCreated: clinicCare.created({ pubsub }),
 				clinicCareUpdated: clinicCare.updated({ pubsub }),
 				clinicCareDeleted: clinicCare.deleted({ pubsub }),
-				clinicCareUpserted: clinicCare.upserted({ pubsub })
+				clinicCareUpserted: clinicCare.upserted({ pubsub }),
+
+				agreementCreated: agreement.created({ pubsub }),
+				agreementUpdated: agreement.updated({ pubsub }),
+				agreementDeleted: agreement.deleted({ pubsub }),
+				agreementUpserted: agreement.upserted({ pubsub }),
 			}
 		}])
 	}
