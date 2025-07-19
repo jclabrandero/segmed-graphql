@@ -14,7 +14,8 @@ model FileUpload {
 	lastUpdateDate		DateTime?
 
 	interclinicals	InterclinicalFileUpload[]
+	agreement				Agreement?
 
-	creatorUser		User	@relation(name: "FileUploadCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+	creatorUser			User	@relation(name: "FileUploadCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "FileUploadLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }
