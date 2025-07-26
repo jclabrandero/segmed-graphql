@@ -131,6 +131,9 @@ model User {
 
 	createdAgreements	Agreement[]	@relation(name: "AgreementCreatorUser")
 	updatedAgreements	Agreement[]	@relation(name: "AgreementLastUpdateUser")
+
+	createdAgreementTariffs	Tariff[] @relation(name: "TariffCreatorUser")
+	updatedAgreementTariffs	Tariff[] @relation(name: "TariffLastUpdateUser")
 }
 
 

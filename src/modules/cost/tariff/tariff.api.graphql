@@ -1,0 +1,63 @@
+
+type Tariff {
+    id:		Int!
+    currencyUMA:    Int!
+    exchangeRate:   Decimal!
+    priceBs:        Decimal!
+
+    status:         Int!
+    
+    agreement:      Agreement!
+    
+  providerMedicalSpecialty:    ProviderMedicalSpecialty!
+  providerMedicalSubspecialty:    ProviderMedicalSubspecialty
+}
+
+type ProviderMedicalSpecialty {
+  id: Int!
+  medicalSpecialty: MedicalSpecialty!
+  subspecialties: [ProviderMedicalSubspecialty!]!
+}
+
+type ProviderMedicalSubspecialty {
+  id: Int!
+  medicalSubspecialty: MedicalSubspecialty!
+}
+
+input ITariffCreateArgs {
+  currencyUMA: Int!
+  exchangeRate: Decimal!
+  priceBs: Decimal!
+
+  agreementId: Int!
+  providerMedicalSpecialtyId: Int!
+  providerMedicalSubspecialtyId: Int
+}
+
+input ITariffUpdateArgs {
+  currencyUMA: Int!
+  exchangeRate: Decimal!
+  priceBs: Decimal!
+
+  agreementId: Int!
+  providerMedicalSpecialtyId: Int!
+  providerMedicalSubspecialtyId: Int
+}
+
+type Query {
+	tariffItems(agreementId: Int!): [Tariff!]! @authorized @has(permissions: [WriteAgreement])
+  tariffItem(id: Int!): Tariff! @authorized @has(permissions: [WriteAgreement])
+}
+
+type Mutation {
+	createTariff(data: ITariffCreateArgs!): Tariff! @authorized @has(permissions: [WriteAgreement])
+	updateTariff(id: Int!, data: ITariffUpdateArgs!): Tariff! @authorized @has(permissions: [WriteAgreement])
+	deleteTariff(id: Int!): Tariff! @authorized @has(permissions: [WriteAgreement])
+}
+
+type Subscription {
+	tariffCreated: Tariff!
+	tariffUpdated: Tariff!
+	tariffDeleted: Tariff!
+	tariffUpserted: Tariff!
+}

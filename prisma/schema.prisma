@@ -242,7 +242,10 @@ model User {
 
   createdAgreements Agreement[] @relation(name: "AgreementCreatorUser")
   updatedAgreements Agreement[] @relation(name: "AgreementLastUpdateUser")
-  Session           Session[]
+
+  createdAgreementTariffs Tariff[]  @relation(name: "TariffCreatorUser")
+  updatedAgreementTariffs Tariff[]  @relation(name: "TariffLastUpdateUser")
+  Session                 Session[]
 }
 
 model UserGroup {
@@ -604,10 +607,41 @@ model Agreement {
   lastUpdateDate     DateTime?
 
   provider Provider   @relation(fields: [providerId], references: [id])
+  tariffs  Tariff[]
   file     FileUpload @relation(fields: [fileUploadId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   creatorUser    User  @relation(name: "AgreementCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser User? @relation(name: "AgreementLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+//
+// tariff.model.prisma
+//
+
+model Tariff {
+  id           Int     @id @default(autoincrement())
+  currencyUMA  Int
+  exchangeRate Decimal
+  priceBs      Decimal
+
+  agreementId                   Int
+  providerMedicalSpecialtyId    Int
+  providerMedicalSubspecialtyId Int?
+
+  status Int @default(1)
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  // Relaciones
+  agreement                   Agreement                    @relation(fields: [agreementId], references: [id])
+  providerMedicalSpecialty    ProviderMedicalSpecialty     @relation(fields: [providerMedicalSpecialtyId], references: [id])
+  providerMedicalSubspecialty ProviderMedicalSubspecialty? @relation(fields: [providerMedicalSubspecialtyId], references: [id])
+
+  creatorUser    User  @relation(name: "TariffCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "TariffLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 }
 
 //
@@ -1548,6 +1582,7 @@ model ProviderMedicalSpecialty {
   providerMedicalGroup ProviderMedicalGroup @relation(fields: [providerMedicalGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   subspecialties ProviderMedicalSubspecialty[]
+  tariffs        Tariff[]
 
   creatorUser    User  @relation(name: "ProviderMedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser User? @relation(name: "ProviderMedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -1570,6 +1605,8 @@ model ProviderMedicalSubspecialty {
 
   medicalSubspecialty      MedicalSubspecialty      @relation(fields: [medicalSubspecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   providerMedicalSpecialty ProviderMedicalSpecialty @relation(fields: [providerMedicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  tariffs Tariff[]
 
   creatorUser    User  @relation(name: "ProviderMedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser User? @relation(name: "ProviderMedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

@@ -15,7 +15,8 @@ model Agreement {
 	lastUpdateDate		DateTime?
  
   provider    Provider    @relation(fields: [providerId], references: [id])
-  file				FileUpload  @relation(fields: [fileUploadId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tariffs     Tariff[]
+  file        FileUpload  @relation(fields: [fileUploadId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 	
   creatorUser     User	@relation(name: "AgreementCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser  User?	@relation(name: "AgreementLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

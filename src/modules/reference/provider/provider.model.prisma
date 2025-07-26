@@ -68,6 +68,7 @@ model ProviderMedicalSpecialty {
 	providerMedicalGroup	ProviderMedicalGroup	@relation(fields: [providerMedicalGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
 	subspecialties			ProviderMedicalSubspecialty[]
+	tariffs				    Tariff[]
 
 	creatorUser		User	@relation(name: "ProviderMedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "ProviderMedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -91,6 +92,8 @@ model ProviderMedicalSubspecialty {
 	medicalSubspecialty			MedicalSubspecialty			@relation(fields: [medicalSubspecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 	providerMedicalSpecialty	ProviderMedicalSpecialty	@relation(fields: [providerMedicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
+	tariffs				    Tariff[]
+	
 	creatorUser		User	@relation(name: "ProviderMedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "ProviderMedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 

@@ -1,0 +1,25 @@
+model Tariff {
+  id                          Int     @id @default(autoincrement())
+  currencyUMA                 Int
+  exchangeRate                Decimal
+  priceBs                     Decimal
+
+  agreementId                 Int
+  providerMedicalSpecialtyId  Int
+  providerMedicalSubspecialtyId Int?
+
+  status                      Int    @default(1)
+
+  creatorUserName             String
+  creationDate                DateTime
+  lastUpdateUserName          String?
+  lastUpdateDate              DateTime?
+
+  // Relaciones
+  agreement                   Agreement @relation(fields: [agreementId], references: [id])
+  providerMedicalSpecialty    ProviderMedicalSpecialty @relation(fields: [providerMedicalSpecialtyId], references: [id])
+  providerMedicalSubspecialty ProviderMedicalSubspecialty? @relation(fields: [providerMedicalSubspecialtyId], references: [id])
+
+  creatorUser     User	@relation(name: "TariffCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser  User?	@relation(name: "TariffLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}

@@ -1,14 +1,14 @@
 
 type Agreement {
-	id:		Int!
-	name:        String!
-  validFrom:   DateTime!
-  validTo:     DateTime
+	id:			Int!
+	name:		String!
+	validFrom:	DateTime!
+	validTo:	DateTime
 
-	status:	Int!
+	status:		Int!
 
-	provider:    Provider!
-  file:				FileInfo!
+	provider:	Provider!
+	file:		FileInfo!
 }
 
 input IAgreementCreateArgs {
@@ -20,12 +20,26 @@ input IAgreementCreateArgs {
   fileMd5:    String!
 }
 
+input IAgreementUpdateArgs {
+  name: String!
+  validFrom:   DateTime!
+  validTo:     DateTime
+
+  providerId: Int!
+  fileMd5:    String!
+}
+
 type Query {
 	agreements: [Agreement!]! @authorized @has(permissions: [ReadAgreement, ReadProvider])
+	agreement(id: Int!): Agreement! @authorized @has(permissions: [ReadAgreement, ReadProvider])
 }
 
 type Mutation {
 	createAgreement(data: IAgreementCreateArgs!): Agreement! @authorized @has(permissions: [WriteAgreement])
+	updateAgreement(id: Int!, data: IAgreementUpdateArgs!): Agreement! @authorized @has(permissions: [WriteAgreement])
+	deleteAgreement(id: Int!): Agreement! @authorized @has(permissions: [WriteAgreement])
+	upgradeAgreement(id: Int!): Agreement! @authorized @has(permissions: [WriteAgreement])
+	downgradeAgreement(id: Int!): Agreement! @authorized @has(permissions: [WriteAgreement])
 }
 
 type Subscription {

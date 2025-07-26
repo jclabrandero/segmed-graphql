@@ -201,6 +201,13 @@ enum Agreement {
 	UPSERTED = 'AGRMNT-UPSERT'
 }
 
+enum Tariff {
+	CREATED = 'TRFF-C',
+	UPDATED = 'TRFF-U',
+	DELETED = 'TRFF-D',
+	UPSERTED = 'TRFF-UPSERT'
+}
+
 export const SubscriptionEvent = {
 	User, Group,
 
@@ -217,5 +224,5 @@ export const SubscriptionEvent = {
 
 	ClinicCare,
 
-	Agreement
+	Agreement, Tariff
 }

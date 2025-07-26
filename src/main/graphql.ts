@@ -35,6 +35,7 @@ import {
 } from '../modules/health'
 import { Decimal } from '@prisma/client/runtime/library'
 import { AgreementResolver } from '../modules/cost/agreement/agreement.resolver'
+import { TariffResolver } from '../modules/cost/tariff/tariff.resolver'
 
 export class GraphqlResolver {
 	schema:	GraphQLSchema
@@ -111,6 +112,7 @@ export class GraphqlResolver {
 			, prescription = new PrescriptionResolver()
 			, medicalLeave = new MedicalLeaveResolver()
 			, agreement = new AgreementResolver()
+			, tariff = new TariffResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -231,6 +233,10 @@ export class GraphqlResolver {
 				medicalLeave: medicalLeave.findOne,
 
 				agreements: agreement.index,
+				agreement: agreement.findOne,
+				tariffItems: tariff.index,	
+				tariffItem: tariff.findOne		
+
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -342,6 +348,11 @@ export class GraphqlResolver {
 				printMedicalLeave: medicalLeave.print,
 
 				createAgreement: agreement.create,
+				// updateAgreement: agreement.update,
+				deleteAgreement: agreement.delete,
+				upgradeAgreement: agreement.upgradeAgreement,
+				downgradeAgreement: agreement.downgradeAgreement,
+				createTariff: tariff.create
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
@@ -455,6 +466,11 @@ export class GraphqlResolver {
 				agreementUpdated: agreement.updated({ pubsub }),
 				agreementDeleted: agreement.deleted({ pubsub }),
 				agreementUpserted: agreement.upserted({ pubsub }),
+
+				tariffCreated: tariff.created({ pubsub }),
+				tariffUpdated: tariff.updated({ pubsub }),
+				tariffDeleted: tariff.deleted({ pubsub }),
+				tariffUpserted: tariff.upserted({ pubsub }),
 			}
 		}])
 	}
