@@ -24,6 +24,8 @@ model ClinicCare {
 	prescriptionExterns	PrescriptionExtern[]
 	medicalLeaves		MedicalLeave[]
 	departureClinicCares DepartureClinicCare[]
+    interclinicalCostItems InterclinicalCostItem[]
+
 
 	creatorUser		User	@relation(name: "ClinicCareCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "ClinicCareLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

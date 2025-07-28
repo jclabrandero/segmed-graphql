@@ -1,0 +1,93 @@
+type InterclinicalCost {
+	id:				Int!
+	
+	invoiceNumber:	Int!
+    invoiceDate:      DateTime!
+	invoiceTotalRefPrice:		Decimal!
+
+	approvalState:	Int!
+	closed:			Boolean!
+	status:			Int!
+
+	provider:	Provider
+}
+
+type InterclinicalCostItem {
+    id: Int!
+    interclinicalCostId: Int!
+    clinicCareId: Int!
+    interclinicalMedicalSpecialtyId: Int
+    interclinicalMedicalSubspecialtyId: Int
+    numberOfSessions: Int!
+    sessionDate: DateTime
+    remark: String!
+    price: Decimal!
+    providerTariffId: Int!
+    status: Int!
+}
+
+input IInterclinicalCostCreateArgs {
+	
+	invoiceNumber:				Int!
+    invoiceDate: DateTime!
+	invoiceTotalRefPrice:		Decimal!
+
+	providerId:	Int
+}
+
+input IInterclinicalCostUpdateArgs {
+	
+    invoiceNumber:				Int
+    invoiceDate: DateTime
+	invoiceTotalRefPrice:		Decimal
+
+	providerId:	Int
+}
+
+input IInterclinicalCostItemCreateArgs {
+    interclinicalCostId: Int!
+    clinicCareId: Int!
+    interclinicalMedicalSpecialtyId: Int
+    interclinicalMedicalSubspecialtyId: Int
+    numberOfSessions: Int!
+    sessionDate: DateTime
+    remark: String!
+    price: Decimal!
+    providerTariffId: Int!
+}
+
+input IInterclinicalCostItemUpdateArgs {
+    numberOfSessions: Int
+    sessionDate: DateTime
+    remark: String
+    price: Decimal
+    providerTariffId: Int
+}
+
+
+type Query {
+    interclinicalCosts: [InterclinicalCost!]! @authorized @has(permissions: [ReadInvoice, ReadProvider])
+	interclinicalCost(id: Int!): InterclinicalCost! @authorized @has(permissions: [ReadProvider, ReadInvoice])
+	interclinicalCostItems(arrivalId: Int!): [InterclinicalCostItem!]! @authorized @has(permissions: [ReadProvider, ReadInvoice])
+    interclinicalCostItem(id: Int!): InterclinicalCostItem! @authorized @has(permissions: [ReadProvider, ReadInvoice])
+}
+
+type Mutation {
+	createInterclinicalCost(data: IInterclinicalCostCreateArgs!): InterclinicalCost! @authorized @has(permissions: [WriteInvoice])
+	approveInterclinicalCost(id: Int!): InterclinicalCost! @authorized @has(permissions: [ApproveInvoice])
+    disapproveInterclinicalCost(id: Int!): InterclinicalCost! @authorized @has(permissions: [DisapproveInvoice])
+	closeInterclinicalCost(id: Int!): InterclinicalCost! @authorized @has(permissions: [WriteInvoice])
+	updateInterclinicalCost(id: Int!, data: IInterclinicalCostUpdateArgs!): InterclinicalCost! @authorized @has(permissions: [WriteInvoice])
+	deleteinterclinicalCost(id: Int!): InterclinicalCost! @authorized @has(permissions: [WriteInvoice, DisapproveInvoice])
+	createinterclinicalCostItem(data: IInterclinicalCostItemCreateArgs!): InterclinicalCostItem! @authorized @has(permissions: [WriteInvoice])
+	updateinterclinicalCostItem(id: Int!, data: IInterclinicalCostItemUpdateArgs!): InterclinicalCostItem! @authorized @has(permissions: [WriteInvoice          ])
+	deleteinterclinicalCostItem(id: Int!): InterclinicalCostItem! @authorized @has(permissions: [WriteInvoice])
+}
+
+type Subscription {
+	interclinicalCostCreated: InterclinicalCost!
+	interclinicalCostUpdated: InterclinicalCost!
+	interclinicalCostDeleted: InterclinicalCost!
+	interclinicalCostUpserted: InterclinicalCost!
+	interclinicalCostItemUpserted: InterclinicalCostItem!
+}

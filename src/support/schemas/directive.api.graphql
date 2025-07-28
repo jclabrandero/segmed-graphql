@@ -64,4 +64,9 @@ enum PermissionName {
 
 	ReadAgreement
 	WriteAgreement
+
+	ReadInvoice
+	WriteInvoice
+	ApproveInvoice
+	DisapproveInvoice
 }

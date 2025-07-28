@@ -86,6 +86,8 @@ model InterclinicalMedicalSpecialty {
 	interclinicalMedicalGroup	InterclinicalMedicalGroup	@relation(fields: [interclinicalMedicalGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
 	subspecialties	InterclinicalMedicalSubspecialty[]
+    costItems InterclinicalCostItem[]
+
 
 	creatorUser		User	@relation(name: "InterclinicalMedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "InterclinicalMedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -109,6 +111,8 @@ model InterclinicalMedicalSubspecialty {
 
 	medicalSubspecialty				MedicalSubspecialty				@relation(fields: [medicalSubspecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 	interclinicalMedicalSpecialty	InterclinicalMedicalSpecialty	@relation(fields: [interclinicalMedicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+    costItems InterclinicalCostItem[]
 
 	creatorUser		User	@relation(name: "InterclinicalMedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
 	lastUpdateUser	User?	@relation(name: "InterclinicalMedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)

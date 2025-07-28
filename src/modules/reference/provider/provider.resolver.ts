@@ -84,6 +84,36 @@ export class ProviderResolver extends Resolver {
 		}
 	}
 
+	public static formatWithProviderIds(record) {
+		if (!record) return null
+		const { medicalGroups, ...provider } = record
+		return {
+			...provider,
+			medicalGroups: medicalGroups.map(um => ({
+				...um.medicalGroup,
+				specialties: um.specialties.map(em => ({
+					id: em.id,
+					medicalSpecialty: em.medicalSpecialty,
+					subspecialties: em.subspecialties.map(sm => ({
+						id: sm.id,
+						medicalSubspecialty: sm.medicalSubspecialty
+					}))
+				}))
+			}))
+		}
+	}
+	
+	public static async findOneWithProviderIds({ id }: { id: number }, { db }: IContext) {
+		const record = await db.provider.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: ProviderResolver.include()
+		})
+		return ProviderResolver.formatWithProviderIds(record)
+	}
+
 	public static async findOne({ id }: { id: number }, { db }: IContext) {
 		const record = await db.provider.findUnique({
 			where: {
@@ -118,7 +148,12 @@ export class ProviderResolver extends Resolver {
 					some: {
 						medicalGroupId
 					}
-				} : undefined
+				} : undefined,
+				// agreements: {
+				// 	some: {
+				// 		status: Status.Active || undefined
+				// 	}
+				// }
 			}
 		})
 	}
@@ -133,6 +168,18 @@ export class ProviderResolver extends Resolver {
 		})
 
 		return ProviderResolver.format(record)
+	}
+
+	async findOneWithProviderIds(_, { id }: { id: number }, { db }: IContext) {
+		const record = await db.provider.findUnique({
+			where: {
+				id,
+				NOT: { status: Status.Removed }
+			},
+			include: ProviderResolver.include()
+		})
+
+		return ProviderResolver.formatWithProviderIds(record)
 	}
 
 	async create(_, { data }: { data: IProviderCreateArgs }, { db, pubsub, user }: IContext): Promise<Provider> {

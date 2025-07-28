@@ -208,6 +208,20 @@ enum Tariff {
 	UPSERTED = 'TRFF-UPSERT'
 }
 
+enum InterclinicalCost {
+	CREATED = 'INTRCLNCLCST-C',
+	UPDATED = 'INTRCLNCLCST-U',
+	DELETED = 'INTRCLNCLCST-D',
+	UPSERTED = 'INTRCLNCLCST-UPSERT'
+}
+
+enum InterclinicalCostItem {
+	CREATED = 'INTRCLNCLCSTITM-C',
+	UPDATED = 'INTRCLNCLCSTITM-U',
+	DELETED = 'INTRCLNCLCSTITM-D',
+	UPSERTED = 'INTRCLNCLCSTITM-UPSERT'
+}
+
 export const SubscriptionEvent = {
 	User, Group,
 
@@ -224,5 +238,8 @@ export const SubscriptionEvent = {
 
 	ClinicCare,
 
-	Agreement, Tariff
+	Agreement, Tariff,
+
+	InterclinicalCost, InterclinicalCostItem
+
 }

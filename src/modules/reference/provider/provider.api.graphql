@@ -50,10 +50,44 @@ input IProviderFilterArgs {
 	medicalGroupId:	Int
 }
 
+type ProviderWithProviderIds {
+  id: Int!
+  businessName: String!
+  medicalGroups: [MedicalGroupWithProviderSpecialties!]!
+}
+
+type MedicalGroupWithProviderSpecialties {
+  id: Int!
+  name: String!
+  specialties: [ProviderSpecialty!]!
+}
+
+type ProviderSpecialty {
+  id: Int! # ID de ProviderMedicalSpecialty
+  medicalSpecialty: MedicalSpecialty!
+  subspecialties: [ProviderSubspecialty!]!
+}
+
+type ProviderSubspecialty {
+  id: Int! # ID de ProviderMedicalSubspecialty
+  medicalSubspecialty: MedicalSubspecialty!
+}
+
+type MedicalSpecialty {
+  id: Int!
+  name: String!
+}
+
+type MedicalSubspecialty {
+  id: Int!
+  name: String!
+}
+
 type Query {
 	providers: [Provider!]! @authorized @has(permissions: [ReadProvider])
 	activeProviders(query: IProviderFilterArgs!): [Provider!]! @authorized @has(permissions: [ReadProvider])
 	provider(id: Int!): Provider! @authorized @has(permissions: [ReadProvider])
+	providerWithProviderIds(id: Int!): ProviderWithProviderIds! @authorized @has(permissions: [ReadProvider])
 }
 
 type Mutation {

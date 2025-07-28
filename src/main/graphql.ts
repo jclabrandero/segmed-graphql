@@ -36,6 +36,7 @@ import {
 import { Decimal } from '@prisma/client/runtime/library'
 import { AgreementResolver } from '../modules/cost/agreement/agreement.resolver'
 import { TariffResolver } from '../modules/cost/tariff/tariff.resolver'
+import { InterclinicalCostResolver } from '../modules/cost/invoice/invoice.resolver'
 
 export class GraphqlResolver {
 	schema:	GraphQLSchema
@@ -113,6 +114,7 @@ export class GraphqlResolver {
 			, medicalLeave = new MedicalLeaveResolver()
 			, agreement = new AgreementResolver()
 			, tariff = new TariffResolver()
+			, interclinicalCost = new InterclinicalCostResolver()
 
 		return mergeResolvers([{
 			DateTime: new GraphQLScalarType({
@@ -190,6 +192,7 @@ export class GraphqlResolver {
 				providers: provider.index,
 				activeProviders: provider.filter,
 				provider: provider.findOne,
+				providerWithProviderIds: provider.findOneWithProviderIds,
 
 				persons: person.index,
 				activePersons: person.active,
@@ -235,8 +238,9 @@ export class GraphqlResolver {
 				agreements: agreement.index,
 				agreement: agreement.findOne,
 				tariffItems: tariff.index,	
-				tariffItem: tariff.findOne		
-
+				tariffItem: tariff.findOne,
+				
+				interclinicalCosts: interclinicalCost.index
 			},
 			Mutation: {
 				signIn: session.signIn,
@@ -352,7 +356,9 @@ export class GraphqlResolver {
 				deleteAgreement: agreement.delete,
 				upgradeAgreement: agreement.upgradeAgreement,
 				downgradeAgreement: agreement.downgradeAgreement,
-				createTariff: tariff.create
+				createTariff: tariff.create,
+
+				createInterclinicalCost: interclinicalCost.create				
 			},
 			Subscription: {
 				userCreated: user.created({ pubsub }),
@@ -471,6 +477,11 @@ export class GraphqlResolver {
 				tariffUpdated: tariff.updated({ pubsub }),
 				tariffDeleted: tariff.deleted({ pubsub }),
 				tariffUpserted: tariff.upserted({ pubsub }),
+
+				interclinicalCostCreated: interclinicalCost.created({ pubsub }),
+				interclinicalCostUpdated: interclinicalCost.updated({ pubsub }),
+				interclinicalCostDeleted: interclinicalCost.deleted({ pubsub }),
+				interclinicalCostUpserted: interclinicalCost.upserted({ pubsub }),				
 			}
 		}])
 	}

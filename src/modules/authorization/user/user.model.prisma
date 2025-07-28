@@ -134,8 +134,12 @@ model User {
 
 	createdAgreementTariffs	Tariff[] @relation(name: "TariffCreatorUser")
 	updatedAgreementTariffs	Tariff[] @relation(name: "TariffLastUpdateUser")
-}
 
+	createdInterclinicalCosts InterclinicalCost[] @relation(name: "InterclinicalCostCreatorUser")
+	updatedInterclinicalCosts InterclinicalCost[] @relation(name: "InterclinicalCostLastUpdateUser")
+	createdInterclinicalCostItems InterclinicalCostItem[] @relation(name: "InterclinicalCostItemCreatorUser")
+	updatedInterclinicalCostItems InterclinicalCostItem[] @relation(name: "InterclinicalCostItemLastUpdateUser") 
+}
 
 model UserGroup {
 	id		Int		@unique @default(autoincrement())

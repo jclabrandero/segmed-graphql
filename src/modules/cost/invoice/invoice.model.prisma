@@ -1,0 +1,61 @@
+model InterclinicalCost {
+  id               Int     @id @default(autoincrement())
+  invoiceNumber    Int     @default(0) 
+  invoiceDate      DateTime
+  invoiceTotalRefPrice		Decimal @default(0)
+  providerId       Int
+  status           Int     @default(1)
+
+  approvalState		Int		@default(0)
+  approvalDate		DateTime?
+  approvalUserName	String?
+
+  closed			Boolean	@default(false)
+
+  provider    Provider    @relation(fields: [providerId], references: [id])
+  items            InterclinicalCostItem[]
+
+  creatorUserName  String
+  creationDate     DateTime
+  lastUpdateUserName String?
+  lastUpdateDate   DateTime?
+
+  creatorUser     User	@relation(name: "InterclinicalCostCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser  User?	@relation(name: "InterclinicalCostLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model InterclinicalCostItem {
+  id                             Int     @id @default(autoincrement())
+  interclinicalCostId            Int
+  clinicCareId                   Int
+
+  // Especialidad y subespecialidad autorizadas (según interconsulta)
+  interclinicalMedicalSpecialtyId   Int?
+  interclinicalMedicalSubspecialtyId Int?
+
+  numberOfSessions               Int     @default(1)
+  sessionDate                    DateTime?
+  remark                         String
+  price                          Decimal
+  providerTariffId               Int
+  status                         Int     @default(1)
+
+  interclinicalCost              InterclinicalCost @relation(fields: [interclinicalCostId], references: [id])
+  clinicCare                     ClinicCare        @relation(fields: [clinicCareId], references: [id])
+
+  // Relaciones con especialidades autorizadas
+  interclinicalMedicalSpecialty  InterclinicalMedicalSpecialty? @relation(fields: [interclinicalMedicalSpecialtyId], references: [id])
+  interclinicalMedicalSubspecialty InterclinicalMedicalSubspecialty? @relation(fields: [interclinicalMedicalSubspecialtyId], references: [id])
+
+//   providerTariff                 Tariff @relation(fields: [providerTariffId], references: [id])
+  providerTariff                 Tariff @relation(fields: [providerTariffId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+
+
+  creatorUserName                String
+  creationDate                   DateTime
+  lastUpdateUserName             String?
+  lastUpdateDate                 DateTime?
+
+  creatorUser     User	@relation(name: "InterclinicalCostItemCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser  User?	@relation(name: "InterclinicalCostItemLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}

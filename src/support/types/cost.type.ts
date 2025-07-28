@@ -20,3 +20,11 @@ export interface TariffCreateArgs {
     providerMedicalSubspecialtyId?: number
 
 }
+
+export interface InterclinicalCostCreateArgs {
+  invoiceNumber: number
+  invoiceDate: Date
+  invoiceTotalRefPrice:	Decimal
+
+  providerId: number
+}

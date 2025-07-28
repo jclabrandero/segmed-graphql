@@ -243,9 +243,14 @@ model User {
   createdAgreements Agreement[] @relation(name: "AgreementCreatorUser")
   updatedAgreements Agreement[] @relation(name: "AgreementLastUpdateUser")
 
-  createdAgreementTariffs Tariff[]  @relation(name: "TariffCreatorUser")
-  updatedAgreementTariffs Tariff[]  @relation(name: "TariffLastUpdateUser")
-  Session                 Session[]
+  createdAgreementTariffs Tariff[] @relation(name: "TariffCreatorUser")
+  updatedAgreementTariffs Tariff[] @relation(name: "TariffLastUpdateUser")
+
+  createdInterclinicalCosts     InterclinicalCost[]     @relation(name: "InterclinicalCostCreatorUser")
+  updatedInterclinicalCosts     InterclinicalCost[]     @relation(name: "InterclinicalCostLastUpdateUser")
+  createdInterclinicalCostItems InterclinicalCostItem[] @relation(name: "InterclinicalCostItemCreatorUser")
+  updatedInterclinicalCostItems InterclinicalCostItem[] @relation(name: "InterclinicalCostItemLastUpdateUser")
+  Session                       Session[]
 }
 
 model UserGroup {
@@ -615,6 +620,74 @@ model Agreement {
 }
 
 //
+// invoice.model.prisma
+//
+
+model InterclinicalCost {
+  id                   Int      @id @default(autoincrement())
+  invoiceNumber        Int      @default(0)
+  invoiceDate          DateTime
+  invoiceTotalRefPrice Decimal  @default(0)
+  providerId           Int
+  status               Int      @default(1)
+
+  approvalState    Int       @default(0)
+  approvalDate     DateTime?
+  approvalUserName String?
+
+  closed Boolean @default(false)
+
+  provider Provider                @relation(fields: [providerId], references: [id])
+  items    InterclinicalCostItem[]
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  creatorUser                                           User                         @relation(name: "InterclinicalCostCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser                                        User?                        @relation(name: "InterclinicalCostLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  ProviderMedicalSubspecialty                           ProviderMedicalSubspecialty? @relation(fields: [providerMedicalSubspecialtyMedicalSubspecialtyId, providerMedicalSubspecialtyProviderMedicalSpecialtyId], references: [medicalSubspecialtyId, providerMedicalSpecialtyId])
+  providerMedicalSubspecialtyMedicalSubspecialtyId      Int?
+  providerMedicalSubspecialtyProviderMedicalSpecialtyId Int?
+}
+
+model InterclinicalCostItem {
+  id                  Int @id @default(autoincrement())
+  interclinicalCostId Int
+  clinicCareId        Int
+
+  // Especialidad y subespecialidad autorizadas (según interconsulta)
+  interclinicalMedicalSpecialtyId    Int?
+  interclinicalMedicalSubspecialtyId Int?
+
+  numberOfSessions Int       @default(1)
+  sessionDate      DateTime?
+  remark           String
+  price            Decimal
+  providerTariffId Int
+  status           Int       @default(1)
+
+  interclinicalCost InterclinicalCost @relation(fields: [interclinicalCostId], references: [id])
+  clinicCare        ClinicCare        @relation(fields: [clinicCareId], references: [id])
+
+  // Relaciones con especialidades autorizadas
+  interclinicalMedicalSpecialty    InterclinicalMedicalSpecialty?    @relation(fields: [interclinicalMedicalSpecialtyId], references: [id])
+  interclinicalMedicalSubspecialty InterclinicalMedicalSubspecialty? @relation(fields: [interclinicalMedicalSubspecialtyId], references: [id])
+
+  //   providerTariff                 Tariff @relation(fields: [providerTariffId], references: [id])
+  providerTariff Tariff @relation(fields: [providerTariffId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+
+  creatorUserName    String
+  creationDate       DateTime
+  lastUpdateUserName String?
+  lastUpdateDate     DateTime?
+
+  creatorUser    User  @relation(name: "InterclinicalCostItemCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser User? @relation(name: "InterclinicalCostItemLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+}
+
+//
 // tariff.model.prisma
 //
 
@@ -639,6 +712,8 @@ model Tariff {
   agreement                   Agreement                    @relation(fields: [agreementId], references: [id])
   providerMedicalSpecialty    ProviderMedicalSpecialty     @relation(fields: [providerMedicalSpecialtyId], references: [id])
   providerMedicalSubspecialty ProviderMedicalSubspecialty? @relation(fields: [providerMedicalSubspecialtyId], references: [id])
+
+  interclinicalCostItems InterclinicalCostItem[]
 
   creatorUser    User  @relation(name: "TariffCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser User? @relation(name: "TariffLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -1088,11 +1163,12 @@ model ClinicCare {
 
   state ClinicalCareState @relation(fields: [stateId], references: [id])
 
-  interclinicals       Interclinical[]
-  prescriptions        Prescription[]
-  prescriptionExterns  PrescriptionExtern[]
-  medicalLeaves        MedicalLeave[]
-  departureClinicCares DepartureClinicCare[]
+  interclinicals         Interclinical[]
+  prescriptions          Prescription[]
+  prescriptionExterns    PrescriptionExtern[]
+  medicalLeaves          MedicalLeave[]
+  departureClinicCares   DepartureClinicCare[]
+  interclinicalCostItems InterclinicalCostItem[]
 
   creatorUser    User  @relation(name: "ClinicCareCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser User? @relation(name: "ClinicCareLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -1234,6 +1310,7 @@ model InterclinicalMedicalSpecialty {
   interclinicalMedicalGroup InterclinicalMedicalGroup @relation(fields: [interclinicalMedicalGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   subspecialties InterclinicalMedicalSubspecialty[]
+  costItems      InterclinicalCostItem[]
 
   creatorUser    User  @relation(name: "InterclinicalMedicalSpecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser User? @relation(name: "InterclinicalMedicalSpecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -1257,6 +1334,8 @@ model InterclinicalMedicalSubspecialty {
 
   medicalSubspecialty           MedicalSubspecialty           @relation(fields: [medicalSubspecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   interclinicalMedicalSpecialty InterclinicalMedicalSpecialty @relation(fields: [interclinicalMedicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  costItems InterclinicalCostItem[]
 
   creatorUser    User  @relation(name: "InterclinicalMedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser User? @relation(name: "InterclinicalMedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
@@ -1537,8 +1616,9 @@ model Provider {
   arrivals       Arrival[]
   agreements     Agreement[]
 
-  creatorUser    User  @relation(name: "ProviderCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
-  lastUpdateUser User? @relation(name: "ProviderLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  creatorUser       User                @relation(name: "ProviderCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  lastUpdateUser    User?               @relation(name: "ProviderLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
+  InterclinicalCost InterclinicalCost[]
 }
 
 model ProviderMedicalGroup {
@@ -1606,7 +1686,8 @@ model ProviderMedicalSubspecialty {
   medicalSubspecialty      MedicalSubspecialty      @relation(fields: [medicalSubspecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   providerMedicalSpecialty ProviderMedicalSpecialty @relation(fields: [providerMedicalSpecialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  tariffs Tariff[]
+  tariffs            Tariff[]
+  interclinicalCosts InterclinicalCost[]
 
   creatorUser    User  @relation(name: "ProviderMedicalSubspecialtyCreatorUser", fields: [creatorUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
   lastUpdateUser User? @relation(name: "ProviderMedicalSubspecialtyLastUpdateUser", fields: [lastUpdateUserName], references: [userName], onDelete: NoAction, onUpdate: NoAction)
